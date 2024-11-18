@@ -1,0 +1,1 @@
+<div>Welcome to the Chats-View</div>

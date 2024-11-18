@@ -1,0 +1,1 @@
+<div>Welcome to the Search-View</div>

@@ -1,0 +1,18 @@
+@font-face {
+    font-family: 'KirangHaerang';
+    src: url('/fonts/KirangHaerang-Regular.ttf');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'REM';
+    src: url('/fonts/REM-VariableFont_wght.ttf');
+    font-weight: 700;
+    font-style: normal;
+}
+
+/* Apply a global font */
+body {
+    font-family: 'REM', sans-serif;
+}
