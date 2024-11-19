@@ -17,6 +17,6 @@
         box-shadow: 0vh -4vh 16vh rgba(0,0,0, 0.5);
         display: flex;
         flex-wrap: nowrap;
-        justify-content: space-between;
+        justify-content: center;
     }
 </style>
