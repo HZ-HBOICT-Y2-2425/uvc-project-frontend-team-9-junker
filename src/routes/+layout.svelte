@@ -1,4 +1,5 @@
 <script>
-    import '../app.css';
+  import '../app.css'; // Importing the main stylesheet
 </script>
-<slot />
+
+<slot /> <!-- Placeholder for child content -->
