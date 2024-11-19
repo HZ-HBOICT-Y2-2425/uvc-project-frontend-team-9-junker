@@ -2,21 +2,9 @@
     import ToggleButtons from "./ToggleButtons.svelte";
 </script>
 
-<div class="main-wrapper">
+<div class="h-full w-full bg-[var(--background-color)] border-t-3 border-solid border-[var(--accent-color)] shadow-[0vh_-4vh_16vh_rgba(0,0,0,0.5)] flex flex-nowrap justify-center">
     <ToggleButtons />
 </div>
 
 <style>
-    .main-wrapper {
-        height: 100%;
-        width: 100%;
-        background-color: var(--background-color);
-        border-top: 3px;
-        border-style: solid;
-        border-color: var(--accent-color);
-        box-shadow: 0vh -4vh 16vh rgba(0,0,0, 0.5);
-        display: flex;
-        flex-wrap: nowrap;
-        justify-content: center;
-    }
 </style>

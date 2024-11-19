@@ -7,32 +7,32 @@
     }
 </script>
 
-<div class="toggle-buttons">
-    <button on:click={() => toggle("search")} class:is-active={$toggleState === "search"}>search</button>
-    <button on:click={() => toggle("comms")} class:is-active={$toggleState === "comms"}>comms</button>
-    <button on:click={() => toggle("chats")} class:is-active={$toggleState === "chats"}>chats</button>
-    <button on:click={() => toggle("items")} class:is-active={$toggleState === "items"}>items</button>
-
+<div>
+    <button 
+      class="p-2 text-base border-0 rounded cursor-pointer text-black bg-gray-300 active:bg-primary hover:bg-primary active:text-white hover:text-white" 
+      on:click={() => toggle("search")} 
+      class:active={$toggleState === "search"}>
+      search
+    </button>
+    <button
+      class="p-2 text-base border-0 rounded cursor-pointer text-black bg-gray-300 active:bg-primary hover:bg-primary active:text-white hover:text-white"
+      on:click={() => toggle("comms")}
+      class:is-active={$toggleState === "comms"}>
+      comms
+    </button>
+    <button
+      class="p-2 text-base border-0 rounded cursor-pointer text-black bg-gray-300 active:bg-primary hover:bg-primary active:text-white hover:text-white"
+      on:click={() => toggle("chats")}
+      class:is-active={$toggleState === "chats"}>
+      chats
+    </button>
+    <button
+      class="p-2 text-base border-0 rounded cursor-pointer text-black bg-gray-300 active:bg-primary hover:bg-primary active:text-white hover:text-white"
+      on:click={() => toggle("items")}
+      class:is-active={$toggleState === "items"}>
+      items
+    </button>
 </div>
 
 <style>
-    button {
-      padding: 0.5em 1em;
-      font-size: 1rem;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-  
-    /* Add styles for active state */
-    .is-active {
-      background-color: var(--primary-color);
-      color: white;
-    }
-  
-    /* Default button style */
-    button:not(.is-active) {
-      background-color: gray;
-      color: black;
-    }
 </style>

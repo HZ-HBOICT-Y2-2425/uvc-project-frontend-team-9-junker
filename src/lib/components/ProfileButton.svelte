@@ -2,15 +2,8 @@
     import { goto } from "$app/navigation";
 </script>
 
-<button class="button" on:click={() => goto("/username")}><img class="profile-button" src="icons/iconoir--profile-circle.svg"></button>
+<button class="h-4vh w-4vh" on:click={() => goto("/username")}><img src="icons/iconoir--profile-circle.svg"></button>
 
 <style>
-    .button {
-        
-    }
-    .profile-button {
-        height: 4vh;
-        width: 4vh;
-    }
 
 </style>

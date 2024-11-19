@@ -7,8 +7,5 @@
 </div>
 
 <style>
-    .main-wrapper {
-
-    }
 
 </style>

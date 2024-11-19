@@ -11,7 +11,7 @@
 </script>
 
 {#if $loadingState}
-<div class="main-wrapper">
+<div class="bg-background h-screen w-screen flex flex-col flex-nowrap">
 	<header>
 		<Header />
 	</header>
@@ -20,6 +20,7 @@
 				<ViewSearch />
 			{/if}
 			{#if $toggleState==="comms"}
+			
 				<ViewCommunities />
 			{/if}
 			{#if $toggleState==="chats"}

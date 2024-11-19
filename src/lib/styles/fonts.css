@@ -11,8 +11,3 @@
     font-weight: 700;
     font-style: normal;
 }
-
-/* Apply a global font */
-body {
-    font-family: 'REM', sans-serif;
-}
