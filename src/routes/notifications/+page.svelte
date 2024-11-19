@@ -2,13 +2,10 @@
     import ViewNotifications from "$lib/components/ViewNotifications.svelte";
 </script>
 
-<div class="main-wrapper">
+<div>
     <ViewNotifications />
 </div>
 
 <style>
-    .main-wrapper {
-
-    }
 
 </style>

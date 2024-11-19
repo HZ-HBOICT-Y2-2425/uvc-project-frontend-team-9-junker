@@ -2,7 +2,7 @@
     import ViewUserprofile from "$lib/components/ViewUserprofile.svelte";
 </script>
 
-<div class="main-wrapper">
+<div>
     <ViewUserprofile />
 </div>
 
