@@ -1,8 +1,8 @@
 <script>
-
+    import { goto } from "$app/navigation";
 </script>
 
-<button class="button"><img class="notification-bell" src="icons/cil--bell.svg"></button>
+<button class="button" on:click={() => goto("/notifications")}><img class="notification-bell" src="icons/cil--bell.svg"></button>
 
 <style>
     .button {

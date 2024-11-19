@@ -1,0 +1,1 @@
+<div>Welcome to the Notifications-View</div>
