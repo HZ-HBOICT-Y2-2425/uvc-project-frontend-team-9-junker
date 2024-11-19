@@ -1,8 +1,8 @@
 <script>
-
+    import { goto } from "$app/navigation";
 </script>
 
-<button class="button"><img class="profile-button" src="icons/iconoir--profile-circle.svg"></button>
+<button class="button" on:click={() => goto("/username")}><img class="profile-button" src="icons/iconoir--profile-circle.svg"></button>
 
 <style>
     .button {
