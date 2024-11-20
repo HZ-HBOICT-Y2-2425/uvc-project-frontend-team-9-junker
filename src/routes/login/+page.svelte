@@ -5,15 +5,18 @@
   
     const login = async () => {
       try {
-        const response = await fetch('http://localhost:3011/auth/login', {
+        const response = await fetch('http://localhost:3012/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ username, password }),
         });
         const data = await response.json();
+        console.log(data.accessToken);
+        console.log(username);
   
         if (response.ok) {
-          localStorage.setItem('token', data.token);
+          localStorage.setItem('token', data.accessToken);
+          localStorage.setItem('username', JSON.stringify(username));
           message = 'Login successful!';
           window.location.href = '/dashboard'; // Redirect to the dashboard
         } else {
