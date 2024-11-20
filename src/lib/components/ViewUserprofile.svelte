@@ -1,1 +1,6 @@
-<div>Welcome to the Userprofile-View</div>
+<script>
+    export let userData;
+    // console.log(userData);
+</script>
+
+<div>Welcome, {userData.username}</div>
