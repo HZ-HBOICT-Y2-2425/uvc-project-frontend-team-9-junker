@@ -26,6 +26,7 @@
         }
       } catch (error) {
         message = 'An error occurred during registration.';
+        console.log(error);
       }
     };
   </script>
