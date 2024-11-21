@@ -1,1 +1,11 @@
-<div>Welcome to the Communities-View</div>
+<script>
+  import HomeScreenTitle from "./HomeScreenTitle.svelte";
+</script>
+
+<div>
+  <HomeScreenTitle />
+
+  <div class="text-text dark:text-text-dark">
+    Welcome to the Communities-View
+  </div>
+</div>
