@@ -26,6 +26,7 @@
         }
       } catch (error) {
         message = 'An error occurred during login.';
+        console.error(error);
       }
     };
   </script>
