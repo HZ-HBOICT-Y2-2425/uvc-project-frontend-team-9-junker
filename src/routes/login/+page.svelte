@@ -1,4 +1,6 @@
 <script>
+  import { goto } from "$app/navigation";
+
     let username = '';
     let password = '';
     let message = '';
@@ -18,20 +20,23 @@
           localStorage.setItem('token', data.accessToken);
           localStorage.setItem('username', JSON.stringify(username));
           message = 'Login successful!';
-          window.location.href = '/dashboard'; // Redirect to the dashboard
+          window.location.href = '/username'; // Redirect to the dashboard
         } else {
           message = data.error;
         }
       } catch (error) {
         message = 'An error occurred during login.';
+        console.error(error);
       }
     };
   </script>
   
   <main class="flex items-center justify-center min-h-screen bg-background">
     <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
-      <div class="flex justify-center mb-4">
-        <img src="/Frog.png" alt="Junker Frog Icon" class="h-20 w-20" />
+      <div class="flex justify-center mb-4" >
+        <button on:click={ () => goto("/")}>
+          <img src="/Frog.png" alt="Junker Frog Icon" class="h-20 w-20" />
+        </button>
       </div>
       <h1 class="text-2xl font-bold text-primary mb-4">Log In</h1>
       <form on:submit|preventDefault={login} class="space-y-6">
