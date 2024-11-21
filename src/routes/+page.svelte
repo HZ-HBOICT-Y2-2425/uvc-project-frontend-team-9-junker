@@ -10,7 +10,7 @@
 </script>
 
 {#if $loadingState}
-<div class="bg-background h-screen w-screen flex flex-col flex-nowrap">
+<div class="bg-background dark:bg-background-dark h-screen w-screen flex flex-col flex-nowrap">
 	<header class="z-20 h-[10vh]">
 		<Header />
 	</header>
