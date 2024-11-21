@@ -4,6 +4,7 @@ module.exports = {
     "./src/**/*.{html,js,svelte,ts}", // Combined content paths
     "./public/index.html",           // Added this from stashed changes
   ],
+  darkMode: 'selector',
   theme: {
     extend: {
       fontFamily: {
@@ -97,8 +98,8 @@ module.exports = {
           950: '#001a0c',
         },
         background: {
-          DEFAULT: '#f8fdf7',
-          dark: '#030802',
+          DEFAULT: '#e5fff2',
+          dark: '#002512',
         },
         text: {
           DEFAULT: '#040b04',
