@@ -11,8 +11,13 @@
 </script>
 
 {#if $loadingState}
+<<<<<<< HEAD
 <div class="main-wrapper">
 	<header>
+=======
+<div class="bg-background dark:bg-background-dark h-screen w-screen flex flex-col flex-nowrap">
+	<header class="z-20 h-[10vh]">
+>>>>>>> 2cb7dc9aa8b3e0a8b4cb45b48d16ef7a87e6eca1
 		<Header />
 	</header>
 	<main>
