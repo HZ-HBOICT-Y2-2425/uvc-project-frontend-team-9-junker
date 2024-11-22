@@ -1,4 +1,5 @@
 <script>
+	import '../app.css';
 	import Header from '$lib/components/Header.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 	import ViewSearch from '$lib/components/ViewSearch.svelte';
@@ -10,16 +11,15 @@
 </script>
 
 {#if $loadingState}
-<div class="bg-background h-screen w-screen flex flex-col flex-nowrap">
-	<header class="z-20 h-[10vh]">
+<div class="main-wrapper">
+	<header>
 		<Header />
 	</header>
-	<main class="z-10">
+	<main>
 			{#if $toggleState==="search"}
 				<ViewSearch />
 			{/if}
 			{#if $toggleState==="comms"}
-			
 				<ViewCommunities />
 			{/if}
 			{#if $toggleState==="chats"}
@@ -29,7 +29,7 @@
 				<ViewItems />
 			{/if}
 	</main>
-	<footer class="z-20 mt-auto h-[10vh]">
+	<footer class="">
 		<Footer />
 	</footer>
 </div>
@@ -38,4 +38,24 @@
 {/if}
 
 <style>
+	.main-wrapper {
+		background-color: var(--background-color);
+		height: 100vh;
+		width: 100vw;
+		display: flex;
+		flex-direction: column;
+		flex-wrap: nowrap;
+	}
+	header {
+		z-index: 2;
+		height: 10vh;
+	}
+	main {
+		z-index: 1;
+	}
+	footer {
+		z-index: 2;
+		margin-top: auto;
+		height: 10vh;
+	}
 </style>
