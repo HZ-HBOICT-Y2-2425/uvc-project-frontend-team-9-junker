@@ -60,7 +60,9 @@
       {/if}
       <span class="flex items-center">{title}</span>
       <!-- spacer div  -->
-      <div class="w-6 h-6"></div>
+      {#if $toggleState !== 'swipe'}
+        <div class="w-6 h-6"></div>
+      {/if}
     </div>
   </div>
 {/if}
