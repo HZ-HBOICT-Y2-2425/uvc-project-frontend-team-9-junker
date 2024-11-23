@@ -14,7 +14,7 @@
 
 {#if $loadingState}
     <div class:dark={$darkModeEnabled} class="bg-background dark:bg-background-dark h-screen w-screen flex flex-col flex-nowrap">
-        <header class="z-20 h-[10vh]">
+        <header>
             <Header />
         </header>
         <main class="z-10 flex flex-col items-center justify-center">
@@ -34,7 +34,7 @@
                 <ViewSwipe />
             {/if}
         </main>
-        <footer class="z-20 mt-auto h-[10vh]">
+        <footer>
             <Footer />
         </footer>
     </div>
