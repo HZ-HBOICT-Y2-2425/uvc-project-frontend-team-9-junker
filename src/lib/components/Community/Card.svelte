@@ -6,7 +6,7 @@
   export let tag = ""; // Optional, e.g., "Nearby"
 </script>
 
-<div class="relative bg-background dark:bg-background-dark rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer aspect-square">
+<div class="relative bg-background sm:w-[30vh] dark:bg-background-dark rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer aspect-square">
   <!-- Tag (Optional) -->
   {#if tag}
     <span class="absolute top-2 left-2 bg-green-500 text-white text-xs px-3 py-1 rounded-full z-10">
