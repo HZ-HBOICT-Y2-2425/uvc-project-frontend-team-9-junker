@@ -8,7 +8,7 @@
   let agreeToSustainability = false;
   let message = '';
 
-  const isStrongPassword = (password) => {
+  const isStrongPassword = (/** @type {string} */ password) => {
     const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return strongPasswordRegex.test(password);
   };
@@ -19,11 +19,11 @@
       return;
     }
 
-    if (!isStrongPassword(password)) {
-      message =
-        'Password must be at least 8 characters long and include uppercase letters, lowercase letters, numbers, and symbols.';
-      return;
-    }
+    // if (!isStrongPassword(password)) {
+    //   message =
+    //     'Password must be at least 8 characters long and include uppercase letters, lowercase letters, numbers, and symbols.';
+    //   return;
+    // }
 
     if (!age || age < 18) {
       message = 'You must be at least 18 years old to register.';
@@ -42,6 +42,7 @@
         body: JSON.stringify({ fullName, username, password, age }),
       });
       const data = await response.json();
+      console.log(data);
 
       if (response.ok) {
         message = 'Registration successful! Please log in.';
@@ -141,7 +142,7 @@
       </div>
       <button
         type="submit"
-        class="w-full py-2 px-4 bg-primary text-white font-semibold rounded-lg shadow-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+        class="w-full py-2 px-4 bg-primary text-black font-semibold rounded-lg shadow-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
       >
         Register
       </button>

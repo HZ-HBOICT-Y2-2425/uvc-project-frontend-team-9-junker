@@ -16,15 +16,22 @@
         }
 
         try {
-        const response = await fetch(`http://localhost:3012/user/${username}`, {
-            headers: {
-            Authorization: `Bearer ${token}`,
-            },
-        });
-        userData = await response.json();
-        // console.log(userData);
+            const response = await fetch(`http://localhost:3012/user/${username}`, {
+                headers: {
+                Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (response.status === 403) {
+                window.location.href = "/login";
+                return;
+            }
+
+            userData = await response.json();
+            console.log(userData);
         } catch (error) {
-        console.error("Error fetching user data:", error);
+            console.error("Error fetching user data:", error);
+            window.location.href = "/login";
         }
     };
 
