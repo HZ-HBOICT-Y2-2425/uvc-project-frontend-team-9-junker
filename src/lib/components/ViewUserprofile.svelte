@@ -8,7 +8,7 @@
       tags: ["HZ Students", "APV"]
     };
   
-    let profileImage = "https://via.placeholder.com/120";
+    let profileImage = "/icons/James_pic.svg";
   
     function handleImageUpload(event) {
       const file = event.target.files[0];
@@ -99,17 +99,33 @@
           </p>
           <button class="bg-green-500 text-white px-4 py-2 rounded text-sm hover:bg-green-600">
             View Trades
+            
           </button>
         </div>
       </div>
     </div>
   
     <!-- Footer -->
-    <div class="flex justify-between border-t-4 border-green-300 pt-4 mt-6">
-      <img src="/icons/search_icon.svg" alt="Search Icon" class="w-7 h-7 cursor-pointer" />
-      <img src="/icons/comunity_icon.svg" alt="Community Icon" class="w-7 h-7 cursor-pointer" />
-      <img src="/icons/chat_icon.svg" alt="Chat Icon" class="w-7 h-7 cursor-pointer" />
-      <img src="/icons/box_icon.svg" alt="Box Icon" class="w-7 h-7 cursor-pointer" />
-    </div>
+    <div class="flex justify-around items-center gap-4">
+        <button 
+          class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-full shadow-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500">
+          <img src="/icons/search_icon.svg" alt="Search Icon" class="w-7 h-7" />
+        </button>
+      
+        <button 
+          class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-full shadow-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500">
+          <a href="/community"><img src="/icons/comunity_icon.svg" alt="Community Icon" class="w-7 h-7" /></a>
+        </button>
+      
+        <button 
+          class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-full shadow-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500">
+          <img src="/icons/chat_icon.svg" alt="Chat Icon" class="w-7 h-7" />
+        </button>
+      
+        <button 
+          class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-full shadow-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500">
+          <img src="/icons/box_icon.svg" alt="Box Icon" class="w-7 h-7" />
+        </button>
+      </div>
   </div>
   
