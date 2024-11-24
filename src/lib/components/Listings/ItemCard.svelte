@@ -1,4 +1,6 @@
 <script>
+  import { goto } from "$app/navigation";
+
   export let item = {
     title: "Tennis Racket",
     image: "path-to-racket.jpg",
@@ -47,6 +49,7 @@
     <!-- Details Button -->
     <button
       class="px-4 py-2 bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm sm:text-base rounded-lg shadow-md hover:bg-gray-400 transition"
+      
     >
       Details
     </button>

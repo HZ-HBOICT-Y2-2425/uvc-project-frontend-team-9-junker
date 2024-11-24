@@ -1,35 +1,14 @@
 <script>
+// @ts-nocheck
+
   import Card from './Card.svelte';
+  import { Community } from "$lib/models/Community.js";
 
   const communities = [
-    {
-      title: "Middelburg",
-      image: "middelburg-church.JPG",
-      members: 218,
-      connections: 22,
-      tag: "Nearby"
-    },
-    {
-      title: "HZ Students",
-      image: "hz-middelburg.jpg",
-      members: 218,
-      connections: 22,
-      tag: ""
-    },
-    {
-      title: "APV Residents",
-      image: "APV-ruyter.jpg",
-      members: 218,
-      connections: 22,
-      tag: ""
-    },
-    {
-      title: "APV Residents",
-      image: "APV-ruyter.jpg",
-      members: 218,
-      connections: 22,
-      tag: ""
-    }
+    new Community("0", "Middelburg", "middelburg-church.JPG", 218, 22, "Nearby", ["0", "1", "2"]),
+    new Community("1", "HZ Students", "hz-middelburg.jpg", 218, 22, "", ["0", "1", "2"]),
+    new Community("2", "APV Residents", "APV-ruyter.jpg", 218, 22, "", ["0", "1", "2"]),
+    new Community("3", "APV Residents", "APV-ruyter.jpg", 218, 22, "", ["0", "1", "2"])
   ];
 </script>
 
@@ -73,11 +52,7 @@
     <!-- Community Cards -->
     {#each communities as community}
       <Card
-        title={community.title}
-        image={community.image}
-        members={community.members}
-        connections={community.connections}
-        tag={community.tag}
+        community = {community}
       />
     {/each}
   </div>

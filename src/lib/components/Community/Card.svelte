@@ -1,36 +1,47 @@
 <script>
-  export let title = "";
-  export let image = "";
-  export let members = 0;
-  export let connections = 0;
-  export let tag = ""; // Optional, e.g., "Nearby"
+// @ts-nocheck
+
+
+  import { goto } from "$app/navigation";
+  import { Community } from "$lib/models/Community.js";
+  import { communityObject } from "$lib/stores/AllPurposeStore";
+
+  export let community = new Community("", "", "", 0, 0, "", []);
+
+  const handleClick = () => {
+        $communityObject = community;
+        goto(`/community/${community.id}_${community.title}`);
+    };
 </script>
 
-<div class="relative bg-background sm:w-[30vh] dark:bg-background-dark rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer aspect-square">
+<button
+class="relative bg-background sm:w-[30vh] dark:bg-background-dark rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer aspect-square"
+on:click={() => handleClick()}
+>
   <!-- Tag (Optional) -->
-  {#if tag}
+  {#if community.tag}
     <span class="absolute top-2 left-2 bg-green-500 text-white text-xs px-3 py-1 rounded-full z-10">
-      {tag}
+      {community.tag}
     </span>
   {/if}
 
   <!-- Image Section -->
   <div class="h-full relative">
-    <img src={image} alt={title} class="w-full h-full object-cover" />
+    <img src={community.image} alt={community.title} class="w-full h-full object-cover" />
 
     <!-- Uniform Text Overlay -->
     <div class="absolute inset-x-0 bottom-0 bg-gray-800 bg-opacity-70 text-white p-4 h-[80px] md:h-[100px]">
-      <h3 class="text-sm md:text-lg font-semibold text-center truncate">{title}</h3>
+      <h3 class="text-sm md:text-lg font-semibold text-center truncate">{community.title}</h3>
       <div class="mt-2 flex items-center justify-center space-x-4 text-xs md:text-sm">
         <div class="flex items-center space-x-1">
           <i class="fa-solid fa-users"></i>
-          <span>{members}</span>
+          <span>{community.members}</span>
         </div>
         <div class="flex items-center space-x-1">
           <i class="fa-solid fa-arrows-rotate"></i>
-          <span>{connections}</span>
+          <span>{community.connections}</span>
         </div>
       </div>
     </div>
   </div>
-</div>
+</button>
