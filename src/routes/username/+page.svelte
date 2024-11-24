@@ -44,7 +44,7 @@
         <ViewUserprofile {userData}/>
     </div>
     <div class="mt-3">
-        <button class=" py-2 px-4 bg-primary text-white font-semibold rounded-lg shadow-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary" on:click={() => logout()}>
+        <button class=" py-2 px-4 bg-primary text-black font-semibold rounded-lg shadow-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary" on:click={() => logout()}>
             Log out</button>
     </div>
     {/if}
