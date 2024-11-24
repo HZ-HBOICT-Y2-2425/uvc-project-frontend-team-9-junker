@@ -7,7 +7,7 @@
     import { onMount } from 'svelte';
     onMount( () => {
         if(!$loadingState) {
-            mockLoading(1000);
+            mockLoading(500);
         }
     });
 

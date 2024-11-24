@@ -37,6 +37,8 @@
             <Footer />
         </footer>
     </div>
+
+
 {:else}
     <LoadingScreen />
 {/if}
