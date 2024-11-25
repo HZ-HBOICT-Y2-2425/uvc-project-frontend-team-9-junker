@@ -9,7 +9,6 @@
     import ViewSwipe from "$lib/components/ViewSwipe.svelte";
     import { toggleState, loadingState } from "$lib/stores/AllPurposeStore";
     import { darkModeEnabled } from "$lib/stores/AllPurposeStore";
-
 </script>
 
 {#if $loadingState}
@@ -43,4 +42,24 @@
 {/if}
 
 <style>
+    .main-wrapper {
+        background-color: var(--background-color);
+        height: 100vh;
+        width: 100vw;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+    }
+    header {
+        z-index: 2;
+        height: 10vh;
+    }
+    main {
+        z-index: 1;
+    }
+    footer {
+        z-index: 2;
+        margin-top: auto;
+        height: 10vh;
+    }
 </style>
