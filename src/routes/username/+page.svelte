@@ -16,15 +16,22 @@
         }
 
         try {
-        const response = await fetch(`http://localhost:3012/user/${username}`, {
-            headers: {
-            Authorization: `Bearer ${token}`,
-            },
-        });
-        userData = await response.json();
-        // console.log(userData);
+            const response = await fetch(`http://localhost:3012/user/${username}`, {
+                headers: {
+                Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (response.status === 403) {
+                window.location.href = "/login";
+                return;
+            }
+
+            userData = await response.json();
+            console.log(userData);
         } catch (error) {
-        console.error("Error fetching user data:", error);
+            console.error("Error fetching user data:", error);
+            window.location.href = "/login";
         }
     };
 
@@ -44,7 +51,7 @@
         <ViewUserprofile {userData}/>
     </div>
     <div class="mt-3">
-        <button class=" py-2 px-4 bg-primary text-white font-semibold rounded-lg shadow-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary" on:click={() => logout()}>
+        <button class=" py-2 px-4 bg-primary text-black font-semibold rounded-lg shadow-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary" on:click={() => logout()}>
             Log out</button>
     </div>
     {/if}
