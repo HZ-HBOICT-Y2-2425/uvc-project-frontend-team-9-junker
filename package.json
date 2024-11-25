@@ -11,11 +11,11 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.0.0",
-		"@sveltejs/kit": "^2.0.0",
+		"@sveltejs/kit": "^2.8.2",
 		"@sveltejs/vite-plugin-svelte": "^4.0.0",
 		"autoprefixer": "^10.4.20",
 		"postcss": "^8.4.49",
-		"svelte": "^5.0.0",
+		"svelte": "^5.2.7",
 		"svelte-check": "^4.0.0",
 		"tailwindcss": "^3.4.15",
 		"typescript": "^5.0.0",
@@ -23,6 +23,7 @@
 	},
 	"dependencies": {
 		"@material-icons/svg": "^1.0.33",
+		"@use-gesture/vanilla": "^10.3.1",
 		"svelte-gesture": "^0.1.4"
 	},
 	"description": "Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).",
