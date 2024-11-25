@@ -38,6 +38,7 @@
   
     <!-- Profile Section -->
     <div class="flex flex-col items-center mb-8">
+      <!-- svelte-ignore a11y_img_redundant_alt -->
       <img
         src={profileImage}
         alt="Profile Picture"
@@ -78,6 +79,7 @@
           
         
         <div class="flex items-center justify-between border p-4 rounded-lg mb-6">
+        <!-- svelte-ignore a11y_img_redundant_alt -->
         <img
           src="/icons/tenis.svg"
           alt="Item Image"
@@ -97,10 +99,8 @@
             {item.value}
             <img src="/icons/eye_icon.svg" alt="Eye Icon" class="w-5 h-5" />
           </p>
-          <button class="bg-green-500 text-white px-4 py-2 rounded text-sm hover:bg-green-600">
-            View Trades
-            
-          </button>
+          <button class="bg-green-500 text-white px-4 py-2 rounded text-sm hover:bg-green-600">View Trades</button>
+          <span class="text-[#5abf4a] text-lg">›</span>
         </div>
       </div>
     </div>
