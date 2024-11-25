@@ -4,19 +4,14 @@
 
   import { goto } from "$app/navigation";
   import { Community } from "$lib/models/Community.js";
-  import { communityObject } from "$lib/stores/AllPurposeStore";
 
   export let community = new Community("", "", "", 0, 0, "", []);
 
-  const handleClick = () => {
-        $communityObject = community;
-        goto(`/community/${community.id}_${community.title}`);
-    };
 </script>
 
 <button
 class="relative bg-background sm:w-[30vh] dark:bg-background-dark rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer aspect-square"
-on:click={() => handleClick()}
+on:click={() =>  goto(`/community/${community.id}_${community.title}`)}
 >
   <!-- Tag (Optional) -->
   {#if community.tag}

@@ -5,7 +5,6 @@
     import { darkModeEnabled } from "$lib/stores/AllPurposeStore";
     import { Community } from "$lib/models/Community.js";
     import { page } from "$app/stores";
-    import { communityObject } from "$lib/stores/AllPurposeStore";
     import ViewCommunityListings from "$lib/components/ViewCommunityItems.svelte";
     import { onMount } from "svelte";
     let communityId = $page.params.id;
@@ -79,10 +78,7 @@
         </sort-bar>
     <div class="text-text dark:text-text-dark overflow-y-auto" style="max-height: 100vh;">
         
-
         <div class="flex flex-col items-center p-4 space-y-8">
-    
-            
         
             <!-- Community Grid -->
             <!--TODO: Get rid of top margin-->
@@ -97,9 +93,6 @@
         </div>
     </div>
 </div>
-
-
-<!--ViewCommunityListings communityId={communityId} communityMock={$communityObject}/-->
 
 <style>
     .fa-blank {
