@@ -102,10 +102,6 @@
 <!--ViewCommunityListings communityId={communityId} communityMock={$communityObject}/-->
 
 <style>
-    .wrapper {
-        height: 100vh;
-        overflow-y: hidden;
-    }
     .fa-blank {
         visibility: hidden !important;
     }

@@ -23,12 +23,12 @@ on:click={() => navigate()}
         <h3 class="text-sm md:text-lg font-semibold text-center truncate">{item.name}</h3>
         <div class="mt-2 flex items-center justify-center space-x-4 text-xs md:text-sm">
         <div class="flex items-center space-x-1">
-            <i class="fa-solid fa-users"></i>
-            <span>{item.name}</span>
+            <i class="fa-solid fa-eye text-white dark:text-text-dark"></i>
+            <span>{item.views}</span>
         </div>
         <div class="flex items-center space-x-1">
-            <i class="fa-solid fa-arrows-rotate"></i>
-            <span>{item.views}</span>
+            <i class="fa-solid fa-exclamation"></i>
+            <span>{item.interested}</span>
         </div>
         </div>
     </div>
