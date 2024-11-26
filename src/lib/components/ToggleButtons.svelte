@@ -1,24 +1,22 @@
 <script>
 // @ts-nocheck
-    import { toggleState } from "$lib/stores/AllPurposeStore";
+    import { goto } from '$app/navigation';
 
-    function toggle(name) {
-        $toggleState = name;
-    }
+    const navigate = (route) => {
+        goto(route);
+    };
 </script>
 
 <div class="flex justify-center items-center absolute text-center">
   <button
     class="w-16 m-2 p-3 text-base border-0 rounded cursor-pointer text-secondary-500 dark:text-secondary-dark-500 bg-background dark:bg-background-dark active:bg-secondary-500 dark:active:bg-secondary-dark-500 hover:bg-secondary-500 dark:hover:bg-secondary-dark-500 active:text-background dark:text-secondary-dark-500 hover:text-background dark:hover:text-text-dark"
-    on:click={() => toggle("comms")}
-    class:active={$toggleState === "comms"}
+    on:click={() => navigate("/community")}
     aria-label="Communities">
     <i class="fa-solid fa-users text-3xl"></i>
   </button>
   <button
     class="w-16 m-2 p-3 text-base border-0 rounded cursor-pointer text-secondary-500 dark:text-secondary-dark-500 bg-background dark:bg-background-dark active:bg-secondary-500 dark:active:bg-secondary-dark-500 hover:bg-secondary-500 dark:hover:bg-secondary-dark-500 active:text-background dark:text-secondary-dark-500 hover:text-background dark:hover:text-text-dark"
-    on:click={() => toggle("search")}
-    class:active={$toggleState === "search"}
+    on:click={() => navigate("/search")}
     aria-label="Search">
     <i class="fa-solid fa-magnifying-glass text-4xl"></i>
   </button>
@@ -31,20 +29,14 @@
   <div class="w-16 h-16"></div>
   <button
     class="w-16 m-2 p-3 text-base border-0 rounded cursor-pointer text-secondary-500 dark:text-secondary-dark-500 bg-background dark:bg-background-dark active:bg-secondary-500 dark:active:bg-secondary-dark-500 hover:bg-secondary-500 dark:hover:bg-secondary-dark-500 active:text-background dark:text-secondary-dark-500 hover:text-background dark:hover:text-text-dark"
-    on:click={() => toggle("chats")}
-    class:active={$toggleState === "chats"}
-    aria-label="Chats">
-    <i class="fa-solid fa-comment text-4xl"></i>
+    on:click={() => navigate("/swipe")}
+    aria-label="Swipe">
+    <i class="fa-solid fa-rotate text-4xl"></i>
   </button>
   <button
     class="w-16 m-2 p-3 text-base border-0 rounded cursor-pointer text-secondary-500 dark:text-secondary-dark-500 bg-background dark:bg-background-dark active:bg-secondary-500 dark:active:bg-secondary-dark-500 hover:bg-secondary-500 dark:hover:bg-secondary-dark-500 active:text-background dark:text-secondary-dark-500 hover:text-background dark:hover:text-text-dark"
-    on:click={() => toggle("items")}
-    class:active={$toggleState === "items"}
-    aria-label="Items">
-    <i class="fa-solid fa-list text-4xl"></i>
+    on:click={() => navigate("/chats")}
+    aria-label="Chats">
+    <i class="fa-solid fa-comment text-4xl"></i>
   </button>
 </div>
-
-
-<style>
-</style>

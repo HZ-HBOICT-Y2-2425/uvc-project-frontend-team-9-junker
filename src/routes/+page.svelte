@@ -1,65 +1,43 @@
 <script>
-    import Header from "$lib/components/Header.svelte";
-    import Footer from "$lib/components/Footer.svelte";
-    import ViewSearch from "$lib/components/ViewSearch.svelte";
-    import ViewCommunities from "$lib/components/ViewCommunities.svelte";
-    import ViewChats from "$lib/components/ViewChats.svelte";
-    import ViewItems from "$lib/components/ViewItems.svelte";
-    import LoadingScreen from "$lib/components/LoadingScreen.svelte";
-    import ViewSwipe from "$lib/components/ViewSwipe.svelte";
-    import { toggleState, loadingState } from "$lib/stores/AllPurposeStore";
-    import { darkModeEnabled } from "$lib/stores/AllPurposeStore";
+  import { onMount } from 'svelte';
+  import { goto } from '$app/navigation';
+  import { tick } from 'svelte';
+  import { darkModeEnabled } from "$lib/stores/AllPurposeStore";
+
+  let countdown = 3;
+
+  onMount(async () => {
+    while (countdown > 0) {
+      await tick();
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      countdown--;
+    }
+    goto('/swipe');
+  });
+
+  const redirectToJunker = () => {
+    goto('/swipe');
+  };
 </script>
 
-{#if $loadingState}
-    <div class:dark={$darkModeEnabled} class="bg-background dark:bg-background-dark h-screen w-screen flex flex-col flex-nowrap">
-        <header>
-            <Header />
-        </header>
-        <main class="z-10 flex flex-col items-center justify-center">
-            {#if $toggleState === "search"}
-                <ViewSearch />
-            {/if}
-            {#if $toggleState === "comms"}
-                <ViewCommunities />
-            {/if}
-            {#if $toggleState === "chats"}
-                <ViewChats />
-            {/if}
-            {#if $toggleState === "items"}
-                <ViewItems />
-            {/if}
-            {#if $toggleState === "swipe"}
-                <ViewSwipe />
-            {/if}
-        </main>
-        <footer>
-            <Footer />
-        </footer>
-    </div>
-{:else}
-    <LoadingScreen />
-{/if}
+<div class:dark={$darkModeEnabled} class="bg-background dark:bg-background-dark h-screen w-screen flex flex-col items-center justify-center text-text dark:text-text-dark">
+  <h1 class="text-2xl text-center font-bold mb-4">You will be redirected to Junker in {countdown}...</h1>
+  <button on:click={redirectToJunker} class="mt-4 px-4 py-2 bg-primary-500 dark:bg-primary-dark-500 text-white rounded-lg shadow-md hover:bg-primary-700 dark:hover:bg-primary-dark-700">
+    Go to Junker
+  </button>
+</div>
 
 <style>
-    .main-wrapper {
-        background-color: var(--background-color);
-        height: 100vh;
-        width: 100vw;
-        display: flex;
-        flex-direction: column;
-        flex-wrap: nowrap;
-    }
-    header {
-        z-index: 2;
-        height: 10vh;
-    }
-    main {
-        z-index: 1;
-    }
-    footer {
-        z-index: 2;
-        margin-top: auto;
-        height: 10vh;
-    }
+  .bg-background {
+    background-color: var(--background-color);
+  }
+  .dark\:bg-background-dark {
+    background-color: var(--background-dark);
+  }
+  .text-text {
+    color: var(--text-color);
+  }
+  .dark\:text-text-dark {
+    color: var(--text-dark);
+  }
 </style>
