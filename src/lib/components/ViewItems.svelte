@@ -1,4 +1,5 @@
 <script>
+  // depricated file
   import PublicProfile from './Listings/PublicProfile.svelte';
   import ItemList from './Listings/ItemList.svelte';
   import SavedListings from './Listings/SavedListings.svelte';
