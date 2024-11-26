@@ -1,9 +1,13 @@
 <script>
+    import { savedListingsStore } from '$lib/stores/savedStore';
+    import { onMount } from 'svelte';
+    import SavedListings from './Listings/SavedListings.svelte';
+    import { goto } from '$app/navigation';
+
     export let userData;
     const user = userData.user;
     console.log(user);
 
-    let username = user.fullname;
     let badges = ["Beginner", "Level 1"];
     let item = {
         name: "Tennis Racket",
@@ -11,8 +15,6 @@
         value: 12,
         tags: ["HZ Students", "APV"],
     };
-
-    let profileImage = user.profile_pic;
 
     /**
      * @param {{ target: { files: any[]; }; }} event
@@ -22,16 +24,29 @@
         if (file) {
             const reader = new FileReader();
             reader.onload = (e) => {
-                profileImage = e.target.result;
+                user.profile_pic = e.target.result;
             };
             reader.readAsDataURL(file);
         }
     }
 
+    let savedListings = [];
+
+    // Subscribe to the saved listings store on mount
+    onMount(() => {
+        const unsubscribe = savedListingsStore.subscribe((saved) => {
+        savedListings = saved; // Reactively update the local array
+        });
+
+        return () => {
+        unsubscribe(); // Clean up the subscription when the component unmounts
+        };
+    });
+
     const logout = () => {
             localStorage.removeItem("token");
             localStorage.removeItem("username");
-            window.location.href = "/login";
+            goto("/login");
         };
 </script>
 
@@ -39,29 +54,15 @@
     <!-- Profile Section -->
     <div class="flex flex-col items-center mb-8">
         <!-- svelte-ignore a11y_img_redundant_alt -->
-        <img
-        src={profileImage}
-        alt="Profile Picture"
-        class="w-32 h-32 rounded-full object-cover mb-2"
-        />
-
-            <label
-            for="profile-upload"
-            class="text-green-500 underline cursor-pointer text-sm"
-            >
-            Change Profile Picture
+        <img src={user.profile_pic} alt="Profile Picture" class="w-32 h-32 rounded-full object-cover mb-2" />
+            <label for="profile-upload" class="text-green-500 underline cursor-pointer text-sm" >
+                Change Profile Picture
             </label>
-            <input
-            type="file"
-            id="profile-upload"
-            accept="image/*"
-            on:change={handleImageUpload}
-            class="hidden"
-            />
+            <input type="file" id="profile-upload" accept="image/*" on:change={handleImageUpload} class="hidden" />
 
     </div>
 
-    <h2 class="text-center text-2xl font-bold mb-4">{username}</h2>
+    <h2 class="text-center text-2xl font-bold mb-4">@{user.username}</h2>
 
     <!-- Badges -->
     <div class="flex justify-center gap-3 mb-8">
@@ -126,6 +127,7 @@
         </div>
         </div>
     </div>
+
     <div class="mt-3">
         <button class=" py-2 px-4 bg-primary text-black font-semibold rounded-lg shadow-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary" on:click={() => logout()}>
             Log out</button>

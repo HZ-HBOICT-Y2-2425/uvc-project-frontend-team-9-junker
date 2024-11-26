@@ -1,6 +1,6 @@
 <script>
   import { goto } from '$app/navigation'; // Import the goto function
-  import { savedListingsStore } from '$lib/stores/AllPurposeStore';
+  import { savedListingsUser } from '$lib/stores/AllPurposeStore';
   /** @type {Array<{image: string, views: number, saves: number, username: string}>} */
   export let savedListings = [];
 
@@ -9,8 +9,8 @@
    * @param {string} username
    */
   function gotoUser(username) {
-    // Set the savedListingsStore with the saved listings
-    savedListingsStore.set(username);
+    // Set the savedListingsUser with the saved listings
+    savedListingsUser.set(username);
     goto(`/public_profile`); // Redirect to the profile page using the username
   }
 </script>

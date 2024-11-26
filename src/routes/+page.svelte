@@ -6,25 +6,27 @@
 
 	let countdown = 3;
 
+	// user authentication
+	let userData = null;
+	const loadUserData = async () => {
+		const fetchUserData = (await import("$lib/utils/authUtils")).default;
+		userData = await fetchUserData();
+	}
+
 	onMount(async () => {
 		while (countdown > 0) {
 		await tick();
 		await new Promise(resolve => setTimeout(resolve, 1000));
 		countdown--;
 		}
+		loadUserData();
 		goto('/swipe');
 	});
 
 	const redirectToJunker = () => {
 		goto('/swipe');
 	};
-	// user authentication
-	// let userData = null;
-	// 	const loadUserData = async () => {
-	// 		const fetchUserData = (await import("$lib/utils/authUtils")).default;
-	// 		userData = await fetchUserData();
-	// 	};
-	// 	loadUserData();
+	
 </script>
 
 <div class:dark={$darkModeEnabled} class="bg-background dark:bg-background-dark h-screen w-screen flex flex-col items-center justify-center text-text dark:text-text-dark">

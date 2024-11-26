@@ -1,17 +1,17 @@
 <script lang="ts">
     import JunkerLettering from "$lib/components/JunkerLettering.svelte";
-    import { savedListingsStore } from "$lib/stores/AllPurposeStore";
+    import { savedListingsUser } from "$lib/stores/AllPurposeStore";
     import { get } from 'svelte/store';
     import { browser } from '$app/environment';
     import { goto } from '$app/navigation';
     import ViewPublicprofile from "$lib/components/ViewPublicprofile.svelte";
 
-    let userData = null;
+    let userData: null = null;
     const fetchUserData = async () => {
         if (!browser) return null;
 
         // Use `get` to access the current value of the store
-        const username = get(savedListingsStore);
+        const username = get(savedListingsUser);
         console.log(username);
 
         try {
