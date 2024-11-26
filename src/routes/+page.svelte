@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import Header from "$lib/components/Header.svelte";
     import Footer from "$lib/components/Footer.svelte";
     import ViewSearch from "$lib/components/ViewSearch.svelte";
@@ -9,6 +9,15 @@
     import ViewSwipe from "$lib/components/ViewSwipe.svelte";
     import { toggleState, loadingState } from "$lib/stores/AllPurposeStore";
     import { darkModeEnabled } from "$lib/stores/AllPurposeStore";
+	
+	// user authentication
+	let userData = null;
+	const loadUserData = async () => {
+		const fetchUserData = (await import("$lib/utils/authUtils")).default;
+		userData = await fetchUserData();
+	};
+	loadUserData();
+
 </script>
 
 {#if $loadingState}
@@ -42,14 +51,6 @@
 {/if}
 
 <style>
-    .main-wrapper {
-        background-color: var(--background-color);
-        height: 100vh;
-        width: 100vw;
-        display: flex;
-        flex-direction: column;
-        flex-wrap: nowrap;
-    }
     header {
         z-index: 2;
         height: 10vh;

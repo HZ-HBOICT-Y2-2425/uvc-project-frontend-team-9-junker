@@ -35,6 +35,8 @@
         const path = $page.url.pathname;
         if (path === '/username') {
             title = "Profile";
+        } else if (path === '/public_profile') {
+            title = "Profile";
         } else if (path === '/notifications') {
             title = "Notifications";
         }

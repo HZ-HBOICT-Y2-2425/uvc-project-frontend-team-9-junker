@@ -28,16 +28,19 @@
 
   const savedListings = [
     {
+      username: "zhly",
       image: "path-to-saved-item1.jpg",
       views: 15,
       saves: 4
     },
     {
+      username: "zhly",
       image: "path-to-saved-item2.jpg",
       views: 8,
       saves: 2
     },
     {
+      username: "zhly",
       image: "path-to-saved-item3.jpg",
       views: 30,
       saves: 10

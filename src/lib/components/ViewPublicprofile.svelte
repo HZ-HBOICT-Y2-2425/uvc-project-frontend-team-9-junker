@@ -1,9 +1,8 @@
 <script>
     export let userData;
-    const user = userData.user;
+    const user = userData;
     console.log(user);
 
-    let username = user.fullname;
     let badges = ["Beginner", "Level 1"];
     let item = {
         name: "Tennis Racket",
@@ -11,28 +10,6 @@
         value: 12,
         tags: ["HZ Students", "APV"],
     };
-
-    let profileImage = user.profile_pic;
-
-    /**
-     * @param {{ target: { files: any[]; }; }} event
-     */
-    function handleImageUpload(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                profileImage = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-    }
-
-    const logout = () => {
-            localStorage.removeItem("token");
-            localStorage.removeItem("username");
-            window.location.href = "/login";
-        };
 </script>
 
 <div class="max-w-lg mx-auto bg-white shadow-lg rounded-lg p-6">
@@ -40,28 +17,13 @@
     <div class="flex flex-col items-center mb-8">
         <!-- svelte-ignore a11y_img_redundant_alt -->
         <img
-        src={profileImage}
+        src={user.profile_pic}
         alt="Profile Picture"
         class="w-32 h-32 rounded-full object-cover mb-2"
         />
-
-            <label
-            for="profile-upload"
-            class="text-green-500 underline cursor-pointer text-sm"
-            >
-            Change Profile Picture
-            </label>
-            <input
-            type="file"
-            id="profile-upload"
-            accept="image/*"
-            on:change={handleImageUpload}
-            class="hidden"
-            />
-
     </div>
 
-    <h2 class="text-center text-2xl font-bold mb-4">{username}</h2>
+    <h2 class="text-center text-2xl font-bold mb-4">{user.username}</h2>
 
     <!-- Badges -->
     <div class="flex justify-center gap-3 mb-8">
@@ -82,17 +44,9 @@
     <div class="border-t-2 border-[#5abf4a]">
         <div class="relative flex justify-center items-center mb-6">
         <!-- Centered "My Items" -->
-        <h3 class="text-2xl font-semibold text-[#5abf4a]">My Items</h3>
-
-        <!-- Saved Button with Arrow -->
-        <div class="absolute right-0 flex items-center space-x-1">
-            <button class="text-sm text-[#a7e5a5] underline hover:text-[#5abf4a]"
-            >Saved</button
-            >
-            <span class="text-[#5abf4a] text-lg">›</span>
+        <h3 class="text-2xl font-semibold text-[#5abf4a]">Listed Items</h3>
         </div>
-        </div>
-
+        <!-- Item Card -->
         <div class="flex items-center justify-between border p-4 rounded-lg mb-6">
         <!-- svelte-ignore a11y_img_redundant_alt -->
         <img
@@ -126,9 +80,4 @@
         </div>
         </div>
     </div>
-    <div class="mt-3">
-        <button class=" py-2 px-4 bg-primary text-black font-semibold rounded-lg shadow-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary" on:click={() => logout()}>
-            Log out</button>
-    </div>
-    
 </div>

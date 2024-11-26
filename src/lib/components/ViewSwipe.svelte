@@ -43,7 +43,7 @@
 
     const navigateToSaved = () => {
         // Navigate to the profile page
-        goto('/profile');
+        goto('/username');
     };
 
     const bindGesture = (el, index) => {
