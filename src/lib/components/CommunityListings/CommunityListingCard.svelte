@@ -2,10 +2,12 @@
     // @ts-nocheck    
     import { goto } from "$app/navigation";
     import { Item } from "$lib/models/Item";
+    import { User } from "$lib/models/User";
 
     const images = import.meta.glob(['$lib/assets/images/**.jpg', '$lib/assets/images/**.png', '$lib/assets/images/**.svg', '$lib/assets/images/**.webp', '$lib/assets/images/**.avif'], { eager: true, as: 'url' });
 
-    export let item = new Item("0", "0", "noname", "", "default.png", "", false, 0, 0);
+    export let item = new Item(0, 0, "noname", "", "default.png", "", false, 0, 0);
+    export let owner = new User(0, "unknown", "blank-pfp.webp");
 
     const navigate = () => {
         goto(`/item_details/${item.id}_${item.name}`);
@@ -18,29 +20,8 @@ on:click={() => navigate()}
 >
     <!-- Image Section -->
     <div class="card-content">
-        <!--img src={item.picture} alt={item.name} class="w-full h-full object-cover" /-->
         <!--Method for importing images: https://stackoverflow.com/questions/77934659/how-can-i-dynamically-import-images-stored-in-lib-within-a-component-in-svelte -->
-        <!--img src={images[`/src/lib/assets/images/${item.picture}`]} alt={item.name} class="w-full h-full object-cover" /-->
         <img src={images[`/src/lib/assets/images/${item.picture}`]} alt={item.name} class="card-image" />
-
-
-        <!-- Uniform Text Overlay -->
-        <!--div class="absolute inset-x-0 bottom-0 bg-gray-800 bg-opacity-70 text-white p-4 h-[80px] md:h-[100px]"-->
-        <!--div class="absolute inset-x-0 bottom-0 bg-white bg-opacity-100 text-black p-4 h-[40px] md:h-[100px]">
-            <h3 class="text-sm md:text-lg font-semibold text-center truncate">{item.name}</h3>
-            <div class="mt-2 flex items-center justify-center space-x-4 text-xs md:text-sm">
-            <div class="flex items-center space-x-1">
-                <i class="fa-solid fa-eye text-white dark:text-text-dark"></i>
-                <span>{item.views}</span>
-            </div>
-            <div class="flex items-center space-x-1">
-                <i class="fa-solid fa-exclamation"></i>
-                <span>{item.interested}</span>
-            </div>
-            </div>
-        </div-->
-
-        
 
         <div class="card-text">
             <div class="item-name">
@@ -48,6 +29,10 @@ on:click={() => navigate()}
             </div>
             <div class="item-desc">
                 {item.description}
+            </div>
+            <img src={images[`/src/lib/assets/images/${owner.pfp}`]} alt={owner.pfp} class="pfp">
+            <div class="item-name">
+                {owner.name}
             </div>
         </div>
     </div>
@@ -65,7 +50,7 @@ on:click={() => navigate()}
         flex-shrink: 0;
         object-fit:cover;
         overflow: hidden;
-        flex-grow: 1;
+          flex-grow: 1;
         flex-shrink: 1;
     }
     .card-text {
@@ -76,7 +61,7 @@ on:click={() => navigate()}
         display: flex;
         flex-flow: column nowrap;
         overflow: hidden;
-        padding: 0px 3px;
+        padding: 0px 3px 3px 3px;
         flex-grow: 0;
         flex-shrink: 0;
     }
@@ -85,6 +70,7 @@ on:click={() => navigate()}
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
+        margin-bottom: -5px;
     }
     .item-desc {
         text-align: left;
@@ -92,6 +78,14 @@ on:click={() => navigate()}
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
+    }
+    .pfp {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+
+        object-fit: cover;
+        object-position: center right;
     }
 </style>
     

@@ -1,6 +1,6 @@
 export class Item {
     // @ts-ignore
-    constructor(id, userid, name, description, picture, action, available, views, interested) {
+    constructor(id, userid, name, description, picture, action, available, views, interested, date) {
       this.id = id;
       this.userid = userid;
       this.name = name;
@@ -10,6 +10,7 @@ export class Item {
       this.available = available;
       this.views = views;
       this.interested = interested;
+      this.date = date; //ISO string format
     }
   
     // Add methods or getters if needed

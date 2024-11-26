@@ -10,9 +10,13 @@
     let communityId = $page.params.id;
     let communityName = $page.params.title;
     export let data;
-    let itemsArray = data.items;
+    let { items } = data;
+    let { users } = data;
+    let item = items.find((item) => item.id == $page.params.id);
+    let owner = users.find((user) => user.id == item.userid);
+    
 
-    let sortParams = ["name", "views", "interested"];
+    let sortParams = ["name", "date", "interested"];
     let sortBy = {col: "name", ascending: false};
 
     $: sort = (column) => {
@@ -34,7 +38,7 @@
 			? 1 * sortModifier 
 			: 0;
 		
-		itemsArray = itemsArray.sort(sort);
+		items = items.sort(sort);
 	}
 
     onMount(() => {
@@ -65,12 +69,12 @@
                 {param}
                 {#if sortBy.col === `${param}`}
                     {#if sortBy.ascending == true}
-                        <i class="m-0 text-secondary-500 dark:text-secondary-dark-500 m-4 fa-solid fa-sort-down"></i>
+                        <i class="mt-4 mb-4 mr-0 ml-1 text-secondary-500 dark:text-secondary-dark-500 fa-solid fa-sort-down"></i>
                     {:else if sortBy.ascending == false}
-                        <i class="m-0 text-secondary-500 dark:text-secondary-dark-500 m-4 fa-solid fa-sort-up"></i>
+                        <i class="mt-4 mb-4 mr-0 ml-1 text-secondary-500 dark:text-secondary-dark-500 fa-solid fa-sort-up"></i>
                     {/if}
                 {:else}
-                    <i class="m-0 text-secondary-500 dark:text-secondary-dark-500 m-4 fa-solid fa-sort-up fa-blank"></i>
+                    <i class="mt-4 mb-4 mr-0 ml-1 text-secondary-500 dark:text-secondary-dark-500 fa-solid fa-sort-up fa-blank"></i>
                 {/if}
             </button>
         {/each}
@@ -83,9 +87,10 @@
             <!--TODO: Get rid of top margin-->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 w-full">
                 <!-- Community Cards -->
-                {#each itemsArray as item}
+                {#each items as item}
                 <CommunityListingCard
                     item = {item}
+                    owner = {owner}
                 />
                 {/each}
             </div>
