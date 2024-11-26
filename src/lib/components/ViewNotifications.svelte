@@ -1,6 +1,6 @@
 <script>
-  import SubHeader from "./SubHeader.svelte";
+    import SubHeaderV2 from "./SubHeaderV2.svelte";
 </script>
 
-<SubHeader />
+<SubHeaderV2 title='Notifications' />
 <div>Welcome to the Notifications-View</div>
