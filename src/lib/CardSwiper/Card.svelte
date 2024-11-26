@@ -274,7 +274,7 @@
     background: rgba(0, 0, 0, 0.7);
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     z-index: 1000;
     overflow-y: auto;
 }
@@ -282,16 +282,15 @@
 .overlay-content-wrapper {
     position: relative;
     background: white;
-    padding: 20px;
+    padding: 25px;
     border-radius: 10px;
-    width: 90%;
-    max-width: 350px;
+    width: 100%;
+    max-width: 450px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
     max-height: 90vh;
     overflow-y: auto;
-    margin-top: 3%
 }
 
 .close-overlay {
