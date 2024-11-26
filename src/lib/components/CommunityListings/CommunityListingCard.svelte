@@ -3,6 +3,8 @@
     import { goto } from "$app/navigation";
     import { Item } from "$lib/models/Item";
 
+    const images = import.meta.glob(['$lib/assets/images/**.jpg', '$lib/assets/images/**.png', '$lib/assets/images/**.svg', '$lib/assets/images/**.webp', '$lib/assets/images/**.avif'], { eager: true, as: 'url' });
+
     export let item = new Item("0", "0", "noname", "", "default.png", "", false, 0, 0);
 
     const navigate = () => {
@@ -16,7 +18,10 @@ on:click={() => navigate()}
 >
     <!-- Image Section -->
     <div class="h-full relative">
-    <img src={item.picture} alt={item.name} class="w-full h-full object-cover" />
+    <!--img src={item.picture} alt={item.name} class="w-full h-full object-cover" /-->
+    <!--Method for importing images: https://stackoverflow.com/questions/77934659/how-can-i-dynamically-import-images-stored-in-lib-within-a-component-in-svelte -->
+    <img src={images[`/src/lib/assets/images/${item.picture}`]} alt={item.name} class="w-full h-full object-cover" />
+
 
     <!-- Uniform Text Overlay -->
     <div class="absolute inset-x-0 bottom-0 bg-gray-800 bg-opacity-70 text-white p-4 h-[80px] md:h-[100px]">
