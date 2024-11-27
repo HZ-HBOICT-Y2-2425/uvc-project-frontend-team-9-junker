@@ -1,6 +1,6 @@
 <script>
-  import { goto } from "$app/navigation";
-
+    import { goto } from "$app/navigation";
+    import { authStore } from "$lib/stores/authStore";
     let username = '';
     let password = '';
     let message = '';
@@ -13,20 +13,20 @@
           body: JSON.stringify({ username, password }),
         });
         const data = await response.json();
-        console.log(data.accessToken);
-        console.log(username);
-  
+
         if (response.ok) {
-          localStorage.setItem('token', data.accessToken);
-          localStorage.setItem('username', JSON.stringify(username));
+          authStore.set({
+            username: username,
+            isAuthenticated: !!data.accessToken,
+            token: data.accessToken,
+          });
           message = 'Login successful!';
-          window.location.href = '/username'; // Redirect to the dashboard
+          goto('/');
         } else {
           message = data.error;
         }
       } catch (error) {
-        message = 'An error occurred during login.';
-        console.error(error);
+        message = error.message;
       }
     };
   </script>
@@ -63,7 +63,7 @@
         </div>
         <button
           type="submit"
-          class="w-full py-2 px-4 bg-primary text-white font-semibold rounded-lg shadow-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+          class="w-full py-2 px-4 bg-primary text-black font-semibold rounded-lg shadow-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
         >
           Log In
         </button>

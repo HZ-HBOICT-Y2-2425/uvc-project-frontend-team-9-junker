@@ -1,41 +1,52 @@
 <script>
-	import Header from '$lib/components/Header.svelte';
-	import Footer from '$lib/components/Footer.svelte';
-	import ViewSearch from '$lib/components/ViewSearch.svelte';
-	import ViewCommunities from '$lib/components/ViewCommunities.svelte';
-	import ViewChats from '$lib/components/ViewChats.svelte';
-	import ViewItems from '$lib/components/ViewItems.svelte';
-	import LoadingScreen from '$lib/components/LoadingScreen.svelte';
-    import { toggleState, loadingState } from "$lib/stores/AllPurposeStore";
+	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
+	import { tick } from 'svelte';
+	import { darkModeEnabled } from "$lib/stores/AllPurposeStore";
+
+	let countdown = 3;
+
+	// user authentication
+	let userData = null;
+	const loadUserData = async () => {
+		const fetchUserData = (await import("$lib/utils/authUtils")).default;
+		userData = await fetchUserData();
+	}
+
+	onMount(async () => {
+		while (countdown > 0) {
+		await tick();
+		await new Promise(resolve => setTimeout(resolve, 1000));
+		countdown--;
+		}
+		loadUserData();
+		goto('/swipe');
+	});
+
+	const redirectToJunker = () => {
+		goto('/swipe');
+	};
+	
 </script>
 
-{#if $loadingState}
-<div class="bg-background h-screen w-screen flex flex-col flex-nowrap">
-	<header class="z-20 h-[10vh]">
-		<Header />
-	</header>
-	<main class="z-10">
-			{#if $toggleState==="search"}
-				<ViewSearch />
-			{/if}
-			{#if $toggleState==="comms"}
-			
-				<ViewCommunities />
-			{/if}
-			{#if $toggleState==="chats"}
-				<ViewChats />
-			{/if}
-			{#if $toggleState==="items"}
-				<ViewItems />
-			{/if}
-	</main>
-	<footer class="z-20 mt-auto h-[10vh]">
-		<Footer />
-	</footer>
+<div class:dark={$darkModeEnabled} class="bg-background dark:bg-background-dark h-screen w-screen flex flex-col items-center justify-center text-text dark:text-text-dark">
+  <h1 class="text-2xl text-center font-bold mb-4">You will be redirected to Junker in {countdown}...</h1>
+  <button on:click={redirectToJunker} class="mt-4 px-4 py-2 bg-primary-500 dark:bg-primary-dark-500 text-white rounded-lg shadow-md hover:bg-primary-700 dark:hover:bg-primary-dark-700">
+    Go to Junker
+  </button>
 </div>
-{:else}
-	<LoadingScreen />
-{/if}
 
 <style>
+	.bg-background {
+		background-color: var(--background-color);
+	}
+	.dark\:bg-background-dark {
+		background-color: var(--background-dark);
+	}
+	.text-text {
+		color: var(--text-color);
+	}
+	.dark\:text-text-dark {
+		color: var(--text-dark);
+	}
 </style>
