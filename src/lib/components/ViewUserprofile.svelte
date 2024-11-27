@@ -46,7 +46,7 @@
     const logout = () => {
             localStorage.removeItem("token");
             localStorage.removeItem("username");
-            goto("/login"); // use replaceState to prevent adding to the browser history
+            goto("/login");
         };
 </script>
 
@@ -69,6 +69,13 @@
                 <h2 class="text-center text-2xl font-bold mb-4 md:mb-0 md:text-left md:self-center">
                     @{user.username}
                 </h2>
+                <!-- Divider -->
+                <div class="my-2"></div>
+                
+                <!-- Change Password -->
+                <a href="/Change-Password" class="text-green-500 underline cursor-pointer text-sm">
+                Change Password
+                </a>
             </div>
     
             <!-- Badges -->
@@ -88,8 +95,6 @@
         </div>
     </div>
     
-    
-
     <!-- Item Section -->
     <div class="border-t-2 border-[#5abf4a]">
         <div class="relative flex justify-center items-center mb-6 md:justify-between">
