@@ -21,7 +21,6 @@
             console.log(userData);
         } catch (error) {
             console.error("Error fetching user data:", error);
-            goto("/login");
             return null;
         }
     }
