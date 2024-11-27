@@ -1,10 +1,10 @@
 <script>
-  import { savedListingsStore } from "$lib/stores/savedStore";
-  import { onMount } from "svelte";
-  import SavedListings from "./Listings/SavedListings.svelte";
-  import { goto } from "$app/navigation";
-  import ProfileTabs from "./Profile/ProfileTabs.svelte";
-  import ProfileDetails from "./Profile/ProfileDetails.svelte";
+    import { savedListingsStore } from "$lib/stores/savedStore";
+    import { onMount } from "svelte";
+    import SavedListings from "./Listings/SavedListings.svelte";
+    import { goto } from "$app/navigation";
+    import ProfileTabs from "./Profile/ProfileTabs.svelte";
+    import ProfileDetails from "./Profile/ProfileDetails.svelte";
 
   export let userData;
   const user = userData.user;
@@ -71,3 +71,4 @@
     >
   </div>
 </div>
+
