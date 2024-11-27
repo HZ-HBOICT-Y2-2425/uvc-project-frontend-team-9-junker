@@ -1,23 +1,32 @@
 <script>
-  import { onMount } from 'svelte';
-  import { goto } from '$app/navigation';
-  import { tick } from 'svelte';
-  import { darkModeEnabled } from "$lib/stores/AllPurposeStore";
+	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
+	import { tick } from 'svelte';
+	import { darkModeEnabled } from "$lib/stores/AllPurposeStore";
 
-  let countdown = 3;
+	let countdown = 3;
 
-  onMount(async () => {
-    while (countdown > 0) {
-      await tick();
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      countdown--;
-    }
-    goto('/swipe');
-  });
+	// user authentication
+	let userData = null;
+	const loadUserData = async () => {
+		const fetchUserData = (await import("$lib/utils/authUtils")).default;
+		userData = await fetchUserData();
+	}
 
-  const redirectToJunker = () => {
-    goto('/swipe');
-  };
+	onMount(async () => {
+		while (countdown > 0) {
+		await tick();
+		await new Promise(resolve => setTimeout(resolve, 1000));
+		countdown--;
+		}
+		loadUserData();
+		goto('/swipe');
+	});
+
+	const redirectToJunker = () => {
+		goto('/swipe');
+	};
+	
 </script>
 
 <div class:dark={$darkModeEnabled} class="bg-background dark:bg-background-dark h-screen w-screen flex flex-col items-center justify-center text-text dark:text-text-dark">
@@ -28,16 +37,16 @@
 </div>
 
 <style>
-  .bg-background {
-    background-color: var(--background-color);
-  }
-  .dark\:bg-background-dark {
-    background-color: var(--background-dark);
-  }
-  .text-text {
-    color: var(--text-color);
-  }
-  .dark\:text-text-dark {
-    color: var(--text-dark);
-  }
+	.bg-background {
+		background-color: var(--background-color);
+	}
+	.dark\:bg-background-dark {
+		background-color: var(--background-dark);
+	}
+	.text-text {
+		color: var(--text-color);
+	}
+	.dark\:text-text-dark {
+		color: var(--text-dark);
+	}
 </style>
