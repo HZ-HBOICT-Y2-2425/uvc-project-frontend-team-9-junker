@@ -1,54 +1,57 @@
 <script lang="ts">
+    import SubHeaderV2 from "$lib/components/SubHeaderV2.svelte";
     import ViewUserprofile from "$lib/components/ViewUserprofile.svelte";
-    import { browser } from "$app/environment";
+    import JunkerLettering from "$lib/components/JunkerLettering.svelte";
+    import { get } from 'svelte/store';
+    import { authStore } from '$lib/stores/authStore';
+    import { browser } from '$app/environment';
+    import { goto } from '$app/navigation';
 
-    let userData: null = null;
+    let userData: { $set?: any; $on?: any; } | null = null;
 
-    const fetchUserData = async () => {
-        if (!browser) return;
+    const loadUserData = async () => {
+		if (!browser) return null;
 
-        const token = localStorage.getItem("token");
-        const username = JSON.parse(localStorage.getItem("username") || '""');
-
+    // Use `get` to access the current value of the store
+    const { token, username } = get(authStore);
         if (!token) {
-            window.location.href = "/login"; // Redirect if not logged in
-            return;
+            goto("/login");
+            return null;
         }
 
         try {
-        const response = await fetch(`http://localhost:3012/user/${username}`, {
-            headers: {
-            Authorization: `Bearer ${token}`,
-            },
-        });
-        userData = await response.json();
-        // console.log(userData);
+            const response = await fetch(`http://localhost:3012/user/private/${username}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (response.status === 403) {
+                goto("/login");
+                return null;
+            }
+
+            userData = await response.json();
+            // console.log(userData);
+            goto('/username');
         } catch (error) {
-        console.error("Error fetching user data:", error);
+            console.error("Error fetching user data:", error);
+            goto("/login");
+            return null;
         }
-    };
+	};
 
-    fetchUserData();
-
-    const logout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("username");
-        window.location.href = "/login";
-    };
+	loadUserData();
 </script>
 
 <main>
+    <SubHeaderV2 title="Profile" />
+
     {#if userData}
-    <div>
-        <h1>Profile</h1>
-        <ViewUserprofile {userData}/>
-    </div>
-    <div class="mt-3">
-        <button class=" py-2 px-4 bg-primary text-white font-semibold rounded-lg shadow-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary" on:click={() => logout()}>
-            Log out</button>
-    </div>
+        <div>
+            <ViewUserprofile {userData}/>
+        </div>
     {/if}
-    
 </main>
 
 <style>

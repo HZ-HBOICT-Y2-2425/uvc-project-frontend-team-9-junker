@@ -1,3 +1,10 @@
+<script>
+    import ChatSelector from "./Chat/ChatSelector.svelte";
 
+</script>
 
-<div>Welcome to the Chats-View</div>
+<div>
+
+  <ChatSelector />
+
+</div>
