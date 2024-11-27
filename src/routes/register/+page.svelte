@@ -1,62 +1,61 @@
 <script>
 
-  let fullName = '';
-  let username = '';
-  let password = '';
-  let confirmPassword = '';
-  let age = '';
-  let agreeToCommunity = false;
-  let agreeToSustainability = false;
-  let message = '';
+    let fullName = '';
+    let username = '';
+    let password = '';
+    let confirmPassword = '';
+    let age = '';
+    let agreeToCommunity = false;
+    let agreeToSustainability = false;
+    let message = '';
 
-  const isStrongPassword = (/** @type {string} */ password) => {
-    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    return strongPasswordRegex.test(password);
-  };
+    const isStrongPassword = (/** @type {string} */ password) => {
+        const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        return strongPasswordRegex.test(password);
+    };
 
-  const register = async () => {
-    if (password !== confirmPassword) {
-      message = 'Passwords do not match!';
-      return;
+    const register = async () => {
+        if (password !== confirmPassword) {
+          message = 'Passwords do not match!';
+          return;
+        }
 
-    }
+        // if (!isStrongPassword(password)) {
+        //   message =
+        //     'Password must be at least 8 characters long and include uppercase letters, lowercase letters, numbers, and symbols.';
+        //   return;
+        // }
 
-    // if (!isStrongPassword(password)) {
-    //   message =
-    //     'Password must be at least 8 characters long and include uppercase letters, lowercase letters, numbers, and symbols.';
-    //   return;
-    // }
+        if (!age || age < 18) {
+          message = 'You must be at least 18 years old to register.';
+          return;
+        }
 
-    if (!age || age < 18) {
-      message = 'You must be at least 18 years old to register.';
-      return;
-    }
+        if (!agreeToCommunity || !agreeToSustainability) {
+          message = 'You must agree to the community guidelines and sustainability pledge.';
+          return;
+        }
 
-    if (!agreeToCommunity || !agreeToSustainability) {
-      message = 'You must agree to the community guidelines and sustainability pledge.';
-      return;
-    }
+        try {
+            const response = await fetch('http://localhost:3012/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ fullName, username, password, age }),
+            });
+            const data = await response.json();
+            console.log(data);
 
-    try {
-      const response = await fetch('http://localhost:3012/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fullName, username, password, age }),
-      });
-      const data = await response.json();
-      console.log(data);
-
-      if (response.ok) {
-        message = 'Registration successful! Please log in.';
-        window.location.href = '/login';
-      } else {
-        message = data.error;
-      }
-    } catch (error) {
-      message = 'An error occurred during registration.';
-      console.log(error);
-    }
-  };
+            if (response.ok) {
+                message = 'Registration successful! Please log in.';
+                window.location.href = '/login';
+            } else {
+                message = data.error;
+            }
+        } catch (error) {
+            message = 'An error occurred during registration.';
+            console.log(error);
+        }
+    };
 </script>
 
 <main class="flex items-center justify-center min-h-screen bg-background">
