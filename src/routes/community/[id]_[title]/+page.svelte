@@ -11,10 +11,7 @@
     let communityName = $page.params.title;
     export let data;
     let { items } = data;
-    let { users } = data;
-    let item = items.find((item) => item.id == $page.params.id);
-    let owner = users.find((user) => user.id == item.userid);
-    
+
 
     let sortParams = ["name", "date", "interested"];
     let sortBy = {col: "name", ascending: false};
@@ -65,7 +62,7 @@
     <!--TODO: Get rid of top margin-->
     <sort-bar class="w-full border-b-[1px] border-black border-solid flex flex-row flex-nowrap justify-evenly">
         {#each sortParams as param}
-            <button class="" on:click={() => sort(`${param}`)} aria-label="Sort by {param}">
+            <button class="ml-2 mr-2" on:click={() => sort(`${param}`)} aria-label="Sort by {param}">
                 {param}
                 {#if sortBy.col === `${param}`}
                     {#if sortBy.ascending == true}
@@ -88,10 +85,9 @@
             <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 w-full">
                 <!-- Community Cards -->
                 {#each items as item}
-                <CommunityListingCard
-                    item = {item}
-                    owner = {owner}
-                />
+                    <CommunityListingCard
+                        item = {item}
+                    />
                 {/each}
             </div>
         </div>
