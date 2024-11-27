@@ -22,6 +22,7 @@
   </button>
   <button
     class="m-2 w-16 h-16 absolute bottom-[3rem] text-base border-0 rounded-full cursor-pointer text-background bg-primary-500 dark:bg-primary-dark-500 dark:text-background-dark hover:bg-primary-900 dark:hover:bg-primary-dark-900 dark:hover:text-text-dark hover:text-primary-500"
+    on:click={() => navigate("/new-listing")}
     aria-label="Add">
     <i class="fa-solid fa-plus text-4xl"></i>
   </button>
