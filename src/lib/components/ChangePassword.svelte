@@ -13,12 +13,12 @@
   
       // 비밀번호 변경 API를 호출하는 로직을 추가할 수 있습니다.
       // 예시: 
-      // fetch('/api/change-password', { method: 'POST', body: JSON.stringify({ currentPassword, newPassword }) })
-      //   .then(response => {
-      //     if (response.ok) {
+       fetch('/api/Change-Password', { method: 'POST', body: JSON.stringify({ currentPassword, newPassword }) })
+         .then(response => {
+           if (response.ok) {
       //       // 성공적인 변경 후 처리
-      //     }
-      //   })
+           }
+         })
     }
   </script>
   

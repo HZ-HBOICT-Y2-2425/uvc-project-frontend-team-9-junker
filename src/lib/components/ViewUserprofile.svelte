@@ -38,20 +38,34 @@
   
     <!-- Profile Section -->
     <div class="flex flex-col items-center mb-8">
-      <!-- svelte-ignore a11y_img_redundant_alt -->
-      <img
-        src={profileImage}
-        alt="Profile Picture"
-        class="w-32 h-32 rounded-full object-cover mb-2"
-      />
-      <label
-        for="profile-upload"
-        class="text-green-500 underline cursor-pointer text-sm"
-      >
-        Change Profile Picture
-      </label>
-      <input type="file" id="profile-upload" accept="image/*" on:change={handleImageUpload} class="hidden" />
-    </div>
+    <!-- Profile Picture -->
+    <!-- svelte-ignore a11y_img_redundant_alt -->
+    <img
+      src={profileImage}
+      alt="Profile Picture"
+      class="w-32 h-32 rounded-full object-cover mb-2"
+    />
+    
+    <!-- Change Profile Picture -->
+    <label
+      for="profile-upload"
+      class="text-green-500 underline cursor-pointer text-sm"
+    >
+      Change Profile Picture
+    </label>
+    <input type="file" id="profile-upload" accept="image/*" on:change={handleImageUpload} class="hidden" />
+  
+    <!-- Divider -->
+    <div class="my-2"></div>
+    
+    <!-- Change Password -->
+    <a
+      href="/Change-Password"
+      class="text-green-500 underline cursor-pointer text-sm"
+    >
+      Change Password
+    </a>
+  </div>
   
     <h2 class="text-center text-2xl font-bold mb-4">{username}</h2>
   
