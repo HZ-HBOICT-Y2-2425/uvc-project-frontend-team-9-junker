@@ -28,7 +28,7 @@
   ];
 </script>
 
-<div class="flex flex-col space-y-4 bg-background dark:bg-background-dark p-4 mx-2 md:mx-20 lg:mx-40">
+<div class="flex flex-col space-y-4 bg-background dark:bg-background-dark p-4 mx-2 md:mx-20 ">
   
   {#each chats as chat}
     <!-- Chat Row -->
