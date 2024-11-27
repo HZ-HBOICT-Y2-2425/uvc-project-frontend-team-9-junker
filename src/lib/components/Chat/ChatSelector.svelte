@@ -1,6 +1,6 @@
 <script>
     import MyChats from "./MyChats.svelte";
-    import PendingChats from "./PendingChats.svelte";
+    import PendingChats from "../Profile/PendingOffers.svelte";
 
   let activeTab = "chats"; // Current tab
 </script>
