@@ -3,13 +3,8 @@
 
   import Card from './Card.svelte';
   import { Community } from "$lib/models/Community.js";
-
-  const communities = [
-    new Community("0", "Middelburg", "middelburg-church.JPG", 218, 22, "Nearby", ["0", "1", "2"]),
-    new Community("1", "HZ Students", "hz-middelburg.jpg", 218, 22, "", ["0", "1", "2"]),
-    new Community("2", "APV Residents", "APV-ruyter.jpg", 218, 22, "", ["0", "1", "2"]),
-    new Community("3", "APV Residents", "APV-ruyter.jpg", 218, 22, "", ["0", "1", "2"])
-  ];
+  import { communities } from '$lib/stores/AllPurposeStore';
+  
 </script>
 
 <div class="flex flex-col items-center p-4 space-y-8">

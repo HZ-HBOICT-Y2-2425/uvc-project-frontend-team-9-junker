@@ -37,7 +37,7 @@
         <div class="image-wrapper">
             {#each images as image, index}
                 <!--img src={image} alt="Image {index + 1}"-->
-                <img src={imagesPreload[`/src/lib/assets/images/${image}`]} alt="Image {index + 1}" />
+                <img src={imagesPreload[`/src/lib/assets/images/${image}`]} alt="Img {index + 1}" />
             {/each}
         </div>
 
@@ -54,7 +54,7 @@
         </div>
     {:else if images.length}
         <div class="image-wrapper">
-            <img src={imagesPreload[`/src/lib/assets/images/${images[0]}`]} alt="Image 1" />
+            <img src={imagesPreload[`/src/lib/assets/images/${images[0]}`]} alt="Img 1" />
         </div>
     {/if}
 </div>

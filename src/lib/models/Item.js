@@ -1,6 +1,6 @@
 export class Item {
     // @ts-ignore
-    constructor(id, userid, name, description, pictures, action, available, views, interested, date, categories) {
+    constructor(id, userid, name, description, pictures, action, available, views, interested, date, categories, communities) {
       this.id = id;
       this.userid = userid;
       this.name = name;
@@ -12,6 +12,7 @@ export class Item {
       this.interested = interested;
       this.date = date; //ISO string format
       this.categories = categories;
+      this.communities = communities;
     }
 
   

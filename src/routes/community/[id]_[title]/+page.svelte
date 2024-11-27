@@ -11,6 +11,11 @@
     let communityName = $page.params.title;
     export let data;
     let { items } = data;
+    let { communities } = data;
+    let community = communities.find( (community) => community.id == communityId);
+    items = items.filter( (item) => 
+        item.communities.some( (communityId) => communityId == community.id)
+    );
 
 
     let sortParams = ["name", "date", "interested"];
