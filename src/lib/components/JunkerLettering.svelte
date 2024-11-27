@@ -61,10 +61,6 @@
         <button type="button" class="fas fa-chevron-left w-6 h-6 mr-2 cursor-pointer" on:click={goBack} aria-label="Go back" on:keydown={(e) => e.key === 'Enter' && goBack()}></button>
       {/if}
       <span class="flex items-center">{title}</span>
-      <!-- spacer div  -->
-      {#if $toggleState !== 'swipe'}
-        <div class="w-6 h-6"></div>
-      {/if}
     </div>
   </div>
 {/if}
