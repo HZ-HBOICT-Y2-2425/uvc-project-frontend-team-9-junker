@@ -8,7 +8,10 @@
     const images = import.meta.glob(['$lib/assets/images/**.jpg', '$lib/assets/images/**.png', '$lib/assets/images/**.svg', '$lib/assets/images/**.webp', '$lib/assets/images/**.avif'], { eager: true, as: 'url' });
 
     export let item = new Item(0, 0, "noname", "", ["default.png"], "", false, 0, 0);
-    export let owner = users.find( (user) => user.id == item.userid) || new User(0, "Error: User not found", "blank-pfp.webp");
+    console.log(users);
+    //TODO: fix bug where owner parameter is not updated after sort in the parent component changes the item parameter that is being passed here.
+    let owner = users.find( (user) => user.id == item.userid) || new User(2, "Error: User not found", "blank-pfp.webp");
+    console.log(owner);
 
     const navigate = () => {
         goto(`/item_details/${item.id}_${item.name}`);
