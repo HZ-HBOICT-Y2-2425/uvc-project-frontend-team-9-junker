@@ -28,36 +28,33 @@
         showPopup = true;
         console.log("Popup triggered through $ reactive block!");
     }
-
-    // Function to bind gestures to a card
     const bindGesture = (el, index) => {
-        let initialX = 0;
+    let initialX = 0, initialY = 0;
 
-        el.addEventListener("pointerdown", (event) => {
-            initialX = event.clientX;
-        });
+    el.addEventListener("pointerdown", (event) => {
+        initialX = event.clientX;
+        initialY = event.clientY;
+    });
 
-        el.addEventListener("pointerup", (event) => {
-            const deltaX = event.clientX - initialX;
-            const threshold = 100; // Minimum swipe distance
-            if (deltaX > threshold) {
+    el.addEventListener("pointerup", (event) => {
+        const deltaX = event.clientX - initialX;
+        const deltaY = event.clientY - initialY;
+        const threshold = 100; // Minimum swipe distance
+        if (Math.abs(deltaX) > threshold && Math.abs(deltaY) < threshold / 2) {
+            if (deltaX > 0) {
                 console.log("Swiped Right:", cards[index]);
-                el.classList.add('swiped-right'); // Add swipe-right animation
-                setTimeout(() => {
-                    cards.splice(index, 1); // Remove card
-                }, 300); // Wait for animation to complete
-            } else if (deltaX < -threshold) {
-                console.log("Swiped Left:", cards[index]);
-                el.classList.add('swiped-left'); // Add swipe-left animation
-                setTimeout(() => {
-                    cards.splice(index, 1); // Remove card
-                }, 300); // Wait for animation to complete
+                el.classList.add('swiped-right');
             } else {
-                el.style.transform = ""; // Reset card if not swiped far enough
+                console.log("Swiped Left:", cards[index]);
+                el.classList.add('swiped-left');
             }
-            cardElements = [...cardElements]; // Trigger reactivity
-        });
-    };
+            setTimeout(() => cards.splice(index, 1), 300);
+        } else {
+            el.style.transform = ""; // Reset card if not swiped far enough
+        }
+    });
+};
+
 
     // Bind gestures to all cards after mounting
     onMount(() => {

@@ -155,7 +155,7 @@
     height: 90%;
     max-height: 600px;
     border-radius: 16px;
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4); /* Stronger and more dramatic shadow */
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
     display: flex;
     flex-direction: column;
     justify-content: center;
