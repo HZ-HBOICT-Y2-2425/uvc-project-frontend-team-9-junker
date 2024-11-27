@@ -1,62 +1,4 @@
 <script>
-<<<<<<< HEAD
-  let fullName = '';
-  let username = '';
-  let password = '';
-  let confirmPassword = '';
-  let age = '';
-  let agreeToCommunity = false;
-  let agreeToSustainability = false;
-  let message = '';
-
-  const isStrongPassword = (password) => {
-    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    return strongPasswordRegex.test(password);
-  };
-
-  const register = async () => {
-    if (password !== confirmPassword) {
-      message = 'Passwords do not match!';
-      return;
-    }
-
-    if (!isStrongPassword(password)) {
-      message =
-        'Password must be at least 8 characters long and include uppercase letters, lowercase letters, numbers, and symbols.';
-      return;
-    }
-
-    if (!age || age < 18) {
-      message = 'You must be at least 18 years old to register.';
-      return;
-    }
-
-    if (!agreeToCommunity || !agreeToSustainability) {
-      message = 'You must agree to the community guidelines and sustainability pledge.';
-      return;
-    }
-
-    try {
-      const response = await fetch('http://localhost:3012/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fullName, username, password, age }),
-      });
-      const data = await response.json();
-
-      if (response.ok) {
-        message = 'Registration successful! Please log in.';
-        window.location.href = '/login';
-      } else {
-        message = data.error;
-      }
-    } catch (error) {
-      message = 'An error occurred during registration.';
-      console.log(error);
-    }
-  };
-=======
-
     let fullName = '';
     let username = '';
     let password = '';
@@ -113,7 +55,6 @@
             console.log(error);
         }
     };
->>>>>>> develop
 </script>
 
 <main class="flex items-center justify-center min-h-screen bg-background">
@@ -201,11 +142,7 @@
       </div>
       <button
         type="submit"
-<<<<<<< HEAD
-        class="w-full py-2 px-4 bg-primary text-white font-semibold rounded-lg shadow-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-=======
         class="w-full py-2 px-4 bg-primary text-black font-semibold rounded-lg shadow-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
->>>>>>> develop
       >
         Register
       </button>
@@ -223,8 +160,4 @@
   .bg-background {
     background-color: var(--background-color);
   }
-<<<<<<< HEAD
 </style>
-=======
-</style>
->>>>>>> develop
