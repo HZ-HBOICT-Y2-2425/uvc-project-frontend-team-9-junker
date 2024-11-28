@@ -1,6 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
   
+    let title: string = "Vintage Nike Sneakers Size 12";  // 제목을 수정 가능한 변수로 설정
     let selectedListingType: string = "";
     let selectedCommunities: Set<string> = new Set();
     let uploadedImages: { id: number; url: string }[] = []; // 업로드된 이미지를 저장할 배열
@@ -57,8 +58,16 @@
   
   <div class="min-h-screen bg-gray-50 flex items-center justify-center p-4">
     <div class="bg-white shadow-md rounded-lg p-6 w-full max-w-md">
-      <!-- Title -->
-      <h2 class="text-xl font-bold text-gray-800 mb-4">Title: Vintage Nike Sneakers Size 12</h2>
+      <!-- Title (Editable) -->
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Title</label>
+        <input
+          type="text"
+          bind:value={title}  
+          class="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500"
+          placeholder="Enter title"
+        />
+      </div>
   
       <!-- Image Upload Section -->
       <div class="mb-4">
@@ -117,7 +126,6 @@
       <!-- Select Communities -->
       <div class="mb-4">
         <label class="block text-sm font-medium text-gray-700 mb-1">Select Communities</label>
-  
         <div class="flex space-x-2">
           {#each communityOptions as community}
             <button
@@ -168,5 +176,4 @@
         Post my listing
       </button>
     </div>
-  </div>
-  
+  </div>  
