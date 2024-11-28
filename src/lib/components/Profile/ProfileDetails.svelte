@@ -13,22 +13,23 @@
     alt="Profile Picture"
     class="w-32 h-32 rounded-full object-cover mb-2"
   />
-  <label
-    for="profile-upload"
-    class="text-green-500 underline cursor-pointer text-sm"
-  >
+
+  <!-- Change Profile Picture -->
+  <label for="profile-upload" class="text-green-500 underline cursor-pointer text-sm">
     Change Profile Picture
   </label>
-  <input
-    type="file"
-    id="profile-upload"
-    accept="image/*"
-    on:change={handleImageUpload}
-    class="hidden"
-  />
-</div>
+  <input type="file" id="profile-upload" accept="image/*" on:change={handleImageUpload} class="hidden" />
 
-<h2 class="text-center text-2xl font-bold mb-4">@{user.username}</h2>
+  <!-- Change Password -->
+  <a href="/change-password" class="text-green-500 underline cursor-pointer text-sm">
+      Change Password
+  </a>
+
+  <!-- Username -->
+  <h2 class="text-center text-2xl font-bold mb-4 md:mb-0 md:text-left md:self-center">
+    @{user.username}
+</h2>
+</div>
 
 <!-- Badges -->
 <div class="flex justify-center gap-3 mb-8">

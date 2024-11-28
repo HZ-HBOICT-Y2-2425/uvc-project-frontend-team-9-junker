@@ -21,7 +21,7 @@
             token: data.accessToken,
           });
           message = 'Login successful!';
-          goto('/swipe');
+          goto('/');
         } else {
           message = data.error;
         }
