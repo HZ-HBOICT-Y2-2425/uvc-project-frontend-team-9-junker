@@ -1,5 +1,4 @@
 <script>
-
     let fullName = '';
     let username = '';
     let password = '';
