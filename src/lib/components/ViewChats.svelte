@@ -1,10 +1,10 @@
 <script>
-    import ChatSelector from "./Chat/ChatSelector.svelte";
+    import MyChats from "./Chat/MyChats.svelte";
 
 </script>
 
 <div>
 
-  <ChatSelector />
+  <MyChats />
 
 </div>
