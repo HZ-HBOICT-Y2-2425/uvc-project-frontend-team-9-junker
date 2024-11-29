@@ -118,8 +118,8 @@
           placeholder="Enter description here"
           class="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500"
         >
-          I just remembered that I had bought these shoes 10 years ago and they never really fit me well so I barely wore them.
-          I'm looking for some cool vintage fashion. Let’s make a trade!
+ I just remembered that I had bought these shoes 10 years ago and they never really fit me well so I barely wore them.
+ I'm looking for some cool vintage fashion. Let’s make a trade!
         </textarea>
       </div>
   
