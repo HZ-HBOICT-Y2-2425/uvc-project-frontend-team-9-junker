@@ -1,5 +1,13 @@
 export class Community {
-    // @ts-ignore
+    /**
+   * @param {string | number} id
+   * @param {string} title
+   * @param {string} image
+   * @param {number} members
+   * @param {number} connections
+   * @param {string} tag
+   * @param {string[]} itemIds
+   */
     constructor(id, title, image, members, connections, tag, itemIds) {
       this.id = id;
       this.title = title;

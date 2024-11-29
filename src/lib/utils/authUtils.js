@@ -3,7 +3,6 @@ import { get } from 'svelte/store';
 import { authStore } from '$lib/stores/authStore';
 import { browser } from '$app/environment';
 import { goto } from '$app/navigation';
-const url = import.meta.env.VITE_API_URL;
 
 export default async function fetchUserData() {
     if (!browser) return null;
