@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { tick } from 'svelte';
@@ -26,7 +26,7 @@
 	const redirectToJunker = () => {
 		goto('/swipe');
 	};
-	
+
 </script>
 
 <div class:dark={$darkModeEnabled} class="bg-background dark:bg-background-dark h-screen w-screen flex flex-col items-center justify-center text-text dark:text-text-dark">
