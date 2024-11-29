@@ -1,5 +1,18 @@
 export class Item {
-    // @ts-ignore
+    /**
+   * @param {number} id
+   * @param {number} userid
+   * @param {string} name
+   * @param {string} description
+   * @param {string[]} pictures
+   * @param {string} action
+   * @param {boolean} available
+   * @param {number} views
+   * @param {number} interested
+   * @param {string | undefined} [date]
+   * @param {string[] | undefined} [categories]
+   * @param {number[] | undefined} [communities]
+   */
     constructor(id, userid, name, description, pictures, action, available, views, interested, date, categories, communities) {
       this.id = id;
       this.userid = userid;
