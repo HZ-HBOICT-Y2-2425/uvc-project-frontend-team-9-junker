@@ -1,4 +1,0 @@
-- create mock Database
-- dialog module
-- decide on method to implement icons
-- change css to tailwind
