@@ -4,7 +4,6 @@
     import { get } from 'svelte/store';
     import { browser } from '$app/environment';
     import { goto } from '$app/navigation';
-    import ViewPublicprofile from "$lib/components/ViewPublicprofile.svelte";
 
     let userData: null = null;
     const fetchUserData = async () => {
@@ -41,7 +40,7 @@
 
     {#if userData}
         <div>
-            <ViewPublicprofile {userData}/>
+            <!-- <ViewPublicprofile {userData}/> -->
         </div>
     {/if}
 </main>
