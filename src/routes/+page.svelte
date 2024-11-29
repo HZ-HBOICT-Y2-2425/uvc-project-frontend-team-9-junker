@@ -4,7 +4,7 @@
 	import { tick } from 'svelte';
 	import { darkModeEnabled } from "$lib/stores/AllPurposeStore";
 
-	let countdown = 3;
+	let countdown = 1;
 
 	// user authentication
 	let userData = null;

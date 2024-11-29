@@ -15,7 +15,7 @@ export default async function fetchUserData() {
     }
 
     try {
-        const response = await fetch(`https://localhost:3012/user/private/${username}`, {
+        const response = await fetch(`http://localhost:3012/user/private/${username}`, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
