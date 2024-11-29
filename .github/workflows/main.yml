@@ -19,7 +19,12 @@ jobs:
         node-version: 20.x
 
     - name: Build
+<<<<<<< HEAD
       run: npm install --legacy-peer-deps
+=======
+      run: |
+        npm install
+>>>>>>> cb44008 (added eslint to the pipeline and removed a package in the json file so now npm install works correctly)
     
     - name: Run build
       run: npm run build
