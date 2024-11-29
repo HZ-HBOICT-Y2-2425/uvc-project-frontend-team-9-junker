@@ -1,6 +1,6 @@
-// @ts-nocheck
 import { render, screen, fireEvent, waitFor } from '@testing-library/svelte';
-import { vi } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
+// @ts-expect-error - SvelteKit components can be imported without extension
 import Login from '../routes/login/+page.svelte';
 import { authStore } from '$lib/stores/authStore';
 import { goto } from '$app/navigation';
@@ -113,3 +113,7 @@ describe('Login Component', () => {
     expect(goto).not.toHaveBeenCalled();
   });
 });
+function beforeEach(arg0) {
+  throw new Error('Function not implemented.');
+}
+

@@ -1,5 +1,9 @@
 export class User {
-    // @ts-ignore
+    /**
+     * @param {number} id
+     * @param {string} name
+     * @param {string} pfp
+     */
     constructor(id, name, pfp) {
         this.id = id;
         this.name = name;
