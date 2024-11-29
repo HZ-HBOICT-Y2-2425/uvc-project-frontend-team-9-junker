@@ -24,18 +24,10 @@
   .background {
     background-color: #dbfff0; /* Light green background */
     min-height: 100vh;
-    padding-top: 0; /* Removed unnecessary padding */
   }
 
-  .content-container {
-    margin-top: 0; /* Removed any extra margin */
-  }
-
-  .sub-header {
-    margin: 0;
-    padding: 0;
-    box-shadow: none; /* Ensure no shadow */
-    border: none; /* Ensure no border */
+  .content-gap {
+    height: 20px; /* Adjust gap height as needed */
   }
 
   .avatar {
@@ -63,12 +55,12 @@
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background-color: #ffffff; /* 민트색 배경 */
+    background-color: #ffffff;
   }
 
   .chat-button i {
-    color: #00a36c; /* 민트색 아이콘 */
-    font-size: 1.5rem; /* 아이콘 크기 조정 (기존보다 크게) */
+    color: #00a36c; /* Mint color for icon */
+    font-size: 1.5rem; /* Larger icon size */
   }
 
   .notification-card {
@@ -89,6 +81,9 @@
 </style>
 
 <div class="background">
+  <!-- Add gap between header and notifications -->
+  <div class="content-gap"></div>
+
   <!-- Notification Center -->
   <div class="content-container flex items-center justify-center">
     <div class="w-full max-w-md">
@@ -109,13 +104,12 @@
               </div>
 
               <!-- Chat Button -->
-              <!-- svelte-ignore a11y_consider_explicit_label -->
               <button
-              class="chat-button"
-              on:click={() => openChat(user)}
-              title="Chat"
+                class="chat-button"
+                on:click={() => openChat(user)}
+                title="Chat"
               >
-              <i class="fa-solid fa-comment text-sm text-mint"></i>
+                <i class="fa-solid fa-comment"></i>
               </button>
 
               <!-- Delete Button -->
