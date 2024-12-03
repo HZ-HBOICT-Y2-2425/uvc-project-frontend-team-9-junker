@@ -42,7 +42,7 @@
         {owner.name}
     </div>
     <button
-        class="w-16 m-2 p-3 text-base border-0 rounded cursor-pointer text-secondary-500 dark:text-secondary-dark-500 bg-background dark:bg-background-dark active:bg-secondary-500 dark:active:bg-secondary-dark-500 hover:bg-secondary-500 dark:hover:bg-secondary-dark-500 active:text-background dark:text-secondary-dark-500 hover:text-background dark:hover:text-text-dark"
+        class="w-16 m-2 p-3 text-base border-0 rounded cursor-pointer text-secondary-500 dark:text-secondary-dark-500 bg-background dark:bg-background-dark active:bg-secondary-500 dark:active:bg-secondary-dark-500 hover:bg-secondary-500 dark:hover:bg-secondary-dark-500 active:text-background hover:text-background dark:hover:text-text-dark"
         on:click={() => goto("/chats")}
         aria-label="Chats">
         <i class="fa-solid fa-comment text-4xl"></i>
