@@ -1,4 +1,3 @@
-<!-- src/routes/change-password.svelte -->
 <script>
   import { authStore } from "$lib/stores/authStore";
   import { get } from "svelte/store";
