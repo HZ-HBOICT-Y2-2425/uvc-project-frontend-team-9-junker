@@ -213,5 +213,5 @@
     </div>
   {/if}
   
-  <Footer />
+  <!-- <Footer /> -->
   
