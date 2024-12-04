@@ -11,8 +11,25 @@
   }
 </script>
 
+
 <div class="h-screen overflow-y-auto bg-background dark:bg-background-dark">
   <div class="flex flex-col items-center p-4 space-y-8">
+    <!-- Styled Input Area -->
+  <div class="bg-background dark:bg-background-dark rounded-lg shadow-md p-4 max-w-md">
+    <div class="flex items-center justify-center space-x-2">
+      <input 
+        type="text" 
+        placeholder="Enter a code.." 
+        class="px-4 py-2 border rounded-lg text-sm text-text dark:text-text-dark bg-background dark:bg-background-dark focus:ring-primary focus:border-primary"
+      />
+      <button 
+        class="w-10 h-10 flex items-center justify-center bg-primary-500 dark:bg-primary-dark-500 text-white rounded-lg shadow-md" 
+        aria-label="Submit code"
+      >
+        <i class="fa-solid fa-check"></i>
+      </button>
+    </div>
+  </div>
     <!-- Header -->
     <h1 class="text-2xl font-bold text-center">My Communities</h1>
 
