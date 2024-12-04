@@ -21,7 +21,7 @@
   <input type="file" id="profile-upload" accept="image/*" on:change={handleImageUpload} class="hidden" />
 
   <!-- Change Password -->
-  <a href="/change-password" class="text-green-500 underline cursor-pointer text-sm">
+  <a href="/username/change-password" class="text-green-500 underline cursor-pointer text-sm">
       Change Password
   </a>
 
