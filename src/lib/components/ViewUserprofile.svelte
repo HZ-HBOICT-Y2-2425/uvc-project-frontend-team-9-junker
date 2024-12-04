@@ -1,7 +1,8 @@
 <script>
     import { savedListingsStore } from "$lib/stores/savedStore";
     import { onMount } from "svelte";
-    import SavedListings from "./Listings/SavedListings.svelte";
+    import { authStore } from "$lib/stores/authStore";
+    import { get } from "svelte/store";
     import { goto } from "$app/navigation";
     import ProfileTabs from "./Profile/ProfileTabs.svelte";
     import ProfileDetails from "./Profile/ProfileDetails.svelte";
@@ -22,18 +23,49 @@
      * @param {{ target: { files: any[]; }; }} event
      */
     function handleImageUpload(event) {
+        const MAX_SIZE_MB = 5;
         const file = event.target.files[0];
+        
         if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            user.profile_pic = e.target.result;
-        };
-        reader.readAsDataURL(file);
+            if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+                alert(`File size exceeds ${MAX_SIZE_MB}MB limit.`);
+            } else {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    if (e.target) {
+                        saveProfilePic(e.target.result);
+                        user.profile_pic = e.target.result;
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
         }
     }
 
-    let savedListings = [];
+    const { token, username } = get(authStore);
+    console.log(username, token);
+    const saveProfilePic = async (/** @type {any} */ profile_pic) => {
+        try {
+            if (!token) {
+                goto("/login");
+                return null;
+            }
+            const response = await fetch(`http://localhost:3012/user/${username}`, {
+                method: "PUT",
+                headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ username, profile_pic }),
+            });
+            const data = await response.json();
+            console.log(data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
+    let savedListings = [];
     // Subscribe to the saved listings store on mount
     onMount(() => {
         const unsubscribe = savedListingsStore.subscribe((saved) => {

@@ -1,7 +1,6 @@
 <script lang="ts">
     import SubHeaderV2 from "$lib/components/SubHeaderV2.svelte";
     import ViewUserprofile from "$lib/components/ViewUserprofile.svelte";
-    import JunkerLettering from "$lib/components/JunkerLettering.svelte";
     import { get } from 'svelte/store';
     import { authStore } from '$lib/stores/authStore';
     import { browser } from '$app/environment';
