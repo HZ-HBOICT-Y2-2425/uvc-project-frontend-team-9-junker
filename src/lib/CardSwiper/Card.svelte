@@ -38,7 +38,7 @@
 
 <!-- Instructions Overlay -->
 {#if showInstructions}
-<div class="instruction-overlay" on:click={closeInstructions}>
+<div class="instruction-overlay" role="button" tabindex="0" on:click={closeInstructions} on:keydown={(e) => e.key === 'Enter' && closeInstructions()}>
     <div class="instruction-card">
         <h2>Start Swiping!</h2>
         <p>Swipe <strong>right</strong> to like and notify the owner. Swipe <strong>left</strong> to skip.</p>
