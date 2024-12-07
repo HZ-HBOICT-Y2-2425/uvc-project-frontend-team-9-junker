@@ -4,10 +4,10 @@
   export let timestamp;
 </script>
 
-<div class="chat-list-item flex items-center justify-between p-4 bg-gray-100 rounded-lg hover:shadow-md">
+<div class="flex items-center justify-between p-4 bg-background dark:bg-background-dark hover:bg-primary-100 dark:hover:bg-primary-dark-100 rounded-lg shadow">
   <div>
-    <p class="text-lg font-bold">{sender}</p>
-    <p class="text-sm text-gray-600 truncate">{content}</p>
+    <p class="text-lg font-rem text-primary-500 dark:text-primary-dark-500">{sender}</p>
+    <p class="text-sm text-secondary-500 dark:text-secondary-dark-500 truncate">{content}</p>
   </div>
-  <div class="text-sm text-gray-500">{new Date(timestamp).toLocaleString()}</div>
+  <div class="text-sm text-gray-400">{new Date(timestamp).toLocaleString()}</div>
 </div>

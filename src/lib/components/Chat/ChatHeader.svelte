@@ -1,7 +1,12 @@
 <script>
+  import GoBackButton from "../GoBackButton.svelte";
   export let recipient;
 </script>
 
-<div class="chat-header bg-primary-500 text-white flex items-center p-4 rounded-t-lg">
-  <span class="font-bold text-lg">Chat with {recipient}</span>
+<div class="fixed z-10 h-[10vh] w-full bg-background dark:bg-background-dark border-b-4 border-secondary-500 dark:border-secondary-dark-500 shadow-md flex items-center justify-between px-4">
+  <GoBackButton />
+  <span class="font-rem text-xl text-primary-500 dark:text-primary-dark-500">Chat with {recipient}</span>
+  <!-- Spacer to maintain symmetry -->
+  <div class="w-8"></div>
 </div>
+<div class="h-[10vh]"></div>

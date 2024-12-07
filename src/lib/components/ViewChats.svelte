@@ -5,6 +5,7 @@
   import SubHeaderV2 from "./SubHeaderV2.svelte";
 
   let chats = [];
+  let isLoading = true; // Loading state
   const loggedInUserId = "user2"; // Replace this with your actual logged-in user logic.
 
   onMount(async () => {
@@ -20,11 +21,18 @@
       }));
     } catch (error) {
       console.error("Error fetching chats:", error);
+    } finally {
+      isLoading = false; // Hide loading indicator
     }
   });
 </script>
-
-<div class="chats-view space-y-4">
-  <SubHeaderV2 title="Chats" />
-  <MyChats {chats} />
+<SubHeaderV2 title="Chats" />
+<div class="chats-view space-y-4 bg-background dark:bg-background-dark text-text dark:text-text-dark p-4">
+  {#if isLoading}
+    <div class="flex justify-center text-secondary-500 dark:text-secondary-dark-500 items-center py-4">
+      <span>Loading chats...</span>
+    </div>
+  {:else}
+    <MyChats {chats} />
+  {/if}
 </div>

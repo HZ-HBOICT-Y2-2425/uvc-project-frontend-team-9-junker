@@ -8,8 +8,15 @@
   export let messages = [];
   export let sender = "";
   export let recipient = "";
+  export let isLoading = true; // Loading state passed from parent
 
   const dispatch = createEventDispatcher();
+
+  // Auto-scroll to the bottom when messages update
+  let messagesContainer;
+  $: if (messagesContainer && !isLoading) {
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  }
 
   function sendMessage(event) {
     const content = event.detail.content;
@@ -19,12 +26,30 @@
   }
 </script>
 
-<div class="chat-window">
-  <ChatHeader {recipient} />
-  <div class="messages">
-    {#each messages as message}
-      <ChatMessage {message} isSender={message.sender === sender} />
-    {/each}
+<div class="flex flex-col h-screen bg-background dark:bg-background-dark">
+  <!-- Chat Header -->
+  <div class="sticky top-0 z-10">
+    <ChatHeader {recipient} />
   </div>
-  <ChatInput on:send={sendMessage} />
+
+  <!-- Messages Section -->
+  <div
+    class="flex-grow overflow-y-auto p-4 bg-background dark:bg-background-dark relative"
+    bind:this={messagesContainer}
+  >
+    {#if isLoading}
+      <div class="absolute inset-0 flex justify-center items-center bg-background dark:bg-background-dark">
+        <span class="text-secondary-500 dark:text-secondary-dark-500">Loading chats...</span>
+      </div>
+    {:else}
+      {#each messages as message}
+        <ChatMessage {message} isSender={message.sender === sender} />
+      {/each}
+    {/if}
+  </div>
+
+  <!-- Input Section -->
+  <div class="sticky bottom-0 z-10">
+    <ChatInput on:send={sendMessage} />
+  </div>
 </div>

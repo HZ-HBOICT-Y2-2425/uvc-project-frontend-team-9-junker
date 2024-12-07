@@ -3,16 +3,17 @@
   export let isSender = false;
 </script>
 
-<div class={`chat-message ${isSender ? 'bg-green-500 text-white' : 'bg-gray-200 text-black'} rounded-lg p-2`}>
-  <span class="text-sm">{message.content}</span>
-  <span class="text-xs text-gray-500 block text-right">
-    {new Date(message.timestamp).toLocaleTimeString()}
-  </span>
+<div class={`flex ${isSender ? 'justify-end' : 'justify-start'}`}>
+  <div
+    class={`max-w-[70%] p-3 rounded-lg shadow ${
+      isSender
+        ? " bg-secondary-500 text-text dark:text-black dark:bg-secondary-dark-500"
+        : " bg-primary-500 text-text dark:text-black dark:bg-primary-dark-500"
+    }`}
+  >
+    <span class="text-sm">{message.content}</span>
+    <span class="text-xs text-white dark:text-black block text-right">
+      {new Date(message.timestamp).toLocaleTimeString()}
+    </span>
+  </div>
 </div>
-
-<style>
-  .chat-message {
-    max-width: 70%;
-    margin: 4px 0;
-  }
-</style>
