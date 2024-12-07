@@ -3,10 +3,11 @@
   import { onMount } from "svelte";
   import MyChats from "./Chat/MyChats.svelte";
   import SubHeaderV2 from "./SubHeaderV2.svelte";
+    import { loggedInUserID } from "$lib/stores/AllPurposeStore";
 
   let chats = [];
   let isLoading = true; // Loading state
-  const loggedInUserId = "user2"; // Replace this with your actual logged-in user logic.
+  const loggedInUserId = loggedInUserID; // Replace this with your actual logged-in user logic.
 
   onMount(async () => {
     try {

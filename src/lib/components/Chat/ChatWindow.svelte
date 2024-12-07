@@ -42,8 +42,20 @@
         <span class="text-secondary-500 dark:text-secondary-dark-500">Loading chats...</span>
       </div>
     {:else}
-      {#each messages as message}
-        <ChatMessage {message} isSender={message.sender === sender} />
+      {#each messages as message, i}
+        <!-- Display user's ID dynamically aligned -->
+        {#if i === 0 || message.sender !== messages[i - 1]?.sender}
+          <div
+            class={`mb-1 font-bold text-sm ${
+              message.sender === sender ? 'text-right pr-4 text-secondary-500 dark:text-secondary-dark-500' : 'text-left pl-4 text-primary-500 dark:text-primary-dark-500'
+            }`}
+          >
+            {message.sender}
+          </div>
+        {/if}
+        <div class="mb-4">
+          <ChatMessage {message} isSender={message.sender === sender} />
+        </div>
       {/each}
     {/if}
   </div>

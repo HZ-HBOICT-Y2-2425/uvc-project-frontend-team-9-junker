@@ -3,8 +3,9 @@
   import { onMount } from "svelte";
   import { page } from "$app/stores";
   import ChatWindow from "$lib/components/Chat/ChatWindow.svelte";
+    import { loggedInUserID } from "$lib/stores/AllPurposeStore";
 
-  const sender = "user2"; // Replace this with your logged-in user logic.
+  const sender = loggedInUserID; // Replace this with your logged-in user logic.
   const recipient = $page.params.username; // Get the recipient username from the route.
 
   let messages = [];
