@@ -8,10 +8,10 @@
     const images = import.meta.glob(['$lib/assets/images/**.jpg', '$lib/assets/images/**.png', '$lib/assets/images/**.svg', '$lib/assets/images/**.webp', '$lib/assets/images/**.avif'], { eager: true, as: 'url' });
 
     export let item = new Item(0, 0, "noname", "", ["default.png"], "", false, 0, 0);
-    console.log(users);
-    //TODO: fix bug where owner parameter is not updated after sort in the parent component changes the item parameter that is being passed here.
+
     let owner = users.find( (user) => user.id == item.userid) || new User(2, "Error: User not found", "blank-pfp.webp");
-    console.log(owner);
+    // $: means this is called whenever item variable changes. This makes sure that the owner parameter updates after a sort.
+    $: owner = users.find( (user) => user.id == item.userid) || new User(2, "Error: User not found", "blank-pfp.webp");
 
     const navigate = () => {
         goto(`/item_details/${item.id}_${item.name}`);
@@ -31,9 +31,9 @@ on:click={() => navigate()}
             <div class="item-name">
                 {item.name}
             </div>
-            <div class="item-desc">
+            <!--div class="item-desc">
                 {item.description}
-            </div>
+            </div-->
             <div class="owner">
                 <img src={images[`/src/lib/assets/images/${owner.pfp}`]} alt={owner.pfp} class="owner-pfp">
                 <div class="owner-name">
@@ -76,7 +76,9 @@ on:click={() => navigate()}
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
+        /*
         margin-bottom: -5px;
+        */
     }
     .item-desc {
         text-align: left;
