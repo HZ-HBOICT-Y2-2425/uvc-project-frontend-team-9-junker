@@ -11,8 +11,8 @@
     const loadUserData = async () => {
 		if (!browser) return null;
 
-    // Use `get` to access the current value of the store
-    const { token, username } = get(authStore);
+        // Use `get` to access the current value of the store
+        const { token, username } = get(authStore);
         if (!token) {
             goto("/login");
             return null;
@@ -31,8 +31,14 @@
             }
 
             userData = await response.json();
-            // console.log(userData);
-            goto('/username');
+            if (userData) {
+                authStore.update((store) => ({
+                    ...store,
+                    user: userData.user
+                }));
+                console.log($authStore);
+                goto('/username');
+            }
         } catch (error) {
             console.error("Error fetching user data:", error);
             goto("/login");

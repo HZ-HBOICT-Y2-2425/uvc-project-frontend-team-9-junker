@@ -19,9 +19,10 @@
             username: username,
             isAuthenticated: !!data.accessToken,
             token: data.accessToken,
+            user: []
           });
           message = 'Login successful!';
-          goto('/');
+          goto('/community');
         } else {
           message = data.error;
         }

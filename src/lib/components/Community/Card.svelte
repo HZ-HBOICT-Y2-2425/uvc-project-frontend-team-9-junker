@@ -3,15 +3,16 @@
   import { goto } from "$app/navigation";
   import { Community } from "$lib/models/Community.js";
 
-  export let community = new Community(0, "Default Title", "default-image.jpg", 10, 5, "Default Tag", []);
+  export let community;
+  console.log(community);
 </script>
 
 <button
   class="relative bg-background w-full h-full dark:bg-background-dark rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer aspect-square"
   role="button"
   tabindex="0"
-  on:click={() => goto(`/community/${encodeURIComponent(community.id)}_${encodeURIComponent(community.title)}`)}
-  on:keydown={(e) => e.key === 'Enter' && goto(`/community/${encodeURIComponent(community.id)}_${encodeURIComponent(community.title)}`)}
+  on:click={() => goto(`/community/${encodeURIComponent(community.id)}_${encodeURIComponent(community.name)}`)}
+  on:keydown={(e) => e.key === 'Enter' && goto(`/community/${encodeURIComponent(community.id)}_${encodeURIComponent(community.name)}`)}
 >
   <!-- Tag -->
   {#if community.tag}
@@ -22,15 +23,15 @@
 
   <!-- Image Section -->
   <div class="h-full relative">
-    <img src={community.image || '/placeholder-image.jpg'} alt={community.title} class="w-full h-full object-cover" />
+    <img src={community.cover_pic || '/placeholder-image.jpg'} alt={community.name} class="w-full h-full object-cover" />
 
     <!-- Overlay -->
     <div class="absolute inset-x-0 bottom-0 bg-gray-800 bg-opacity-70 text-white p-4 h-[80px] md:h-[100px]">
       <h3
         class="text-sm md:text-lg font-semibold text-center truncate"
-        title={community.title}
+        title={community.name}
       >
-        {community.title}
+        {community.name}
       </h3>
       <div class="mt-2 flex items-center justify-center space-x-4 text-xs md:text-sm">
         <!-- Members Count -->

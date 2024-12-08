@@ -1,13 +1,28 @@
 <script>
   import Card from './Card.svelte';
-  import { communities } from '$lib/stores/AllPurposeStore';
+  // import { communities } from '$lib/stores/AllPurposeStore';
   import { goto } from '$app/navigation';
 
-  console.log($communities); // Debugging to check the communities in the store
+  /**
+   * @type {never[]}
+   */
+  let communities = [];
 
+  const loadCommunities = async () => {
+    try {
+      const response = await fetch(`http://localhost:3011/`);
+      const data = await response.json();
+      communities = data;
+      console.log(communities);
+    } catch (error) {
+      console.error('Error fetching communities:', error);
+    }
+  };
+  loadCommunities();
+  
   // Navigate to the create-community page
   function AddCommunity() {
-    goto('/create-community'); // Ensure the route matches your actual setup
+    goto('/community/create'); // Ensure the route matches your actual setup
   }
 </script>
 
@@ -52,7 +67,7 @@
         </div>
 
         <!-- Community Cards -->
-        {#each $communities as community (community.id)}
+        {#each communities as community (community.id)}
           <Card {community} />
         {/each}
       </div>
