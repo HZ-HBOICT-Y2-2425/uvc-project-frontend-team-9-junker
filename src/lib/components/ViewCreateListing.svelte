@@ -1,13 +1,13 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  let title: string = "Vintage Nike Sneakers Size 12"; // 제목을 수정 가능한 변수로 설정
-  let selectedListingType: string = ""; // 라디오 버튼 선택 값
-  let selectedCommunities: Set<string> = new Set(); // 선택된 커뮤니티를 저장
-  let uploadedImages: { id: number; url: string }[] = []; // 업로드된 이미지를 저장
-  let imageId = 0; // 이미지 ID 관리
+  let title: string = "Vintage Nike Sneakers Size 12"; 
+  let selectedListingType: string = ""; 
+  let selectedCommunities: Set<string> = new Set(); 
+  let uploadedImages: { id: number; url: string }[] = []; 
+  let imageId = 0; 
 
-  // 커뮤니티 목록
+  // Community List
   const communityOptions = ["HZ", "APV", "Middelburg"];
 
   // Toggle community
@@ -41,13 +41,28 @@
 </script>
 
 <style>
-  /* Add custom styles if needed */
+  /* Custom styles */
+  .form-label {
+    color: #39c69c; /* Mint color for labels */
+    font-weight: bold;
+    font-size: 1.25rem; /* Increase font size */
+  }
+
+  .input-text,
+  .textarea {
+    font-weight: 300; /* Thin font for title and description */
+  }
+
   .upload-placeholder {
     cursor: pointer;
   }
 
   .upload-placeholder:hover {
     background-color: #f3f4f6;
+  }
+
+  .textarea {
+    font-weight: 300; /* Thin font for description */
   }
 </style>
 
@@ -56,11 +71,11 @@
     <!-- Title (Editable) -->
     <div class="mb-4">
       <!-- svelte-ignore a11y_label_has_associated_control -->
-      <label class="block text-sm font-medium text-gray-700 mb-1">Title</label>
+      <label class="block text-sm font-medium form-label mb-1">Title</label>
       <input
         type="text"
         bind:value={title}
-        class="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500"
+        class="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500 input-text"
         placeholder="Enter title"
       />
     </div>
@@ -68,7 +83,7 @@
     <!-- Image Upload Section -->
     <div class="mb-4">
       <!-- svelte-ignore a11y_label_has_associated_control -->
-      <label class="block text-sm font-medium text-gray-700 mb-1">Upload Images</label>
+      <label class="block text-sm font-medium form-label mb-1">Upload Images</label>
       <div class="flex flex-wrap gap-4">
         <!-- Render uploaded images -->
         {#each uploadedImages as image}
@@ -97,7 +112,6 @@
           <span class="text-gray-400 text-sm font-medium">+ Add Image</span>
         </div>
       </div>
-      <!-- Hidden Input for Image Upload -->
       <input
         type="file"
         id="imageUploadInput"
@@ -110,12 +124,12 @@
 
     <!-- Description Section -->
     <div class="mb-4">
-      <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Add description</label>
+      <label for="description" class="block text-sm font-medium form-label mb-1">Add description</label>
       <textarea
         id="description"
         rows="4"
         placeholder="Enter description here"
-        class="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500"
+        class="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500 textarea"
       >
 I just remembered that I had bought these shoes 10 years ago and they never really fit me well so I barely wore them.
 I'm looking for some cool vintage fashion. Let’s make a trade!
@@ -125,7 +139,7 @@ I'm looking for some cool vintage fashion. Let’s make a trade!
     <!-- Select Communities -->
     <div class="mb-4">
       <!-- svelte-ignore a11y_label_has_associated_control -->
-      <label class="block text-sm font-medium text-gray-700 mb-1">Select Communities</label>
+      <label class="block text-sm font-medium form-label mb-1">Select Communities</label>
       <div class="flex space-x-2">
         {#each communityOptions as community}
           <button
@@ -143,44 +157,40 @@ I'm looking for some cool vintage fashion. Let’s make a trade!
     </div>
 
     <!-- Listing Type -->
-<div class="mb-6">
-  <!-- svelte-ignore a11y_label_has_associated_control -->
-  <label class="block text-sm font-medium text-gray-700 mb-1">Listing type</label>
-  <div class="flex items-center space-x-4">
-    <!-- Radio Button for Give-Away -->
-    <label class="flex items-center space-x-2">
-      <input
-        type="radio"
-        name="listingType"
-        value="Give-Away"
-        bind:group={selectedListingType}
-        class="w-4 h-4 text-green-500 border-gray-300 focus:ring-green-500"
-      />
-      <span
-        class="{selectedListingType === 'Give-Away' ? 'text-green-600 font-bold' : 'text-gray-700'} text-sm"
-      >
-        Give-Away
-      </span>
-    </label>
-
-    <!-- Radio Button for Trade-Offer -->
-    <label class="flex items-center space-x-2">
-      <input
-        type="radio"
-        name="listingType"
-        value="Trade-Offer"
-        bind:group={selectedListingType}
-        class="w-4 h-4 text-green-500 border-gray-300 focus:ring-green-500"
-      />
-      <span
-        class="{selectedListingType === 'Trade-Offer' ? 'text-green-600 font-bold' : 'text-gray-700'} text-sm"
-      >
-        Trade-Offer
-      </span>
-    </label>
-  </div>
-</div>
-
+    <div class="mb-6">
+      <!-- svelte-ignore a11y_label_has_associated_control -->
+      <label class="block text-sm font-medium form-label mb-1">Listing type</label>
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2">
+          <input
+            type="radio"
+            name="listingType"
+            value="Give-Away"
+            bind:group={selectedListingType}
+            class="w-4 h-4 text-green-500 border-gray-300 focus:ring-green-500"
+          />
+          <span
+            class="{selectedListingType === 'Give-Away' ? 'text-green-600 font-bold' : 'text-gray-700'} text-sm"
+          >
+            Give-Away
+          </span>
+        </label>
+        <label class="flex items-center space-x-2">
+          <input
+            type="radio"
+            name="listingType"
+            value="Trade-Offer"
+            bind:group={selectedListingType}
+            class="w-4 h-4 text-green-500 border-gray-300 focus:ring-green-500"
+          />
+          <span
+            class="{selectedListingType === 'Trade-Offer' ? 'text-green-600 font-bold' : 'text-gray-700'} text-sm"
+          >
+            Trade-Offer
+          </span>
+        </label>
+      </div>
+    </div>
 
     <!-- Submit Button -->
     <button
