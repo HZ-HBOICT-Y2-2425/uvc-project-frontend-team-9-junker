@@ -1,6 +1,8 @@
 <script>
     import { goto } from "$app/navigation";
     import { authStore } from "$lib/stores/authStore";
+    import { intendedRoute } from "$lib/stores/AllPurposeStore";
+
     let username = '';
     let password = '';
     let message = '';
@@ -21,7 +23,7 @@
             token: data.accessToken,
           });
           message = 'Login successful!';
-          goto('/');
+          goto( $intendedRoute || '/');
         } else {
           message = data.error;
         }

@@ -9,7 +9,7 @@
 
     export let userData;
     const user = userData.user;
-    console.log(user);
+    // console.log(user);
 
     let badges = ["Beginner", "Level 1"];
     let item = {

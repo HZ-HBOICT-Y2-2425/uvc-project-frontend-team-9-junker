@@ -7,6 +7,7 @@ export const toggleState = writable("swipe");
 export const loadingState = writable(false);
 export const darkModeEnabled = writable(false);
 export const savedListingsUser = writable('username');
+export const intendedRoute = writable("");
 
 export const items = [
     new Item(0, 0, "Bike (Barely Used)", "Almost new", ["bike.jpg", "bike2.jpg"], "", true, 18, 4, "2023-10-05T14:48:00.000Z", ["Bicycles", "Outdoors", "Sports"], [0, 1, 2, 3]),
@@ -28,4 +29,4 @@ export const communities = [
     new Community(1, "HZ Students", "hz-middelburg.jpg", 218, 22, "", ["0", "1", "2"]),
     new Community(2, "APV Residents", "APV-ruyter.jpg", 218, 22, "", ["0", "1", "2"]),
     new Community(3, "APV Residents", "APV-ruyter.jpg", 218, 22, "", ["0", "1", "2"])
-  ];
+];
