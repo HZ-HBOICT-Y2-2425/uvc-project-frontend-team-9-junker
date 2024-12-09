@@ -1,0 +1,31 @@
+import { get } from 'svelte/store';
+import { authStore } from '$lib/stores/authStore';
+
+export async function refreshToken() {
+    const { token, username } = get(authStore);
+
+    try {
+        const response = await fetch('http://localhost:3012/refreshToken', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token, username }),
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+
+            authStore.update((store) => ({
+                ...store,
+                token: data.accessToken, // Update access token
+            }));
+
+            return data.accessToken; // Return new token for further use
+        }
+
+        console.error("Failed to refresh token:", response.status);
+        return null;
+    } catch (error) {
+        console.error("Error refreshing token:", error);
+        return null;
+    }
+}

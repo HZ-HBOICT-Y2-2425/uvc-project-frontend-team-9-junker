@@ -15,9 +15,11 @@
   let description = ""; // Community description
   let cover_pic = ""; // Holds uploaded cover_pic file
   let userid = $authStore.user.id; // Holds user id
+  console.log(userid);
 
   const createCommunity = async () => {
     try {
+      console.log(userid);
       const response = await fetch('http://localhost:3011/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

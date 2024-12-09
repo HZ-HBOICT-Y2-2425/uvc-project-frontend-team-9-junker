@@ -3,28 +3,28 @@
 	import { goto } from '$app/navigation';
 	import { tick } from 'svelte';
 	import { darkModeEnabled } from "$lib/stores/AllPurposeStore";
+	import fetchUserData from '$lib/utils/fetchUserWithAuth';
 
-	let countdown = 1;
-
-	// user authentication
+	let countdown = 3;
 	let userData = null;
-	const loadUserData = async () => {
-		const fetchUserData = (await import("$lib/utils/authUtils")).default;
-		userData = await fetchUserData();
-	}
 
 	onMount(async () => {
 		while (countdown > 0) {
-		await tick();
-		await new Promise(resolve => setTimeout(resolve, 1000));
-		countdown--;
+			await tick();
+			await new Promise(resolve => setTimeout(resolve, 1000));
+			countdown--;
 		}
-		loadUserData();
-		goto('/swipe');
+		userData = await fetchUserData();
+		if (userData) {
+			goto('/swipe');
+		}
 	});
 
-	const redirectToJunker = () => {
-		goto('/swipe');
+	const redirectToJunker = async () => {
+		userData = await fetchUserData();
+		if (userData) {
+			goto('/swipe');
+		}
 	};
 
 </script>
