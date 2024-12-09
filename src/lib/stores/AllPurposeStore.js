@@ -9,6 +9,8 @@ export const darkModeEnabled = writable(false);
 export const savedListingsUser = writable('username');
 export const intendedRoute = writable("");
 
+export const loggedInUserID = "user1";
+
 export const items = [
     new Item(0, 0, "Bike (Barely Used)", "Almost new", ["bike.jpg", "bike2.jpg"], "", true, 18, 4, "2023-10-05T14:48:00.000Z", ["Bicycles", "Outdoors", "Sports"], [0, 1, 2, 3]),
     new Item(2, 1, "Sneakers [Vintage]", "Size 12", ["sneaker1.avif", "sneaker3.avif", "sneaker4.avif", "sneaker5.avif", "sneaker6.avif", "sneaker7.avif",], "", true, 28, 1, "2024-10-05T14:48:00.000Z", ["Shoes", "Clothing"], [0, 1, 2, 3]),
