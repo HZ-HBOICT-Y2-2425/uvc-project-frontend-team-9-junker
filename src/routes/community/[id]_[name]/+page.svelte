@@ -9,12 +9,26 @@
         import { onMount } from "svelte";
         let communityId = $page.params.id;
         let communityName = $page.params.name;
+
         export let data;
         let { items } = data;
-        let { communities } = data;
-        let community = communities.find( (community) => community.id == communityId);
+        let {communities} = data;
+        let communityData = '';
+        console.log(communityId, communityName);
+
+        const fetchCommunityData = async () => {
+            try {
+                const response = await fetch(`http://localhost:3011/${communityId}`);
+                communityData = await response.json();
+                console.log(communityData);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchCommunityData();
+
         items = items.filter( (item) => 
-            item.communities.some( (communityId) => communityId == community.id)
+            item.communities.some( (communityId) => communityId == communityId)
         );
     
     

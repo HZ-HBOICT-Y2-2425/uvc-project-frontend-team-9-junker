@@ -13,7 +13,7 @@
       const response = await fetch(`http://localhost:3011/`);
       const data = await response.json();
       communities = data;
-      console.log(communities);
+      // console.log(communities);
     } catch (error) {
       console.error('Error fetching communities:', error);
     }
