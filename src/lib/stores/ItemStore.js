@@ -26,6 +26,7 @@ const fetchAPI = async (url, method, body) => {
 };
 
 /**
+ * UNTESTED
  * This function handles multiple request
  * @param urls
  */

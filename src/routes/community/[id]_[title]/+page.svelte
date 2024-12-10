@@ -7,6 +7,7 @@
     import { page } from "$app/stores";
     import ViewCommunityListings from "$lib/components/ViewCommunityItems.svelte";
     import { onMount } from "svelte";
+    
     let communityId = $page.params.id;
     let communityName = $page.params.title;
     export let data;

@@ -1,18 +1,30 @@
 <script lang="ts">
     import { onMount } from "svelte";
+    import { getAllItems, getItem, storeItem, updateItem, deleteItem } from "$lib/stores/ItemStore";
   
     let title: string = "Vintage Nike Sneakers Size 12";  // 제목을 수정 가능한 변수로 설정
-    let selectedListingType: string = "";
+    let selectedListingType: string = "Give-Away";
     let selectedCommunities: Set<string> = new Set();
     let uploadedImages: { id: number; url: string }[] = []; // 업로드된 이미지를 저장할 배열
     let imageId = 0; // 이미지 ID를 관리
-  
+    let description: string = "I just remembered that I had bought these shoes 10 years ago and they never really fit me well so I barely wore them. \nI'm looking for some cool vintage fashion. Let's make a trade!";
+    
+    let action: boolean = false;
+    let name: string = "";
+    let images: string[] = [];
+    let userid: number | undefined = undefined;
+    let available: boolean = true;
+    let views: number = 0;
+    let interested: number = 0;
+    let categories: number[] = [];
+    let communities: string[] = Array.from(selectedCommunities);
     // 커뮤니티 목록
     const communityOptions = ["HZ", "APV", "Middelburg"];
   
     // Toggle listing type
     function toggleListingType(type: string) {
       selectedListingType = type;
+      selectedListingType === "Give-Away" ? action = false : action = true;
     }
   
     // Toggle community
@@ -38,11 +50,38 @@
         }
       }
     }
+
+    /**
+     * @param {{ target: { files: any[]; }; }} event
+     */
+    /*
+     function handleImageUpload(event: Event) {
+        const file = event.target.files[0];
+        if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            user.profile_pic = e.target.result;
+        };
+        reader.readAsDataURL(file);
+        }
+    }
+    */
   
     // Delete an uploaded image
     function deleteImage(id: number) {
       uploadedImages = uploadedImages.filter(image => image.id !== id);
     }
+
+    //userid: number, name: string, description: string, images: string[], action: boolean, available: boolean, views: number, interested: number, categories: string[], communities: number[]
+    function postMyListing() {
+      name = title;
+      communities = Array.from(selectedCommunities);
+      userid = 0;
+        
+      let result = storeItem(userid, name, description, images, action, available, views, interested, categories, communities);
+      console.log(result);
+    }
+
   </script>
   
   <style>
@@ -115,11 +154,11 @@
         <textarea
           id="description"
           rows="4"
+          bind:value={description}
           placeholder="Enter description here"
           class="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500"
         >
- I just remembered that I had bought these shoes 10 years ago and they never really fit me well so I barely wore them.
- I'm looking for some cool vintage fashion. Let’s make a trade!
+          {description}
         </textarea>
       </div>
   
@@ -171,6 +210,7 @@
   
       <!-- Submit Button -->
       <button
+        on:click={() => postMyListing()}
         class="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2"
       >
         Post my listing
