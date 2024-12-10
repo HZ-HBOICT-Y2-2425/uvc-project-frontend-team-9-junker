@@ -6,8 +6,8 @@
 	import fetchUserData from '$lib/utils/fetchUserWithAuth';
 	import { authStore } from "$lib/stores/authStore";
 
-	let countdown = 3;
-	let userData = null;
+	let countdown = 1;
+	let userData: { user: any; } | null = null;
 
 	onMount(async () => {
 		while (countdown > 0) {

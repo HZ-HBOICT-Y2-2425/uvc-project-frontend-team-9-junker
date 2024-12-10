@@ -4,9 +4,11 @@
     import { get } from 'svelte/store';
     import { browser } from '$app/environment';
     import { goto } from '$app/navigation';
+    import { onMount } from "svelte";
+    import ViewPublicprofile from "$lib/components/ViewPublicprofile.svelte";
 
     let userData: null = null;
-    const fetchUserData = async () => {
+    onMount(async () => {
         if (!browser) return null;
 
         // Use `get` to access the current value of the store
@@ -22,9 +24,8 @@
             console.error("Error fetching user data:", error);
             return null;
         }
-    }
-
-    fetchUserData();
+    });
+    
 </script>
 
 <main>
@@ -40,7 +41,7 @@
 
     {#if userData}
         <div>
-            <!-- <ViewPublicprofile {userData}/> -->
+            <ViewPublicprofile {userData}/>
         </div>
     {/if}
 </main>
