@@ -16,7 +16,7 @@
         let communityData = '';
         console.log(communityId, communityName);
 
-        const fetchCommunityData = async () => {
+        onMount(async () => {
             try {
                 const response = await fetch(`http://localhost:3011/${communityId}`);
                 communityData = await response.json();
@@ -24,8 +24,7 @@
             } catch (error) {
                 console.log(error);
             }
-        };
-        fetchCommunityData();
+        });
 
         items = items.filter( (item) => 
             item.communities.some( (communityId) => communityId == communityId)
