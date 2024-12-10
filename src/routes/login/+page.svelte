@@ -21,6 +21,7 @@
             username: username,
             isAuthenticated: !!data.accessToken,
             token: data.accessToken,
+            refreshToken: data.refreshToken,
             user: []
           });
           message = 'Login successful!';

@@ -2,13 +2,18 @@ import { get } from 'svelte/store';
 import { authStore } from '$lib/stores/authStore';
 
 export async function refreshToken() {
-    const { token, username } = get(authStore);
+    const { refreshToken, username } = get(authStore);
+
+    if (!refreshToken) {
+        console.error("No refresh token found.");
+        return null;
+    }
 
     try {
         const response = await fetch('http://localhost:3012/refreshToken', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ token, username }),
+            body: JSON.stringify({ refreshToken, username }),
         });
 
         if (response.ok) {
@@ -16,7 +21,8 @@ export async function refreshToken() {
 
             authStore.update((store) => ({
                 ...store,
-                token: data.accessToken, // Update access token
+                token: data.accessToken,
+                refreshToken: data.refreshToken,
             }));
 
             return data.accessToken; // Return new token for further use
