@@ -4,6 +4,7 @@
 	import { tick } from 'svelte';
 	import { darkModeEnabled } from "$lib/stores/AllPurposeStore";
 	import fetchUserData from '$lib/utils/fetchUserWithAuth';
+	import { authStore } from "$lib/stores/authStore";
 
 	let countdown = 3;
 	let userData = null;
@@ -16,8 +17,13 @@
 		}
 		userData = await fetchUserData();
 		if (userData) {
+            authStore.update((store) => ({
+                ...store,
+                user: userData.user
+            }));
+			console.log($authStore);
 			goto('/swipe');
-		}
+        }
 	});
 
 	const redirectToJunker = async () => {

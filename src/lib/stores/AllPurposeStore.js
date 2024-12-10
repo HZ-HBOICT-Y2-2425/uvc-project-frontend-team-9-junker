@@ -26,9 +26,10 @@ export const users = [
     new User(1, "John", "blank-pfp.webp"),
 ];
 
-export const communities = [
+export const communities = writable([
     new Community(0, "Middelburg", "middelburg-church.JPG", 218, 22, "Nearby", ["0", "1", "2"]),
     new Community(1, "HZ Students", "hz-middelburg.jpg", 218, 22, "", ["0", "1", "2"]),
     new Community(2, "APV Residents", "APV-ruyter.jpg", 218, 22, "", ["0", "1", "2"]),
     new Community(3, "APV Residents", "APV-ruyter.jpg", 218, 22, "", ["0", "1", "2"])
-];
+]);
+

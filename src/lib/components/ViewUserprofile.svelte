@@ -43,7 +43,6 @@
     }
 
     const { token, username } = get(authStore);
-    console.log(username, token);
     const saveProfilePic = async (/** @type {any} */ profile_pic) => {
         try {
             if (!token) {

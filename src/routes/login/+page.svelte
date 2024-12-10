@@ -21,6 +21,7 @@
             username: username,
             isAuthenticated: !!data.accessToken,
             token: data.accessToken,
+            user: []
           });
           message = 'Login successful!';
           goto( $intendedRoute || '/');
