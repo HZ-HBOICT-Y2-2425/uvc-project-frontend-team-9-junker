@@ -3,7 +3,10 @@
   import { onMount } from "svelte";
   import { page } from "$app/stores";
   import ChatWindow from "$lib/components/Chat/ChatWindow.svelte";
-    import { loggedInUserID } from "$lib/stores/AllPurposeStore";
+  import { loggedInUserID } from "$lib/stores/AllPurposeStore";
+  import { ref, onValue } from "firebase/database";
+  import { database } from "$lib/utils/firebase";
+
 
   const sender = loggedInUserID; // Replace this with your logged-in user logic.
   const recipient = $page.params.username; // Get the recipient username from the route.
