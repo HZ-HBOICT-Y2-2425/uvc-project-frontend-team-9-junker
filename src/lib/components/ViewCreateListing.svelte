@@ -5,7 +5,7 @@
     let title: string = "Vintage Nike Sneakers Size 12";  // 제목을 수정 가능한 변수로 설정
     let selectedListingType: string = "Give-Away";
     let selectedCommunities: Set<string> = new Set();
-    let uploadedImages: { id: number; url: string }[] = []; // 업로드된 이미지를 저장할 배열
+    let uploadedImages: string[] = []; // 업로드된 이미지를 저장할 배열
     let imageId = 0; // 이미지 ID를 관리
     let description: string = "I just remembered that I had bought these shoes 10 years ago and they never really fit me well so I barely wore them. \nI'm looking for some cool vintage fashion. Let's make a trade!";
     
@@ -43,33 +43,20 @@
       if (input.files) {
         for (const file of input.files) {
           const reader = new FileReader();
-          reader.onload = () => {
-            uploadedImages = [...uploadedImages, { id: imageId++, url: reader.result as string }];
+          reader.onload = (e) => {
+            uploadedImages = [...uploadedImages, e!.target!.result as string];
+            console.log(e!.target!.result);
           };
           reader.readAsDataURL(file);
         }
       }
     }
-
-    /**
-     * @param {{ target: { files: any[]; }; }} event
-     */
-    /*
-     function handleImageUpload(event: Event) {
-        const file = event.target.files[0];
-        if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            user.profile_pic = e.target.result;
-        };
-        reader.readAsDataURL(file);
-        }
-    }
-    */
   
     // Delete an uploaded image
-    function deleteImage(id: number) {
-      uploadedImages = uploadedImages.filter(image => image.id !== id);
+    function deleteImage(index: number) {
+      uploadedImages.splice(index, 1);
+      uploadedImages = uploadedImages; // triggers GUI update
+      //uploadedImages = uploadedImages.filter(image => image.id !== id);
     }
 
     //userid: number, name: string, description: string, images: string[], action: boolean, available: boolean, views: number, interested: number, categories: string[], communities: number[]
@@ -77,6 +64,7 @@
       name = title;
       communities = Array.from(selectedCommunities);
       userid = 0;
+      images = uploadedImages;
         
       let result = storeItem(userid, name, description, images, action, available, views, interested, categories, communities);
       console.log(result);
@@ -113,17 +101,17 @@
         <label class="block text-sm font-medium text-gray-700 mb-1">Upload Images</label>
         <div class="flex flex-wrap gap-4">
           <!-- Render uploaded images -->
-          {#each uploadedImages as image}
+          {#each uploadedImages as image, index}
             <div class="relative">
               <img
-                src="{image.url}"
+                src="{image}"
                 alt="Uploaded Item"
                 class="w-32 h-32 object-cover rounded-lg border"
               />
               <!-- Delete button -->
               <button
                 class="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1 text-xs"
-                on:click={() => deleteImage(image.id)}
+                on:click={() => deleteImage(index)}
               >
                 ✕
               </button>

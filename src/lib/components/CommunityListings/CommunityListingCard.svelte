@@ -5,7 +5,7 @@
     import { User } from "$lib/models/User";
     import { users } from "$lib/stores/AllPurposeStore";
 
-    const images = import.meta.glob(['$lib/assets/images/**.jpg', '$lib/assets/images/**.png', '$lib/assets/images/**.svg', '$lib/assets/images/**.webp', '$lib/assets/images/**.avif'], { eager: true, as: 'url' });
+    const pictures = import.meta.glob(['$lib/assets/pictures/**.jpg', '$lib/assets/pictures/**.png', '$lib/assets/pictures/**.svg', '$lib/assets/pictures/**.webp', '$lib/assets/pictures/**.avif'], { eager: true, as: 'url' });
 
     export let item = new Item(0, 0, "noname", "", ["default.png"], "", false, 0, 0);
 
@@ -22,11 +22,11 @@
 class="relative bg-background sm:w-[30vh] dark:bg-background-dark rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer aspect-[3/4]"
 on:click={() => navigate()}
 >
-    <!-- Image Section -->
+    <!-- picture Section -->
     <div class="card-content">
-        <!--Method for importing images: https://stackoverflow.com/questions/77934659/how-can-i-dynamically-import-images-stored-in-lib-within-a-component-in-svelte -->
-        <img src={images[`/src/lib/assets/images/${item.pictures[0]}`]} alt={item.name} class="card-image" />
-
+        <!--Method for importing pictures: https://stackoverflow.com/questions/77934659/how-can-i-dynamically-import-images-stored-in-lib-within-a-component-in-svelte -->
+        <img src={pictures[`/src/lib/assets/pictures/${item.pictures[0]}`]} alt={item.name} class="card-picture" />
+        {item.pictures}
         <div class="card-text">
             <div class="item-name">
                 {item.name}
@@ -35,7 +35,7 @@ on:click={() => navigate()}
                 {item.description}
             </div-->
             <div class="owner">
-                <img src={images[`/src/lib/assets/images/${owner.pfp}`]} alt={owner.pfp} class="owner-pfp">
+                <img src={pictures[`/src/lib/assets/pictures/${owner.pfp}`]} alt={owner.pfp} class="owner-pfp">
                 <div class="owner-name">
                     {owner.name}
                 </div>
@@ -52,7 +52,7 @@ on:click={() => navigate()}
         width: 100%;
         background-color: white;
     }
-    .card-image {
+    .card-picture {
         flex-shrink: 0;
         object-fit:cover;
         overflow: hidden;

@@ -1,66 +1,72 @@
 <script>
 // @ts-nocheck
 
-    const imagesPreload = import.meta.glob(['$lib/assets/images/**.jpg', '$lib/assets/images/**.png', '$lib/assets/images/**.svg', '$lib/assets/images/**.webp', '$lib/assets/images/**.avif'], { eager: true, as: 'url' });
+    const picturesPreload = import.meta.glob([
+      '$lib/assets/pictures/**.jpg', 
+      '$lib/assets/pictures/**.png', 
+      '$lib/assets/pictures/**.svg', 
+      '$lib/assets/pictures/**.webp', 
+      '$lib/assets/pictures/**.avif'
+    ], { eager: true, as: 'url' });
 
 
-    export let images = [
+    export let pictures = [
       'bike.png',
       'desk.jpg',
     ];
-    console.log(images);
+    console.log(pictures);
     
     let currentIndex = 0;
   
-    // Update image position
-    function goToImage(index) {
+    // Update picture position
+    function goToPicture(index) {
       currentIndex = index;
       document.documentElement.style.setProperty('--currentIndex', currentIndex);
     }
   
     // Next button functionality
-    function nextImage() {
-      currentIndex = (currentIndex + 1) % images.length;
+    function nextPicture() {
+      currentIndex = (currentIndex + 1) % pictures.length;
       document.documentElement.style.setProperty('--currentIndex', currentIndex);
     }
   
     // Previous button functionality
-    function prevImage() {
-      currentIndex = (currentIndex - 1 + images.length) % images.length;
+    function prevPicture() {
+      currentIndex = (currentIndex - 1 + pictures.length) % pictures.length;
       document.documentElement.style.setProperty('--currentIndex', currentIndex);
     }
 </script>
   
   
-<div class="image-viewer">
-    {#if (images.length >= 2)}
-        <div class="image-wrapper">
-            {#each images as image, index}
-                <!--img src={image} alt="Image {index + 1}"-->
-                <img src={imagesPreload[`/src/lib/assets/images/${image}`]} alt="Img {index + 1}" />
+<div class="picture-viewer">
+    {#if (pictures.length >= 2)}
+        <div class="picture-wrapper">
+            {#each pictures as picture, index}
+                <!--img src={picture} alt="picture {index + 1}"-->
+                <img src={picturesPreload[`/src/lib/assets/pictures/${picture}`]} alt="Img {index + 1}" />
             {/each}
         </div>
 
-        <button class="nav-button prev" on:click={prevImage}>&lt;</button>
-        <button class="nav-button next" on:click={nextImage}>&gt;</button>
+        <button class="nav-button prev" on:click={prevPicture}>&lt;</button>
+        <button class="nav-button next" on:click={nextPicture}>&gt;</button>
 
         <div class="indicator-wrapper">
-            {#each images as _, index}
+            {#each pictures as _, index}
             <div
                 class="indicator {index === currentIndex ? 'active' : ''}"
-                on:click={() => goToImage(index)}
+                on:click={() => goTopicture(index)}
             ></div>
             {/each}
         </div>
-    {:else if images.length}
-        <div class="image-wrapper">
-            <img src={imagesPreload[`/src/lib/assets/images/${images[0]}`]} alt="Img 1" />
+    {:else if pictures.length}
+        <div class="picture-wrapper">
+            <img src={picturesPreload[`/src/lib/assets/pictures/${pictures[0]}`]} alt="Img 1" />
         </div>
     {/if}
 </div>
 
 <style>
-    .image-viewer {
+    .picture-viewer {
       position: relative;
       width: 100%;
       height: 100%;
@@ -74,14 +80,14 @@
         --currentIndex: 0;
     }
   
-    .image-wrapper {
+    .picture-wrapper {
       display: flex;
       transition: transform 0.5s ease-in-out;
       height: 100%;
       transform: translateX(calc(-100% * var(--currentIndex)));
     }
   
-    .image-wrapper img {
+    .picture-wrapper img {
       width: 100%;
       height: 100%;
       object-fit:contain;

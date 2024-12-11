@@ -51,15 +51,15 @@ export const getItem = async (itemId) => {
     return item
 };
 
-export const storeItem = async (userid, name, description, images, action, available, views, interested, categories, communities) => {
+export const storeItem = async (userid, name, description, pictures, action, available, views, interested, categories, communities) => {
     console.log("storeItem()")
-    let message = await fetchAPI('/create', 'POST', {userid, name, description, images, action, available, views, interested, categories, communities});
+    let message = await fetchAPI('/create', 'POST', {userid, name, description, pictures, action, available, views, interested, categories, communities});
     return message
 };
 
-export const updateItem = async (itemid, userid, name, description, images, action, available, views, interested, categories, communities) => {
+export const updateItem = async (itemid, userid, name, description, pictures, action, available, views, interested, categories, communities) => {
     console.log("updateItem()");
-    let message = await fetchAPI('/edit/' + itemid + '/' + userid, 'PUT', {name, description, images, action, available, views, interested, categories, communities});
+    let message = await fetchAPI('/edit/' + itemid + '/' + userid, 'PUT', {name, description, pictures, action, available, views, interested, categories, communities});
     return message
 };
 
