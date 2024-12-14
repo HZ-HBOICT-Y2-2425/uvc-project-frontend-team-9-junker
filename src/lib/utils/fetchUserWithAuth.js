@@ -27,7 +27,6 @@ export default async function fetchUserData() {
         if (response.status === 401) { // Token expired
             console.log("Token expired, attempting to refresh...");
             const newToken = await refreshToken();
-            console.log("Refresh token response:", newToken);
 
             if (newToken) {
                 response = await fetch(`${url}${username}`, {
