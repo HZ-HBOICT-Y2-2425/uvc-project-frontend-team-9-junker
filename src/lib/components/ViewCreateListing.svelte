@@ -53,7 +53,7 @@
         placeholder="Enter title"
       />
     </div>
- 
+
     <!-- Image Upload Section -->
     <div class="mb-4">
       <!-- svelte-ignore a11y_label_has_associated_control -->

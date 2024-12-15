@@ -2,23 +2,23 @@
   import Card from './Card.svelte';
   // import { communities } from '$lib/stores/AllPurposeStore';
   import { goto } from '$app/navigation';
+  import { onMount } from 'svelte';
 
   /**
    * @type {never[]}
    */
   let communities = [];
 
-  const loadCommunities = async () => {
-    try {
-      const response = await fetch(`http://localhost:3011/`);
-      const data = await response.json();
-      communities = data;
-      // console.log(communities);
-    } catch (error) {
-      console.error('Error fetching communities:', error);
-    }
-  };
-  loadCommunities();
+  onMount( async () => {
+      try {
+        const response = await fetch(`http://localhost:3011/`);
+        const data = await response.json();
+        communities = data;
+        // console.log(communities);
+      } catch (error) {
+        console.error('Error fetching communities:', error);
+      }
+  });
   
   // Navigate to the create-community page
   function AddCommunity() {

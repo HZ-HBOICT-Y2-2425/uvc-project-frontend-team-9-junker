@@ -2,17 +2,52 @@
   // @ts-nocheck
   import { goto } from "$app/navigation";
   import { Community } from "$lib/models/Community.js";
+  import { onMount } from "svelte";
+  import { authStore } from "$lib/stores/authStore";
 
   export let community;
   console.log(community);
+  let memberRole;
+  const user_id = $authStore.user.id;
+  console.log(user_id);
+
+  onMount(async () => {
+    try {
+      const response = await fetch(`http://localhost:3011/member-role/${community.id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ user_id }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        memberRole = data.role;
+      } else {
+        console.error('Error fetching role:', data.error);
+      }
+      console.log(memberRole);
+    } catch (error) {
+      console.error(error);
+    }
+  });
+
+  function directTo() {
+    if (memberRole) {
+      goto(`/community/${encodeURIComponent(community.id)}_${encodeURIComponent(community.name)}`);
+    } else {
+      goto(`/community/${encodeURIComponent(community.id)}_${encodeURIComponent(community.name)}/join`);
+    }
+  }
 </script>
 
 <button
   class="relative bg-background w-full h-full dark:bg-background-dark rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer aspect-square"
   role="button"
   tabindex="0"
-  on:click={() => goto(`/community/${encodeURIComponent(community.id)}_${encodeURIComponent(community.name)}`)}
-  on:keydown={(e) => e.key === 'Enter' && goto(`/community/${encodeURIComponent(community.id)}_${encodeURIComponent(community.name)}`)}
+  on:click={() => directTo()}
+  on:keydown={(e) => e.key === 'Enter' && directTo()}
 >
   <!-- Tag -->
   {#if community.tag}
