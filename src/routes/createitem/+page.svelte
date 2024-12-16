@@ -1,6 +1,7 @@
 <script>
 // @ts-nocheck
     import { getAllItems, getItem, storeItem, updateItem, deleteItem } from "$lib/stores/ItemStore";
+    import { storePicture } from "$lib/stores/pictureStore";
     import { goto } from "$app/navigation";
     import { authStore } from "$lib/stores/authStore";
     let username = '';
@@ -17,6 +18,9 @@
     let interested = '';
     let categories = '';
     let communities = '';
+
+    let picture = "";
+    let filename = "";
 
     const postMyListing = async (userid, name, description, images, action, available, views, interested, categories, communities) => {
         
@@ -49,9 +53,38 @@
         message = error.message;
       }
     };
-      
+
+    /**
+     * @param {{ target: { files: any[]; }; }} event
+     */
+    function handleImageUpload(event) {
+        const file = event.target.files[0];
+        if (file) {
+          filename = file.name;
+          const reader = new FileReader();
+          reader.onload = (e) => {
+              picture = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        }
+    }
 
 </script>
+<p>
+  <button on:click|preventDefault={ () => storePicture(0, 0, null, filename, picture)}>
+      Upload Image
+  </button>
+  <img
+    src={picture}
+    alt=""
+  />
+  <!-- Change Profile Picture -->
+  <label for="profile-upload" class="text-green-500 underline cursor-pointer text-sm">
+    Change Profile Picture
+  </label>
+  <input type="file" id="profile-upload" accept="image/*" on:change={handleImageUpload} class="hidden" />
+</p>
+
 <p>
     <button on:click|preventDefault={ () => getAllItems()}>
         get all items
@@ -63,12 +96,12 @@
     </button>
 </p>
 <p>
-    <button on:click|preventDefault={ () => storeItem(1, "new Item", "it's new", ["default.jpg"], true, true, 0, 0, [], [])}>
+    <button on:click|preventDefault={ () => storeItem(1, "new Item", "it's new", "0", true, true, 0, 0, "", "")}>
         createItem
     </button>
 </p>
 <p>
-    <button on:click|preventDefault={ () => updateItem(8, 1, "no new Item", "it's new", ["default.jpg"], true, true, 0, 0, [], [])}>
+    <button on:click|preventDefault={ () => updateItem(8, 1, "no new Item", "it's new", "0", true, true, 0, 0, "", "")}>
         update Item
     </button>
 </p>

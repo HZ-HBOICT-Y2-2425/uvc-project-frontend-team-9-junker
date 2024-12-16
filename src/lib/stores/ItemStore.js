@@ -4,7 +4,7 @@ import { Item } from '$lib/models/Item';
 
 let message = '';
 let mainUrl = 'http://localhost:3013';
-let gatewayUrl = 'http://localhost:3010/itemmicroservice';
+let gatewayUrl = 'http://localhost:3010/item_microservice';
 
 /**
  * This function fetches the data from the API

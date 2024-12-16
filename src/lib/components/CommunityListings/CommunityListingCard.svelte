@@ -4,18 +4,34 @@
     import { Item } from "$lib/models/Item";
     import { User } from "$lib/models/User";
     import { users } from "$lib/stores/AllPurposeStore";
+    import { getPicturesByItemId } from "$lib/stores/PictureStore.js";
+    import { onMount } from "svelte";
 
-    const pictures = import.meta.glob(['$lib/assets/pictures/**.jpg', '$lib/assets/pictures/**.png', '$lib/assets/pictures/**.svg', '$lib/assets/pictures/**.webp', '$lib/assets/pictures/**.avif'], { eager: true, as: 'url' });
+    const picturesPreload = import.meta.glob([
+      '$lib/assets/pictures/**.jpg', 
+      '$lib/assets/pictures/**.png', 
+      '$lib/assets/pictures/**.svg', 
+      '$lib/assets/pictures/**.webp', 
+      '$lib/assets/pictures/**.avif'
+    ], { eager: true, as: 'url' });
 
-    export let item = new Item(0, 0, "noname", "", ["default.png"], "", false, 0, 0);
+    let pictures = import.meta.glob(['$lib/assets/pictures/**.jpg', '$lib/assets/pictures/**.png', '$lib/assets/pictures/**.svg', '$lib/assets/pictures/**.webp', '$lib/assets/pictures/**.avif'], { eager: true, as: 'url' });
+
+    export let item = ""; //new Item(0, 0, "noname", "", ["default.png"], "", false, 0, 0);
 
     let owner = users.find( (user) => user.id == item.userid) || new User(2, "Error: User not found", "blank-pfp.webp");
     // $: means this is called whenever item variable changes. This makes sure that the owner parameter updates after a sort.
     $: owner = users.find( (user) => user.id == item.userid) || new User(2, "Error: User not found", "blank-pfp.webp");
 
     const navigate = () => {
-        goto(`/item_details/${item.id}_${item.name}`);
+        let item2 = item;
+        goto(`/item_details/${item2.id}_${item2.name}`);
     };
+
+    onMount( async () => {
+      pictures = await getPicturesByItemId(item.id);
+      console.log(pictures[0]?.data);
+    });
 </script>
 
 <button
@@ -24,9 +40,8 @@ on:click={() => navigate()}
 >
     <!-- picture Section -->
     <div class="card-content">
-        <!--Method for importing pictures: https://stackoverflow.com/questions/77934659/how-can-i-dynamically-import-images-stored-in-lib-within-a-component-in-svelte -->
-        <img src={pictures[`/src/lib/assets/pictures/${item.pictures[0]}`]} alt={item.name} class="card-picture" />
-        {item.pictures}
+        <!--TODO: strings over 100kb length are not converted to pictures-->
+        <img src={pictures[0]?.data || picturesPreload[`/src/lib/assets/pictures/default.svg`]} alt={item.name} class="card-picture" />
         <div class="card-text">
             <div class="item-name">
                 {item.name}
@@ -35,7 +50,7 @@ on:click={() => navigate()}
                 {item.description}
             </div-->
             <div class="owner">
-                <img src={pictures[`/src/lib/assets/pictures/${owner.pfp}`]} alt={owner.pfp} class="owner-pfp">
+                <img src={picturesPreload[`/src/lib/assets/pictures/${owner.pfp}`]} alt={owner.pfp} class="owner-pfp">
                 <div class="owner-name">
                     {owner.name}
                 </div>

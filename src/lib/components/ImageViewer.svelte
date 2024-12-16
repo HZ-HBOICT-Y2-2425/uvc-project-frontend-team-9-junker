@@ -10,10 +10,8 @@
     ], { eager: true, as: 'url' });
 
 
-    export let pictures = [
-      'bike.png',
-      'desk.jpg',
-    ];
+    export let pictures;
+
     console.log(pictures);
     
     let currentIndex = 0;
@@ -43,7 +41,7 @@
         <div class="picture-wrapper">
             {#each pictures as picture, index}
                 <!--img src={picture} alt="picture {index + 1}"-->
-                <img src={picturesPreload[`/src/lib/assets/pictures/${picture}`]} alt="Img {index + 1}" />
+                <img src={pictures[index]?.data || picturesPreload[`/src/lib/assets/pictures/default.svg`]} alt="Img {index + 1}" />
             {/each}
         </div>
 
@@ -60,7 +58,7 @@
         </div>
     {:else if pictures.length}
         <div class="picture-wrapper">
-            <img src={picturesPreload[`/src/lib/assets/pictures/${pictures[0]}`]} alt="Img 1" />
+            <img src={pictures[0]?.data || picturesPreload[`/src/lib/assets/pictures/default.svg`]} alt="Img 1" />
         </div>
     {/if}
 </div>
