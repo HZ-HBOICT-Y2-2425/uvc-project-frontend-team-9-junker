@@ -9,10 +9,11 @@
 
 <script>
 // @ts-nocheck
-
+    import ViewCreateListing from "$lib/components/ViewCreateListing.svelte";
     import { goto } from "$app/navigation";
     import Header from "$lib/components/Header.svelte";
     import { authStore } from "$lib/stores/authStore";
+    import * as picStore from "$lib/stores/PictureStore";
   
     let showCancelPopup = false; // For cancel confirmation
     let showPrivatePopup = false; // For private community confirmation
@@ -25,7 +26,7 @@
     let status = "public"; // Community status
     let description = ""; // Community description
     let cover_pic = ""; // Holds uploaded cover_pic file
-    let userid = $authStore.user.id; // Holds user id
+    let userid = $authStore?.user?.id; // Holds user id
     console.log(userid);
   
     const createCommunity = async () => {
@@ -133,12 +134,14 @@
     }
   </script>
   
-  <Header title="Create a Community" />
+  <Header title="Create a Listing" />
+
+  <ViewCreateListing />
   
   <div
     class="h-screen overflow-y-auto p-6 max-w-lg mx-auto space-y-4 border rounded-lg shadow-lg"
   >
-    <h1 class="text-2xl font-bold text-center">Add Community</h1>
+    <h1 class="text-2xl font-bold text-center">Add Listing</h1>
   
     <!-- Upload cover_pic -->
     <img
