@@ -1,7 +1,6 @@
 // @ts-nocheck
 import { writable } from 'svelte/store';
 import { Picture } from '$lib/models/Picture';
-
 let message = '';
 let mainUrl = 'http://localhost:3014';
 let gatewayUrl = 'http://localhost:3010/picture_microservice';
@@ -41,37 +40,37 @@ const getPromisesData = async (urls) => {
 
 export const getAllPictures = async () => {
     console.log("getAllPictures()");
-    let pictures = await fetchAPI('/pictures', 'GET');
+    let pictures = await fetchAPI('/pictures', 'POST');
     return pictures
 };
 
 export const getPicture = async (pictureId) => {
     console.log("getpicture()");
-    let picture = await fetchAPI('/' + pictureId, 'GET');
+    let picture = await fetchAPI('/' + pictureId, 'POST');
     return picture
 };
 
 export const getPictureByName = async (name) => {
     console.log("getpictureByName()");
-    let picture = await fetchAPI('/name/' + name, 'GET');
+    let picture = await fetchAPI('/name/' + name, 'POST');
     return picture
 };
 
 export const getPicturesByUserId = async (userid) => {
     console.log("getPicturesByUserId()");
-    let pictures = await fetchAPI('/user/' + userid, 'GET');
+    let pictures = await fetchAPI('/user/' + userid, 'POST');
     return pictures
 };
 
 export const getPicturesByItemId = async (itemid) => {
     console.log("getPicturesByItemId()");
-    let pictures = await fetchAPI('/item/' + itemid, 'GET');
+    let pictures = await fetchAPI('/item/' + itemid, 'POST');
     return pictures
 };
 
 export const getPicturesByCommunityId = async (communityid) => {
     console.log("getPicturesByCommunityId()");
-    let pictures = await fetchAPI('/community/' + communityid, 'GET');
+    let pictures = await fetchAPI('/community/' + communityid, 'POST');
     return pictures
 };
 
@@ -92,3 +91,4 @@ export const deletePicture = async (pictureid) => {
     let message = await fetchAPI('/delete/' + pictureid, 'DELETE');
     return message
 };
+

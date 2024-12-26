@@ -1,9 +1,11 @@
 <script>
 // @ts-nocheck
     import { getAllItems, getItem, storeItem, updateItem, deleteItem } from "$lib/stores/ItemStore";
-    import { storePicture } from "$lib/stores/pictureStore";
+    import { storePicture, getAllPictures } from "$lib/stores/pictureStore";
     import { goto } from "$app/navigation";
     import { authStore } from "$lib/stores/authStore";
+    import { onMount } from 'svelte';
+
     let username = '';
     let password = '';
     let message = '';
@@ -21,6 +23,8 @@
 
     let picture = "";
     let filename = "";
+    let filetype = "";
+    let pictures ="";
 
     const postMyListing = async (userid, name, description, images, action, available, views, interested, categories, communities) => {
         
@@ -58,18 +62,139 @@
      * @param {{ target: { files: any[]; }; }} event
      */
     function handleImageUpload(event) {
-        const file = event.target.files[0];
-        if (file) {
-          filename = file.name;
-          const reader = new FileReader();
-          reader.onload = (e) => {
-              picture = e.target.result;
-          };
-          reader.readAsDataURL(file);
-        }
-    }
+      const file = event.target.files[0];
+      if (file) {
+        filename = file.name;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            picture = e.target.result;
+            //let picture2 = sharp(picture).resize(150).toBuffer();
+            //console.log(picture2);
+        };
+        reader.readAsDataURL(file);
+      }
+    };
 
+  // Image downscaling
+
+  const MAX_WIDTH = 600;
+  const MAX_HEIGHT = 600;
+  const MIME_TYPE = "image/jpeg";
+  const QUALITY = 1.0;
+
+  onMount(() => {
+    const input = document.getElementById('img-input');
+
+    input.onchange = function (ev) {
+      const file = ev.target.files[0]; // get the file
+      console.log(file);
+      const blobURL = URL.createObjectURL(file);
+      const img = new Image();
+      img.src = blobURL;
+      img.onerror = function () {
+          URL.revokeObjectURL(this.src);
+          // Handle the failure properly
+          console.log("Cannot load image");
+      };
+      img.onload = function () {
+          URL.revokeObjectURL(this.src);
+          //resize(file, img, 100000);
+          //const [newWidth, newHeight] = calculateSize(img, MAX_WIDTH, MAX_HEIGHT);
+          const [newWidth, newHeight] = resize(file, img, 100000);
+          const canvas = document.createElement("canvas");
+          canvas.width = newWidth;
+          canvas.height = newHeight;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, newWidth, newHeight);
+          canvas.toBlob(
+              (blob) => {
+                  // Handle the compressed image. es. upload or save in local state
+                  displayInfo('Original file', file);
+                  displayInfo('Compressed file', blob);
+              },
+              MIME_TYPE
+              ,QUALITY
+          );
+          document.getElementById("root").append(canvas);
+          let newfile = canvas.toDataURL("image/jpeg");
+          console.log(newfile);
+      };
+    };
+  });
+
+  function resize(file, img, maxSize) {
+    let imgWidth = img.width;
+    let imgHeight = img.height;
+    let imgRatio = imgWidth / imgHeight;
+
+    maxSize = maxSize || 100000;
+    let fileSize = file.size;
+    let byteRatio = fileSize / maxSize;
+
+    let pixels = imgWidth*imgHeight;
+    let requiredPixels = pixels / byteRatio;
+
+    let newHeight = Math.sqrt(requiredPixels / imgRatio);
+    let newWidth = newHeight * imgRatio;
+    console.log(newWidth + " " + newHeight);
+    return [newWidth, newHeight];
+  }
+  
+  function calculateSize(img, maxWidth, maxHeight) {
+      let width = img.width;
+      let height = img.height;
+
+      // calculate the width and height, constraining the proportions
+      if (width > height) {
+          if (width > maxWidth) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+          }
+      } else {
+          if (height > maxHeight) {
+              width = Math.round((width * maxHeight) / height);
+              height = maxHeight;
+          }
+      }
+      return [width, height];
+  }
+  
+
+  // Utility functions for demo purpose
+
+  function displayInfo(label, file) {
+      const p = document.createElement('p');
+      p.innerText = `${label} - ${readableBytes(file.size)}`;
+      document.getElementById('root').append(p);
+  }
+
+  function readableBytes(bytes) {
+      const i = Math.floor(Math.log(bytes) / Math.log(1024)),
+          sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+      return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
+  }
 </script>
+
+<p>
+  <button on:click|preventDefault={ async () => pictures = await getAllPictures()}>
+      get all pictures
+  </button>
+  {pictures[0]}
+  {#if pictures.length > 0}
+    {#each pictures as picture}
+    {picture?.name}
+      <img src="{picture?.data}" alt="a">
+    {/each}
+  {/if}
+</p>
+
+<div id="root">
+  <p>Upload an image and see the result</p>
+  <input id="img-input" type="file" accept="image/*" style="display:block" />
+</div>
+
+
 <p>
   <button on:click|preventDefault={ () => storePicture(0, 0, null, filename, picture)}>
       Upload Image
@@ -83,6 +208,11 @@
     Change Profile Picture
   </label>
   <input type="file" id="profile-upload" accept="image/*" on:change={handleImageUpload} class="hidden" />
+</p>
+<p>
+  <button on:click|preventDefault={ () => downScale()}>
+    DownScale
+  </button>
 </p>
 
 <p>

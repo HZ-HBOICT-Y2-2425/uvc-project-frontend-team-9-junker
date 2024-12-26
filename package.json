@@ -42,7 +42,8 @@
 	},
 	"dependencies": {
 		"@material-icons/svg": "^1.0.33",
-		"@use-gesture/vanilla": "^10.3.1"
+		"@use-gesture/vanilla": "^10.3.1",
+		"canvas": "^2.11.2"
 	},
 	"description": "Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).",
 	"main": "postcss.config.js",
