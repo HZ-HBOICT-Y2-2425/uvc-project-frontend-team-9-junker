@@ -21,7 +21,7 @@
                 ...store,
                 user: userData.user
             }));
-			console.log($authStore);
+			// console.log($authStore);
 			goto('/swipe');
         }
 	});

@@ -6,13 +6,13 @@
   import { authStore } from "$lib/stores/authStore";
 
   export let community;
-  console.log(community);
-  let memberRole;
+  let memberRole = null;
   const user_id = $authStore.user.id;
   console.log(user_id);
 
   onMount(async () => {
-    try {
+    try {      
+      // fetch member role
       const response = await fetch(`http://localhost:3011/member-role/${community.id}`, {
         method: 'POST',
         headers: {
@@ -25,7 +25,7 @@
       if (response.ok) {
         memberRole = data.role;
       } else {
-        console.error('Error fetching role:', data.error);
+        console.error('Error:', data.error);
       }
       console.log(memberRole);
     } catch (error) {
@@ -43,9 +43,7 @@
 </script>
 
 <button
-  class="relative bg-background w-full h-full dark:bg-background-dark rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer aspect-square"
-  role="button"
-  tabindex="0"
+  class="relative bg-background w-full h-full dark:bg-background-dark rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer aspect-square" tabindex="0"
   on:click={() => directTo()}
   on:keydown={(e) => e.key === 'Enter' && directTo()}
 >
