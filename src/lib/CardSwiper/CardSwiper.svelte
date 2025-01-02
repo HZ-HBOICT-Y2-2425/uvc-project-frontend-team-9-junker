@@ -2,93 +2,112 @@
     import { onMount } from 'svelte';
     import Card from './Card.svelte';
 
-    // Mock data for cards
-    let cards = [
-        {
-            title: "Vintage Shoes",
-            description: "Stylish and comfy vintage shoes in excellent condition.",
-            image: "https://via.placeholder.com/300?text=Vintage+Shoes",
-            owner: "Alice Johnson",
-            group: "Fashion Enthusiasts",
-        },
-        {
-            title: "Retro Jacket",
-            description: "A retro jacket perfect for winter, lightly used.",
-            image: "https://via.placeholder.com/300?text=Retro+Jacket",
-            owner: "Bob Smith",
-            group: "Vintage Collectors",
-        },
-    ];
+    let cards = []; // Holds all fetched cards
+    let activeCardIndex = 0; // Tracks the index of the active card
+    let initialX = 0; // Tracks the initial X position for swipe
+    let initialY = 0; // Tracks the initial Y position for swipe
+    let showPopup = false; // Show a popup when no cards are left
+    let loading = true; // Track loading state
 
-    let cardElements = []; // Store references to card DOM elements
-    let showPopup = false; // Controls the visibility of the popup
-
-    // Reactive statement to trigger the popup when `cards` is empty
-    $: if (cards.length === 0 && !showPopup) {
-        showPopup = true;
-        console.log("Popup triggered through $ reactive block!");
+    // Fetch cards from the backend
+    async function fetchCards() {
+        try {
+            const response = await fetch('http://localhost:3010/api/aggregator/aggregated-items');
+            if (!response.ok) {
+                throw new Error('Failed to fetch cards');
+            }
+            const data = await response.json();
+            // Map response to the card structure
+            cards = data.map((community) => ({
+                title: community.name || 'Unknown Title',
+                description: community.description || 'No Description Available',
+                image: community.cover_pic || 'default-image.jpg',
+                owner: `User ID: ${community.userid || 'Unknown'}`,
+                group: community.location || 'Unknown Location',
+            }));
+        } catch (error) {
+            console.error('Error fetching cards:', error);
+        } finally {
+            loading = false;
+        }
     }
-    const bindGesture = (el, index) => {
-    let initialX = 0, initialY = 0;
 
-    el.addEventListener("pointerdown", (event) => {
+    // Handle swipe action
+    const handleSwipe = (direction: string) => {
+        console.log(`Swiped ${direction}:`, cards[activeCardIndex]);
+
+        if (activeCardIndex < cards.length - 1) {
+            activeCardIndex = activeCardIndex + 1; // Move to the next card
+        } else {
+            showPopup = true; // Show popup when no more cards
+        }
+    };
+
+    // Track swipe start position
+    const onPointerDown = (event: PointerEvent) => {
         initialX = event.clientX;
         initialY = event.clientY;
-    });
+    };
 
-    el.addEventListener("pointerup", (event) => {
+    // Detect swipe direction on pointer release
+    const onPointerUp = (event: PointerEvent) => {
         const deltaX = event.clientX - initialX;
         const deltaY = event.clientY - initialY;
-        const threshold = 100; // Minimum swipe distance
-        if (Math.abs(deltaX) > threshold && Math.abs(deltaY) < threshold / 2) {
+        const threshold = 50; // Minimum swipe distance to count
+
+        // Check if swipe is horizontal
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > threshold) {
             if (deltaX > 0) {
-                console.log("Swiped Right:", cards[index]);
-                el.classList.add('swiped-right');
+                handleSwipe('right'); // Swiped right
             } else {
-                console.log("Swiped Left:", cards[index]);
-                el.classList.add('swiped-left');
+                handleSwipe('left'); // Swiped left
             }
-            setTimeout(() => cards.splice(index, 1), 300);
-        } else {
-            el.style.transform = ""; // Reset card if not swiped far enough
         }
-    });
-};
+    };
 
-
-    // Bind gestures to all cards after mounting
     onMount(() => {
-        cardElements.forEach((el, index) => bindGesture(el, index));
+        fetchCards();
     });
 
+    // Close popup
     const closePopup = () => {
         showPopup = false;
     };
 </script>
 
+<!-- Main Card Container -->
 <div class="card-swiper">
-    {#each cards as card, index}
+    {#if loading}
+        <p>Loading cards...</p>
+    {:else if cards.length > 0 && activeCardIndex < cards.length}
         <div
             class="card-wrapper"
-            bind:this={cardElements[index]}
-            style="z-index: {cards.length - index}"
+            on:pointerdown={onPointerDown}
+            on:pointerup={onPointerUp}
+            style="z-index: {cards.length - activeCardIndex}"
         >
             <Card
-                title={card.title}
-                description={card.description}
-                image={card.image}
-                owner={card.owner}
-                group={card.group}
+                title={cards[activeCardIndex].title}
+                description={cards[activeCardIndex].description}
+                image={cards[activeCardIndex].image}
+                owner={cards[activeCardIndex].owner}
+                group={cards[activeCardIndex].group}
             />
         </div>
-    {/each}
+    {:else}
+        <div class="no-more-cards">
+            <h2>No More Cards</h2>
+            <p>You've swiped through all the cards.</p>
+        </div>
+    {/if}
 </div>
 
+<!-- Popup -->
 {#if showPopup}
     <div class="popup">
         <div class="popup-content">
-            <h2>Oops!</h2>
-            <p>There are no more listings to swipe.</p>
+            <h2>No More Cards</h2>
+            <p>You've swiped through all the available cards.</p>
             <button on:click={closePopup}>Close</button>
         </div>
     </div>
@@ -98,37 +117,35 @@
 .card-swiper {
     position: relative;
     width: 100%;
-    height: 100vh; /* Full screen height */
+    height: 100%;
     display: flex;
-    align-items: center; /* Vertically center */
-    justify-content: center; /* Horizontally center */
+    justify-content: center;
+    align-items: center;
     overflow: hidden;
-    margin: 0; /* Reset margin */
 }
 
 .card-wrapper {
     position: absolute;
-    width: 90%; /* Adjust the card width */
-    max-width: 400px; /* Prevent card from being too wide */
-    height: 75%; /* Adjust the card height */
-    max-height: 600px; /* Prevent card from being too tall */
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Center content inside the card */
+    width: 90%;
+    max-width: 400px;
     transition: transform 0.3s ease, opacity 0.3s ease;
-    touch-action: none; /* Ensure proper touch gesture behavior */
+    animation: fadeIn 0.3s ease;
 }
 
-.card-wrapper.swiped-right {
-    transform: translateX(100%); /* Move the card to the right */
-    opacity: 0; /* Fade out the card */
-    transition: transform 0.3s ease, opacity 0.3s ease;
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
-.card-wrapper.swiped-left {
-    transform: translateX(-100%); /* Move the card to the left */
-    opacity: 0; /* Fade out the card */
-    transition: transform 0.3s ease, opacity 0.3s ease;
+.no-more-cards {
+    text-align: center;
+    padding: 20px;
 }
 
 .popup {
@@ -137,45 +154,18 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+    background: rgba(0, 0, 0, 0.7);
     display: flex;
-    align-items: center;
     justify-content: center;
-    z-index: 1000;
+    align-items: center;
+    color: white;
 }
 
 .popup-content {
     background: white;
-    border-radius: 8px;
     padding: 20px;
+    border-radius: 8px;
     text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 90%;
-    max-width: 400px;
-}
-
-.popup-content h2 {
-    margin: 0 0 10px 0;
-    font-size: 1.8rem;
-}
-
-.popup-content p {
-    font-size: 1.2rem;
-    color: gray;
-    margin: 0 0 20px 0;
-}
-
-.popup-content button {
-    padding: 10px 20px;
-    font-size: 1rem;
-    color: white;
-    background: #4CAF50;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.popup-content button:hover {
-    background: #45a049;
+    color: black;
 }
 </style>
