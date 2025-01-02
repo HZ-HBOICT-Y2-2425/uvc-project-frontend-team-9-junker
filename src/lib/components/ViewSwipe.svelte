@@ -1,77 +1,97 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { DragGesture } from '@use-gesture/vanilla';
-    import { savedListingsStore } from '../stores/savedStore'; // Import store
-    import { goto } from '$app/navigation'; // For navigation
     import Card from '../CardSwiper/Card.svelte';
-    import { get } from 'svelte/store'; // To access the store directly
 
-    let cards = [
-        {
-            title: "Vintage Shoes",
-            description: "Heavily Used",
-            image: "https://via.placeholder.com/300",
-        },
-        {
-            title: "Retro Jacket",
-            description: "Lightly Used",
-            image: "https://via.placeholder.com/300",
-        },
-    ];
-
-    let cardElements = [];
-    let feedback = ''; // "heart" for right, "x" for left
+    let cards = []; // Cards array
+    let cardElements = []; // Store card elements for gesture handling
+    let feedback = ''; // Feedback indicator for swipes
+    let loading = true; // Loading state
     let showPopup = false; // Controls the popup visibility
-    let popupClosedManually = false; // Prevents re-triggering the popup
 
-    $: if (cards.length === 0 && !showPopup && !popupClosedManually) {
-        showPopup = true;
-        console.log("Popup triggered due to empty cards!");
+    // Fetch cards
+    async function fetchCards() {
+        try {
+            console.log("Fetching cards...");
+            const response = await fetch('http://localhost:3010/api/aggregator/aggregated-items');
+            if (!response.ok) {
+                throw new Error('Failed to fetch cards');
+            }
+            const data = await response.json();
+            cards = data.map((item) => ({
+                id: item.id,
+                title: item.name || 'Unknown Title',
+                description: item.description || 'No Description Available',
+                image: item.image || 'default-image.jpg',
+                userid: item.userid || 'Unknown',
+                available: item.available ? 'Available' : 'Not Available',
+            }));
+            console.log("Fetched and mapped cards:", cards);
+        } catch (error) {
+            console.error("Error fetching cards:", error);
+        } finally {
+            loading = false;
+        }
     }
 
-    // Handle saving a card
-    const handleSave = (savedCard) => {
-        savedListingsStore.update((saved) => {
-            // Ensure no duplicates in savedListingsStore
-            if (!saved.find((item) => item.image === savedCard.image)) {
-                return [...saved, savedCard];
-            }
-            return saved;
-        });
-        console.log("Card saved:", savedCard);
-    };
-
-    const navigateToSaved = () => {
-        // Navigate to the profile page
-        goto('/username');
-    };
-
+    // Bind swipe gestures to a card element
     const bindGesture = (el, index) => {
-        new DragGesture(el, (state) => {
-            if (state.last) {
-                const [x] = state.movement;
-                const threshold = 100;
+        let initialX = 0;
+        let initialY = 0;
+        let hasSwiped = false;
 
-                if (x > threshold) {
-                    swipeRight(index);
-                } else if (x < -threshold) {
-                    swipeLeft(index);
+        const handlePointerMove = (event) => {
+            if (hasSwiped) return;
+
+            const deltaX = event.clientX - initialX;
+            const deltaY = event.clientY - initialY;
+            el.style.transform = `translate(${deltaX}px, ${deltaY}px) rotate(${deltaX / 15}deg)`;
+        };
+
+        const handlePointerUp = (event) => {
+            if (hasSwiped) return;
+
+            const deltaX = event.clientX - initialX;
+            const threshold = 120; // Minimum swipe distance for a modern effect
+
+            el.style.transition = 'transform 0.3s ease-out';
+            if (Math.abs(deltaX) > threshold) {
+                hasSwiped = true;
+                if (deltaX > 0) {
+                    swipeRight(index, el);
                 } else {
-                    resetCard(el);
+                    swipeLeft(index, el);
                 }
             } else {
-                el.style.transform = `translate(${state.movement[0]}px, ${state.movement[1]}px) rotate(${state.movement[0] / 15}deg)`;
+                el.style.transform = 'translate(0, 0) rotate(0deg)'; // Reset card position
             }
-        });
+
+            el.removeEventListener('pointermove', handlePointerMove);
+            el.removeEventListener('pointerup', handlePointerUp);
+        };
+
+        const handlePointerDown = (event) => {
+            initialX = event.clientX;
+            initialY = event.clientY;
+            hasSwiped = false;
+
+            el.addEventListener('pointermove', handlePointerMove);
+            el.addEventListener('pointerup', handlePointerUp);
+        };
+
+        el.addEventListener('pointerdown', handlePointerDown);
     };
 
-    const swipeRight = (index) => {
+    const swipeRight = (index, el) => {
         feedback = 'heart';
+        el.style.transform = `translate(100vw, 0) rotate(30deg)`; // Smooth swipe to the right
+        console.log(`Swiped Right on Card ${index}`);
         removeCard(index);
     };
 
-    const swipeLeft = (index) => {
+    const swipeLeft = (index, el) => {
         feedback = 'x';
+        el.style.transform = `translate(-100vw, 0) rotate(-30deg)`; // Smooth swipe to the left
+        console.log(`Swiped Left on Card ${index}`);
         removeCard(index);
     };
 
@@ -79,22 +99,25 @@
         setTimeout(() => {
             feedback = '';
             cards = cards.filter((_, i) => i !== index);
-        }, 300);
-    };
 
-    const resetCard = (el) => {
-        el.style.transition = 'transform 0.3s ease';
-        el.style.transform = 'translate(0px, 0px) rotate(0deg)';
-        setTimeout(() => (el.style.transition = ''), 300);
+            if (cards.length === 0) {
+                showPopup = true;
+            }
+        }, 300);
     };
 
     const closePopup = () => {
         showPopup = false;
-        popupClosedManually = true;
     };
 
     onMount(() => {
-        cardElements.forEach((el, index) => bindGesture(el, index));
+        fetchCards().then(() => {
+            cardElements.forEach((el, index) => {
+                if (el) {
+                    bindGesture(el, index);
+                }
+            });
+        });
     });
 </script>
 
@@ -110,26 +133,25 @@
         <div
             class="card-wrapper"
             bind:this={cardElements[index]}
-            style="z-index: {cards.length - index}; opacity: {index === 0 ? 1 : 0}; visibility: {index === 0 ? 'visible' : 'hidden'};"
+            style="z-index: {cards.length - index};"
         >
-            <!-- Ensure the Card component is self-closing and matches your props -->
             <Card
                 title={card.title}
                 description={card.description}
                 image={card.image}
-                isSaved={!!get(savedListingsStore).find((item) => item.image === card.image)}
-                on:save={() => handleSave(card)}
+                userid={card.userid}
+                available={card.available}
             />
         </div>
-    {/each} <!-- Properly closes the each block -->
+    {/each}
 </div>
 
 {#if showPopup}
     <div class="popup">
         <div class="popup-content">
-            <h2>Oops!</h2>
-            <p>There are no more listings to swipe.</p>
-            <button on:click={navigateToSaved}>Go to Saved</button>
+            <h2>No More Cards</h2>
+            <p>You've swiped through all the cards.</p>
+            <button on:click={closePopup}>Close</button>
         </div>
     </div>
 {/if}
@@ -150,7 +172,7 @@
 
 .card-wrapper {
     position: absolute;
-    width: 100%;
+    width: 90%;
     max-width: 400px;
     height: 90%;
     max-height: 600px;
@@ -173,7 +195,6 @@
     opacity: 0.8;
     z-index: 10;
     pointer-events: none;
-    animation: fade-out 0.3s ease-out;
 }
 
 .feedback.heart {
@@ -209,17 +230,6 @@
     max-width: 400px;
 }
 
-.popup-content h2 {
-    margin: 0 0 10px;
-    font-size: 1.8rem;
-}
-
-.popup-content p {
-    font-size: 1.2rem;
-    color: gray;
-    margin: 0 0 20px;
-}
-
 .popup-content button {
     padding: 10px 20px;
     font-size: 1rem;
@@ -232,20 +242,5 @@
 
 .popup-content button:hover {
     background: #45a049;
-}
-
-@media (max-width: 768px) {
-    .popup-content {
-        width: 95%;
-        padding: 16px;
-    }
-
-    .popup-content h2 {
-        font-size: 1.5rem;
-    }
-
-    .popup-content p {
-        font-size: 1rem;
-    }
 }
 </style>
