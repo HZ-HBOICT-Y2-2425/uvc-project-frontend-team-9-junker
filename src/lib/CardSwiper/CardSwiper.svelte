@@ -37,7 +37,7 @@
         console.log(`Swiped ${direction}:`, cards[activeCardIndex]);
 
         if (activeCardIndex < cards.length - 1) {
-            activeCardIndex = activeCardIndex + 1; // Move to the next card
+            activeCardIndex++; // Move to the next card
         } else {
             showPopup = true; // Show popup when no more cards
         }
@@ -54,9 +54,13 @@
         const deltaX = event.clientX - initialX;
         const deltaY = event.clientY - initialY;
         const threshold = 50; // Minimum swipe distance to count
+        const angleTolerance = 30; // Degrees tolerance for valid horizontal swipes
 
-        // Check if swipe is horizontal
-        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > threshold) {
+        // Calculate the angle of the swipe
+        const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+
+        // Check if swipe is horizontal with tolerance
+        if (Math.abs(deltaX) > threshold && (Math.abs(angle) < angleTolerance || Math.abs(angle) > 180 - angleTolerance)) {
             if (deltaX > 0) {
                 handleSwipe('right'); // Swiped right
             } else {
