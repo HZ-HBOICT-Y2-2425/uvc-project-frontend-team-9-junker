@@ -1,5 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
+    import { likedItemsStore } from '../stores/likedItemsStore'; // Import the liked items store
 
     let cards: Array<any> = [];
     let activeCardIndex = 0;
@@ -17,8 +18,6 @@
                 throw new Error('Failed to fetch cards');
             }
             const data = await response.json();
-            console.log("Fetched data:", data);
-
             cards = data.map((item) => ({
                 id: item.id,
                 title: item.name || 'Unknown Title',
@@ -35,9 +34,28 @@
         }
     }
 
+    // Add swiped-right cards to likedItemsStore
+    const addToLikedItems = (card) => {
+        console.log('Attempting to add card to liked items:', card);
+        likedItemsStore.update((items) => {
+            const alreadyExists = items.some((item) => item.id === card.id);
+            if (!alreadyExists) {
+                console.log('Card successfully added to store:', card);
+                return [...items, card];
+            } else {
+                console.log('Card already exists in the store:', card);
+                return items;
+            }
+        });
+    };
+
     // Handle swipe logic
     const handleSwipe = (direction: string) => {
         console.log(`Swiped ${direction}: Current Index: ${activeCardIndex}, Total Cards: ${cards.length}`);
+        if (direction === 'right') {
+            console.log('Swiping right on:', cards[activeCardIndex]);
+            addToLikedItems(cards[activeCardIndex]); // Save to store
+        }
         if (activeCardIndex < cards.length - 1) {
             activeCardIndex++;
         } else {
