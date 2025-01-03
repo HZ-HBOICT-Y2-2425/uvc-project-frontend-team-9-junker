@@ -2,7 +2,7 @@
 import { writable } from 'svelte/store';
 import { Picture } from '$lib/models/Picture';
 let message = '';
-let mainUrl = 'http://localhost:3014';
+let mainUrl = 'http://localhost:3015';
 let gatewayUrl = 'http://localhost:3010/picture_microservice';
 
 /**
