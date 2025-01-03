@@ -31,7 +31,7 @@
 
 <header>
     {#if item}
-        <SubHeaderV2 title={item.name}/>
+        <SubHeaderV2 title={itemName}/>
     {/if}
 </header>
 

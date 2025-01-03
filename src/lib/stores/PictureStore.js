@@ -46,7 +46,7 @@ export const getAllPictures = async () => {
 
 export const getPicture = async (pictureId) => {
     console.log("getpicture()");
-    let picture = await fetchAPI('/' + pictureId, 'POST');
+    let picture = await fetchAPI('/' + pictureId, 'GET');
     return picture
 };
 

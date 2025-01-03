@@ -4,7 +4,10 @@
     import { Community } from "$lib/models/Community.js";
     import { communities } from '$lib/stores/AllPurposeStore';
     import { storePicture } from "$lib/stores/PictureStore";
+    import { goto } from "$app/navigation";
     //import { authStore } from "$lib/stores/authStore";
+
+    let headerTitle = "Create Listing";
   
     let showCancelPopup = false; // For cancel confirmation
     let showPrivatePopup = false; // For private community confirmation
@@ -19,8 +22,6 @@
     let description: string = "";
     
     let action: boolean = false;
-    let name: string = "";
-    let images: string[] = [];
     let userid: number | undefined = undefined;
     let available: boolean = true;
     let views: number = 0;
@@ -28,6 +29,9 @@
     let categories: number[] = [];
     //let communities: string[] = Array.from(selectedCommunities);
     // 커뮤니티 목록
+
+    let listingPath: string = "";
+
     const communityOptions = ["HZ", "APV", "Middelburg"];
 
     onMount( async () => {
@@ -76,7 +80,7 @@
     async function postMyListing() {
 
       // id, userid, name, description, pictures, action, available, views, interested, date, categories, communities
-      name = title;
+      let name = title;
       description = description;
 
       //communities = Array.from(selectedCommunities);
@@ -91,17 +95,22 @@
           communityIds = String(community.id);
         }
       }
-        
+      
       let result = await storeItem(userid, name, description, "", action, available, views, interested, categories, communityIds);
       console.log(result);
       let itemId = result?.itemId || 0;
+      listingPath = `/item_details/${itemId}_${name}`
 
       // Upload pictures and get back the string of picture IDs (ex. "1,2,3")
-      let pictureTitle = title.replace(/\s/g, '');
+      let pictureTitle = name.replace(/\s/g, ''); // remove all spaces in title 
+      // string
       let pictureIdArray = "";
-      for(const [index, imageDataString] of uploadedImages.entries()){
+      //console.log(uploadedImages.entries())
+      let entries = await uploadedImages.entries();
+      for(const [index, imageDataString] of entries){
         console.log(imageDataString, index);
         let result = await storePicture(0, itemId, null, `${pictureTitle}_${index}`, imageDataString);
+        console.log(result);
         console.log(String(result?.pictureId));
         if(result?.pictureId) {
           if(pictureIdArray){
@@ -123,7 +132,53 @@
     }
 
     function cancelCreation() {
-      showCancelPopup = true; // Show confirmation popup
+      if(title || description || uploadedImages.length || selectedCommunities.size) {
+        showCancelPopup = true; // Show confirmation popup
+      }
+      else {
+        confirmCancel();
+      }
+    }
+
+    function requestCreateListing() {
+      if (!title.trim() || !uploadedImages || !description.trim() || !selectedCommunities) {
+        alert("Please fill out all required fields!");
+        return;
+      }
+      showConfirmPopup = true; // Show confirmation popup before creating
+    }
+
+    async function confirmCreateListing() {
+      await postMyListing();
+  
+      // Show success popup
+      showSuccessPopup = true;
+  
+      // Close the confirmation popup
+      showConfirmPopup = false;
+  
+      // Reset the form
+      resetForm();
+  
+    }
+
+    function resetForm() {
+      title = "";
+      selectedListingType = "Give-Away";
+      description = "";
+      selectedCommunities = new Set();
+      uploadedImages = [];
+      action = false;
+    }
+
+    function confirmCancel() {
+      showCancelPopup = false; // Close the popup
+      window.history.back()
+    }
+
+    function closeSuccessPopup() {
+      showSuccessPopup = false;
+      goto(`${listingPath}`); // Redirect to the created listing
     }
 
   </script>
@@ -138,6 +193,21 @@
       background-color: #f3f4f6;
     }
   </style>
+
+  <button on:click={cancelCreation} aria-label="Go back"
+    class="h-[10vh] w-[100vw] bg-background dark:bg-background-dark border-b-4 border-solid border-secondary-500 dark:border-secondary-dark-500 shadow-[0vh_4vh_16vh_rgba(0,0,0,0.1)] flex flex-nowrap justify-between items-center overflow-hidden"
+    >
+      <div class="text-secondary-500 dark:text-secondary-dark-500 m-4">
+        <i class="fa-solid fa-chevron-left text-4xl"></i>
+      </div>
+      <div class="flex justify-center items-center h-full">
+        <div class="flex items-center justify-center text-primary-500 dark:text-primary-dark-500 font-rem text-3xl mt-[-2.5vh] mb-[-2.5vh] mx-auto drop-shadow-[0px_4px_4px_rgba(0,0,0,0.1)]">
+          <span class="flex items-center truncate">{headerTitle}</span>
+        </div>
+      </div>
+    <!-- spacer div -->
+    <div class="flex items-center space-x-4 w-14"></div>
+  </button>
   
   <div class="h-screen overflow-y-auto px-6 pb-6 max-w-lg mx-auto space-y-4 border rounded-lg shadow-lg">
     <!--div class="bg-white shadow-md rounded-lg p-6 w-full max-w-md"-->
@@ -210,7 +280,6 @@
           placeholder="Enter description here"
           class="w-full p-4 border rounded-lg"
         >
-          {description}
         </textarea>
       </div>
       
@@ -238,7 +307,7 @@
       <!-- Listing Type -->
       <div class="mb-6">
         <label class="block text-sm font-medium text-gray-700 mb-1">Listing type</label>
-        <div class="flex space-x-4">
+        <!--div class="flex space-x-4">
           <button
             class="px-4 py-2 border rounded-full text-sm font-medium"
             class:bg-primary-500="{selectedListingType === 'Give-Away'}"
@@ -253,7 +322,6 @@
           <button
             class="px-4 py-2 border rounded-full text-sm font-medium"
             class:bg-primary-500="{selectedListingType === 'Trade-Offer'}"
-
             class:text-white="{selectedListingType === 'Trade-Offer'}"
             class:border-gray-300="{selectedListingType !== 'Trade-Offer'}"
             class:text-gray-600="{selectedListingType !== 'Trade-Offer'}"
@@ -262,25 +330,50 @@
           >
             Trade-Offer
           </button>
-        </div>
+        </div-->
+      </div>
+
+      <div class="flex space-x-4">
+        <label
+          class="flex px-4 py-2 border rounded-full text-sm font-medium"
+          class:bg-primary-500="{selectedListingType === 'Give-Away'}"
+          class:text-white="{selectedListingType === 'Give-Away'}"
+          class:border-gray-300="{selectedListingType !== 'Give-Away'}"
+          class:text-gray-600="{selectedListingType !== 'Give-Away'}"
+          class:bg-white="{selectedListingType !== 'Give-Away'}"
+        >
+          <input class="my-auto mr-1" type="radio" value="Give-Away" bind:group={selectedListingType} />
+          Give-Away
+        </label>
+        <label
+          class="flex px-4 py-2 border rounded-full text-sm font-medium"
+          class:bg-primary-500="{selectedListingType === 'Trade-Offer'}"
+          class:text-white="{selectedListingType === 'Trade-Offer'}"
+          class:border-gray-300="{selectedListingType !== 'Trade-Offer'}"
+          class:text-gray-600="{selectedListingType !== 'Trade-Offer'}"
+          class:bg-white="{selectedListingType !== 'Trade-Offer'}"
+        >
+          <input class="my-auto mr-1" type="radio" value="Trade-Offer" bind:group={selectedListingType} />
+          Trade-Offer
+        </label>
       </div>
   
       <!-- Submit Button -->
       <button
-        on:click={() => postMyListing()}
+        on:click={requestCreateListing}
         class="w-full bg-primary-500 text-white font-medium py-2 px-4 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2"
       >
         Post my listing
       </button>
 
-      <div>
+      <!--div>
         <button
         class="bg-gray-400 text-white py-2 px-4 rounded-lg hover:bg-gray-500 mx-auto"
         on:click={cancelCreation}
         >
           Cancel
         </button>
-      </div>
+      </div-->
     <!--/div-->
   </div>  
 
@@ -290,7 +383,7 @@
     >
       <div class="bg-white p-6 rounded-lg shadow-lg space-y-4 text-center">
         <h2 class="text-lg font-bold">Are you sure?</h2>
-        <p>Do you want to cancel creating this community?</p>
+        <p>Do you want to cancel creating this listing?</p>
         <div class="flex justify-around mt-4">
           <button
             class="bg-gray-400 text-white py-2 px-4 rounded-lg hover:bg-gray-500"
@@ -326,7 +419,7 @@
           </button>
           <button
             class="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600"
-            on:click={confirmCreateCommunity}
+            on:click={confirmCreateListing}
           >
             Yes
           </button>
@@ -341,13 +434,13 @@
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10"
     >
       <div class="bg-white p-6 rounded-lg shadow-lg space-y-4 text-center">
-        <h2 class="text-2xl font-bold">Community Created!</h2>
-        <p>Your community has been created successfully.</p>
+        <h2 class="text-2xl font-bold">Listing Created!</h2>
+        <p>Your listing has been created successfully.</p>
         <button
           class="bg-primary-500 text-white py-2 px-4 rounded-lg hover:bg-primary-600"
           on:click={closeSuccessPopup}
         >
-          Go to Communities
+          Go to my new listing
         </button>
       </div>
     </div>

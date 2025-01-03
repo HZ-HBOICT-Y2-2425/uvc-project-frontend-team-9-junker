@@ -12,6 +12,7 @@
     import ViewCreateListing from "$lib/components/ViewCreateListing.svelte";
     import { goto } from "$app/navigation";
     import Header from "$lib/components/Header.svelte";
+    import SubHeaderV2 from "$lib/components/SubHeaderV2.svelte";
     import { authStore } from "$lib/stores/authStore";
     import * as picStore from "$lib/stores/PictureStore";
   
@@ -134,7 +135,8 @@
     }
   </script>
   
-  <Header title="Create a Listing" />
+  <!--Header title="Create a Listing" /-->
+  <!--SubHeaderV2 title="Create a Listing" /-->
 
   <ViewCreateListing />
   
