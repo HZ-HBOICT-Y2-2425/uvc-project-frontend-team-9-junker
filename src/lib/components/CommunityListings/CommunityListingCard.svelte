@@ -4,38 +4,53 @@
     import { Item } from "$lib/models/Item";
     import { User } from "$lib/models/User";
     import { users } from "$lib/stores/AllPurposeStore";
+    import { getPicturesByItemId } from "$lib/stores/PictureStore.js";
+    import { onMount } from "svelte";
 
-    const images = import.meta.glob(['$lib/assets/images/**.jpg', '$lib/assets/images/**.png', '$lib/assets/images/**.svg', '$lib/assets/images/**.webp', '$lib/assets/images/**.avif'], { eager: true, as: 'url' });
+    const picturesPreload = import.meta.glob([
+      '$lib/assets/pictures/**.jpg', 
+      '$lib/assets/pictures/**.png', 
+      '$lib/assets/pictures/**.svg', 
+      '$lib/assets/pictures/**.webp', 
+      '$lib/assets/pictures/**.avif'
+    ], { eager: true, as: 'url' });
 
-    export let item = new Item(0, 0, "noname", "", ["default.png"], "", false, 0, 0);
-    console.log(users);
-    //TODO: fix bug where owner parameter is not updated after sort in the parent component changes the item parameter that is being passed here.
+    let pictures = import.meta.glob(['$lib/assets/pictures/**.jpg', '$lib/assets/pictures/**.png', '$lib/assets/pictures/**.svg', '$lib/assets/pictures/**.webp', '$lib/assets/pictures/**.avif'], { eager: true, as: 'url' });
+
+    export let item = ""; //new Item(0, 0, "noname", "", ["default.png"], "", false, 0, 0);
+
     let owner = users.find( (user) => user.id == item.userid) || new User(2, "Error: User not found", "blank-pfp.webp");
-    console.log(owner);
+    // $: means this is called whenever item variable changes. This makes sure that the owner parameter updates after a sort.
+    $: owner = users.find( (user) => user.id == item.userid) || new User(2, "Error: User not found", "blank-pfp.webp");
 
     const navigate = () => {
-        goto(`/item_details/${item.id}_${item.name}`);
+        let item2 = item;
+        goto(`/item_details/${item2.id}_${item2.name}`);
     };
+
+    onMount( async () => {
+      pictures = await getPicturesByItemId(item.id);
+      console.log(pictures[0]?.data);
+    });
 </script>
 
 <button
 class="relative bg-background sm:w-[30vh] dark:bg-background-dark rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer aspect-[3/4]"
 on:click={() => navigate()}
 >
-    <!-- Image Section -->
+    <!-- picture Section -->
     <div class="card-content">
-        <!--Method for importing images: https://stackoverflow.com/questions/77934659/how-can-i-dynamically-import-images-stored-in-lib-within-a-component-in-svelte -->
-        <img src={images[`/src/lib/assets/images/${item.pictures[0]}`]} alt={item.name} class="card-image" />
-
+        <!--TODO: strings over 100kb length are not converted to pictures-->
+        <img src={pictures[0]?.data || picturesPreload[`/src/lib/assets/pictures/default.svg`]} alt={item.name} class="card-picture" />
         <div class="card-text">
             <div class="item-name">
                 {item.name}
             </div>
-            <div class="item-desc">
+            <!--div class="item-desc">
                 {item.description}
-            </div>
+            </div-->
             <div class="owner">
-                <img src={images[`/src/lib/assets/images/${owner.pfp}`]} alt={owner.pfp} class="owner-pfp">
+                <img src={picturesPreload[`/src/lib/assets/pictures/${owner.pfp}`]} alt={owner.pfp} class="owner-pfp">
                 <div class="owner-name">
                     {owner.name}
                 </div>
@@ -52,7 +67,7 @@ on:click={() => navigate()}
         width: 100%;
         background-color: white;
     }
-    .card-image {
+    .card-picture {
         flex-shrink: 0;
         object-fit:cover;
         overflow: hidden;
@@ -76,7 +91,9 @@ on:click={() => navigate()}
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
+        /*
         margin-bottom: -5px;
+        */
     }
     .item-desc {
         text-align: left;

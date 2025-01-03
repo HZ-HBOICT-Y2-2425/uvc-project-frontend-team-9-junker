@@ -1,18 +1,29 @@
 <script>
-  // @ts-nocheck
-  import { darkModeEnabled, items } from "$lib/stores/AllPurposeStore";
-  import CommunityListingCard from "./CommunityListings/CommunityListingCard.svelte";
+// @ts-nocheck
 
-  // Reactive variables for search and filters
-  let searchTerm = '';
-  let selectedCategory = '';
+    import { darkModeEnabled, items } from "$lib/stores/AllPurposeStore";
+    import { onMount } from "svelte";
+    import { getAllItems } from "$lib/stores/ItemStore";
+    import CommunityListingCard from "./CommunityListings/CommunityListingCard.svelte";
 
-  // Filtered items
-  $: filteredItems = items.filter((item) => {
-    const matchesName = item.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = !selectedCategory || item.categories.some((category) => category === selectedCategory);
-    return matchesName && matchesCategory;
-  });
+    // Reactive variables for search and filters
+    let searchTerm = '';
+    let selectedCategory = '';
+    let thisItems = items;
+
+    // Filtered items
+    $: filteredItems = thisItems.filter((item) => {
+      console.log(thisItems);
+      const matchesName = item.name.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = !selectedCategory || item.categories.some( (category) => category === selectedCategory);
+      return matchesName && matchesCategory;
+    });
+
+    onMount( async () => {
+      thisItems = await getAllItems();
+      console.log(thisItems);
+    });
+
 </script>
 
 <div class="filter-bar-container">
