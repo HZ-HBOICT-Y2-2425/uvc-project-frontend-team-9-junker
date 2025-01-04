@@ -7,7 +7,10 @@
         import { page } from "$app/stores";
         import ViewCommunityListings from "$lib/components/ViewCommunityItems.svelte";
         import { onMount } from "svelte";
-        
+        import { goto } from "$app/navigation";
+        import { authStore } from "$lib/stores/authStore.js";
+        const user_id = $authStore.user.id;
+
         export let data;
         let { items } = data;
         
@@ -61,6 +64,36 @@
                 sort(sortParams[0]);
             }
         });
+
+        // leave community
+        let showLeavePopup = false;
+
+        function confirmLeave() {
+            showLeavePopup = true;
+        }
+
+        const leaveCommunity = async () => {
+            showLeavePopup = false;
+            try {
+                const response = await fetch(`http://localhost:3011/leave/${communityId}`, {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ user_id }),
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    goto(`/community`);
+                    console.log(data);
+                } else {
+                    console.error('Error fetching role:', data.error);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
     
     </script>
     
@@ -110,6 +143,39 @@
                 </div>
             </div>
         </div>
+
+        <!-- leave button -->
+        <div class="flex justify-between mt-4">
+            <button
+            class="bg-primary-500 text-white py-2 px-4 rounded-lg hover:bg-primary-600"
+            on:click={confirmLeave}
+            >
+            Leave
+            </button>
+        </div>
+        {#if showLeavePopup}
+            <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
+            <div class="bg-white p-6 rounded-lg shadow-lg space-y-4 text-center">
+                <h2 class="text-lg font-bold">Are you sure?</h2>
+                <p>Do you want to leave this community?</p>
+                <div class="flex justify-around mt-4">
+                <button
+                    class="bg-gray-400 text-white py-2 px-4 rounded-lg hover:bg-gray-500"
+                    on:click={() => (showLeavePopup = false)}
+                >
+                    No
+                </button>
+                <button
+                    class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600"
+                    on:click={leaveCommunity}
+                >
+                    Yes
+                </button>
+                </div>
+            </div>
+            </div>
+        {/if}
+
     </div>
     
     <style>

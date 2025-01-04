@@ -1,6 +1,7 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import Card from './Card.svelte';
+    import { items } from '$lib/stores/AllPurposeStore';
 
     // Mock data for cards
     let cards = [
