@@ -12,10 +12,39 @@
 
   const dispatch = createEventDispatcher();
 
-  // Auto-scroll to the bottom when messages update
+  // Reference for the messages container
   let messagesContainer;
+  let showScrollButton = false; // Controls the visibility of the scroll button
+
+  /**
+   * Scroll to the bottom of the messages container
+   */
+  function scrollToBottom() {
+    if (messagesContainer) {
+      messagesContainer.scrollTo({
+        top: messagesContainer.scrollHeight,
+        behavior: "smooth", // Smooth scrolling for a polished experience
+      });
+    }
+  }
+
+  /**
+   * Check if the user is scrolled to the bottom of the messages container
+   */
+  function handleScroll() {
+    if (messagesContainer) {
+      const isAtBottom =
+        messagesContainer.scrollHeight -
+          messagesContainer.scrollTop -
+          messagesContainer.clientHeight <=
+        50; // Add tolerance (50px)
+      showScrollButton = !isAtBottom;
+    }
+  }
+
+  // Automatically scroll to the bottom when messages change or loading finishes
   $: if (messagesContainer && !isLoading) {
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    scrollToBottom();
   }
 
   function sendMessage(event) {
@@ -23,10 +52,11 @@
     const newMessage = { sender, recipient, content, timestamp: Date.now() };
     messages = [...messages, newMessage];
     dispatch("send", newMessage);
+    scrollToBottom(); // Ensure scrolling happens after sending
   }
 </script>
 
-<div class="flex flex-col h-screen bg-background dark:bg-background-dark">
+<div class="flex flex-col h-screen bg-background dark:bg-background-dark relative">
   <!-- Chat Header -->
   <div class="sticky top-0 z-10">
     <ChatHeader {recipient} />
@@ -36,6 +66,7 @@
   <div
     class="flex-grow overflow-y-auto p-4 bg-background dark:bg-background-dark relative"
     bind:this={messagesContainer}
+    on:scroll={handleScroll}
   >
     {#if isLoading}
       <div class="absolute inset-0 flex justify-center items-center bg-background dark:bg-background-dark">
@@ -59,6 +90,17 @@
       {/each}
     {/if}
   </div>
+
+  <!-- Scroll to Bottom Button -->
+  {#if showScrollButton}
+    <button
+      on:click={scrollToBottom}
+      class="fixed bottom-20 left-1/2 transform -translate-x-1/2 w-12 h-12 bg-primary-500 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-primary-600 transition-all"
+      aria-label="Scroll to Bottom"
+    >
+      <i class="fas fa-chevron-down"></i>
+    </button>
+  {/if}
 
   <!-- Input Section -->
   <div class="sticky bottom-0 z-10">
