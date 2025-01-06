@@ -11,6 +11,7 @@
     import { items, users } from "$lib/stores/AllPurposeStore";
     import { getItem } from "$lib/stores/ItemStore";
     import { getPicturesByItemId } from "$lib/stores/PictureStore";
+    import {getUserById} from "$lib/stores/UserStore"
 
     //const pictures = import.meta.glob(['$lib/assets/pictures/**.jpg', '$lib/assets/pictures/**.png', '$lib/assets/pictures/**.svg', '$lib/assets/pictures/**.webp', '$lib/assets/pictures/**.avif'], { eager: true, as: 'url' });
     let pictures = "";
@@ -19,12 +20,14 @@
     let itemName = $page.params.title;
     let item = new Item(0, 0, "Bike (Barely Used)", "Almost new", "1,2", "", true, 18, 4, "2023-10-05T14:48:00.000Z", "0,1,2", "0,1,2,3");
     let owner = users.find((user) => user.id == item.userid) || new User(0, "Error: User not found", "blank-pfp.webp");
+    let publicOwner;
 
     onMount( async () => {
 		let loadedItem = await getItem(itemId);
         pictures = await getPicturesByItemId(itemId);
         item = loadedItem;
 		console.log(item);
+        publicOwner = await getUserById(item.userid);
     });
 
 </script>
@@ -45,10 +48,12 @@
     </div>
 </div>
 <div class="owner">
-    <img src={pictures[`/src/lib/assets/pictures/${owner.pfp}`]} alt={owner.pfp} class="owner-pfp">
-    <div class="owner-name">
-        {owner.name}
-    </div>
+    <button class="flex flex-row flex-nowrap items-center">
+        <img src={publicOwner?.publicProfile?.profile_pic || pictures[`/src/lib/assets/pictures/${owner.pfp}`]} alt={owner.pfp} class="owner-pfp m-2">
+        <div class="owner-name m-2">
+            {publicOwner?.publicProfile?.username || "No Owner Found"}
+        </div>
+    </button>
     <button
         class="w-16 m-2 p-3 text-base border-0 rounded cursor-pointer text-secondary-500 dark:text-secondary-dark-500 bg-background dark:bg-background-dark active:bg-secondary-500 dark:active:bg-secondary-dark-500 hover:bg-secondary-500 dark:hover:bg-secondary-dark-500 active:text-background hover:text-background dark:hover:text-text-dark"
         on:click={() => goto("/chats")}
@@ -60,7 +65,7 @@
 <style>
     .owner {
         display: flex;
-        flex-flow: row nowrap;
+        flex-flow: row;
         align-items: center;
     }
     .owner-pfp {

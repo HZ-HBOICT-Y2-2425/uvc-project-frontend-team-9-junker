@@ -3,8 +3,10 @@
     import { goto } from "$app/navigation";
     import { Item } from "$lib/models/Item";
     import { User } from "$lib/models/User";
+    import { PublicUser } from "$lib/models/PublicUser";
     import { users } from "$lib/stores/AllPurposeStore";
     import { getPicturesByItemId } from "$lib/stores/PictureStore.js";
+    import { getUserById } from "$lib/stores/UserStore.js";
     import { onMount } from "svelte";
 
     const picturesPreload = import.meta.glob([
@@ -16,6 +18,7 @@
     ], { eager: true, as: 'url' });
 
     let pictures = import.meta.glob(['$lib/assets/pictures/**.jpg', '$lib/assets/pictures/**.png', '$lib/assets/pictures/**.svg', '$lib/assets/pictures/**.webp', '$lib/assets/pictures/**.avif'], { eager: true, as: 'url' });
+    let publicOwner;
 
     export let item = ""; //new Item(0, 0, "noname", "", ["default.png"], "", false, 0, 0);
 
@@ -30,7 +33,7 @@
 
     onMount( async () => {
       pictures = await getPicturesByItemId(item.id);
-      console.log(pictures[0]?.data);
+      publicOwner = await getUserById(item.userid);
     });
 </script>
 
@@ -50,9 +53,9 @@ on:click={() => navigate()}
                 {item.description}
             </div-->
             <div class="owner">
-                <img src={picturesPreload[`/src/lib/assets/pictures/${owner.pfp}`]} alt={owner.pfp} class="owner-pfp">
+                <img src={publicOwner?.publicProfile?.profile_pic || picturesPreload[`/src/lib/assets/pictures/${owner.pfp}`]} alt={owner.pfp} class="owner-pfp">
                 <div class="owner-name">
-                    {owner.name}
+                    {publicOwner?.publicProfile?.username || "No Owner Found"}
                 </div>
             </div>
         </div>

@@ -11,6 +11,7 @@ export const authStore = writable({
 */
 
 import { writable } from 'svelte/store';
+import { User } from '$lib/models/User';
 
 export const authStore = writable({
   username: 'null',

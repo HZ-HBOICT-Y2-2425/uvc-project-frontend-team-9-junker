@@ -1,10 +1,11 @@
 <script>
 // @ts-nocheck
 
-    import { darkModeEnabled, items } from "$lib/stores/AllPurposeStore";
+    import { categories, darkModeEnabled, items } from "$lib/stores/AllPurposeStore";
     import { onMount } from "svelte";
     import { getAllItems } from "$lib/stores/ItemStore";
     import CommunityListingCard from "./CommunityListings/CommunityListingCard.svelte";
+    import { Category } from "$lib/models/Category.js";
 
     // Reactive variables for search and filters
     let searchTerm = '';
@@ -13,9 +14,8 @@
 
     // Filtered items
     $: filteredItems = thisItems.filter((item) => {
-      console.log(thisItems);
       const matchesName = item.name.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCategory = !selectedCategory || item.categories.some( (category) => category === selectedCategory);
+      const matchesCategory = !selectedCategory || item.categories === selectedCategory;
       return matchesName && matchesCategory;
     });
 
@@ -26,43 +26,42 @@
 
 </script>
 
+<!-- Content Wrapper -->
+<div class="h-full w-full overflow-scroll">
 <div class="filter-bar-container">
   <!-- Enhanced Filter Bar -->
-  <div class="filter-bar shadow-lg">
+  <div class="filter-bar shadow-lg px-4 py-2">
     <!-- Search Bar with Icon -->
     <div class="search-bar">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="search-icon">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m1.9-5.4a7.5 7.5 0 11-15 0 7.5 7.5 0 0115 0z" />
-      </svg>
       <input
         type="text"
         bind:value={searchTerm}
         placeholder="Search by name..."
-        class="search-input"
+        class="search-input rounded-full border p-2 w-full mb-2"
       />
     </div>
 
     <!-- Category Filter -->
-    <select bind:value={selectedCategory} class="category-select">
+    <select bind:value={selectedCategory} class="category-select rounded-full border p-2 w-full">
       <option value="">All Categories</option>
-      <option value="Outdoors">Outdoors</option>
-      <option value="Furniture">Furniture</option>
-      <option value="Kitchen">Kitchen</option>
-      <option value="Clothing">Clothing</option>
-      <option value="Sports">Sports</option>
+      {#each categories as category}
+      <option value="{String(category.id)}">{category.name}</option>
+      {/each}
     </select>
   </div>
 </div>
 
 <!-- Main Content -->
-<div class:dark={$darkModeEnabled} class="bg-background dark:bg-background-dark h-screen w-screen flex flex-col flex-nowrap">
-  <div class="text-text dark:text-text-dark overflow-y-auto" style="max-height: 100vh;">
+<div class:dark={$darkModeEnabled} class="bg-background dark:bg-background-dark flex flex-col flex-nowrap">
+  <div class="text-text dark:text-text-dark">
     <div class="flex flex-col items-center p-4 space-y-8">
       <!-- Community Grid -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 w-full">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 h-full overflow-hidden">
         {#if filteredItems.length > 0}
           {#each filteredItems as item}
-            <CommunityListingCard item={item} />
+            {#key item}
+              <CommunityListingCard item={item} />
+            {/key}
           {/each}
         {:else}
           <li>No items match your search.</li>
@@ -71,8 +70,9 @@
     </div>
   </div>
 </div>
+</div>
 
-<style>
+<!--style>
   :root {
     --mint-color: #39c69c; /*color*/
     --mint-hover: #a3ebe1; 
@@ -142,4 +142,4 @@
     border-color: var(--mint-hover);
     box-shadow: 0 0 10px rgba(51, 204, 204, 0.4); 
   }
-</style>
+</style-->

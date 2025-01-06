@@ -1,14 +1,14 @@
-export class User {
+export class PublicUser {
     /**
      * @param {number} id
-     * @param {string} fullname
      * @param {string} username
+     * @param {string} fullname
      * @param {string} profile_pic
      */
-    constructor(id, fullname, username, profile_pic) {
+    constructor(id, username, fullname, profile_pic) {
         this.id = id;
-        this.fullname = fullname;
         this.username = username;
+        this.fullname = fullname;
         this.profile_pic = profile_pic;
     }
 

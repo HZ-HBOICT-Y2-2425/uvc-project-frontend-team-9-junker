@@ -14,4 +14,4 @@
     import SubHeaderV2 from "$lib/components/SubHeaderV2.svelte";
 </script>
 
-<ViewCreateListing />
+<ViewCreateListing/>

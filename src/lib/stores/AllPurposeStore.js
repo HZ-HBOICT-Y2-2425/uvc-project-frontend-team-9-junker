@@ -1,5 +1,6 @@
 import { writable } from 'svelte/store';
 import { Community } from '$lib/models/Community.js';
+import { Category } from '$lib/models/Category.js';
 import { Item } from '$lib/models/Item';
 import { User } from '$lib/models/User';
 
@@ -10,6 +11,22 @@ export const savedListingsUser = writable('username');
 export const intendedRoute = writable("");
 
 export const loggedInUserID = "user1";
+
+export const categories = [
+    new Category(0, "Bicycles"),
+    new Category(1, "Books"),
+    new Category(2, "Clothing"),
+    new Category(3, "Collectibles"),
+    new Category(4, "Furniture"),
+    new Category(5, "Kitchen Appliance"),
+    new Category(6, "Kitchenware"),
+    new Category(7, "Shoes"),
+    new Category(8, "Sports Equipment"),
+    new Category(9, "Electronics"),
+    new Category(10, "Toys"),
+    new Category(11, "Miscelaneous"),
+    new Category(12, "Arts and Crafts"),
+];
 
 export const items = [
     new Item(0, 0, "Bike (Barely Used)", "Almost new", "1,2", "", true, 18, 4, "2023-10-05T14:48:00.000Z", "0,1,2", "0,1,2,3"),
@@ -22,8 +39,8 @@ export const items = [
 ];
 
 export const users = [
-    new User(0, "Alisa", "blank-pfp.webp"),
-    new User(1, "John", "blank-pfp.webp"),
+    new User(0, "A", "Alisa", "blank-pfp.webp"),
+    new User(1, "J", "John", "blank-pfp.webp"),
 ];
 
 export const communities = [
