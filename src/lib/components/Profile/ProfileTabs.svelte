@@ -16,8 +16,10 @@
     Expert: 100,
   };
 
+  // Subscribe to likedItemsStore for reactivity
   $: likedItems = get(likedItemsStore);
 
+  // Calculate carbon footprint
   function calculateCarbonFootprint() {
     const totalDistance = likedItems.reduce((acc, item) => acc + (item.distance || 0), 0);
     const emissionFactor = 0.25;

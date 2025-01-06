@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { likedItemsStore } from '../stores/likedItemsStore'; // Import the liked items store
+    import { likedItemsStore } from '../stores/likedItemsStore';
 
     let cards: Array<any> = [];
     let activeCardIndex = 0;
@@ -12,7 +12,6 @@
     // Fetch cards from the backend
     async function fetchCards() {
         try {
-            console.log("Fetching cards...");
             const response = await fetch('http://localhost:3010/api/aggregator/aggregated-items');
             if (!response.ok) {
                 throw new Error('Failed to fetch cards');
@@ -26,7 +25,6 @@
                 userid: item.userid || 'Unknown',
                 available: item.available ? 'Available' : 'Not Available',
             }));
-            console.log("Mapped cards:", cards);
         } catch (error) {
             console.error("Error fetching cards:", error);
         } finally {
@@ -34,27 +32,36 @@
         }
     }
 
-    // Add swiped-right cards to likedItemsStore
-    const addToLikedItems = (card) => {
-        console.log('Attempting to add card to liked items:', card);
+    // Add a card to likedItemsStore and save to the database
+    const addToLikedItems = async (card) => {
         likedItemsStore.update((items) => {
-            const alreadyExists = items.some((item) => item.id === card.id);
-            if (!alreadyExists) {
-                console.log('Card successfully added to store:', card);
+            if (!items.some((item) => item.id === card.id)) {
                 return [...items, card];
-            } else {
-                console.log('Card already exists in the store:', card);
-                return items;
             }
+            return items;
         });
+
+        try {
+            const response = await fetch('http://localhost:3013/api/liked-items', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId: 'user123', itemId: card.id }), // Replace `user123` with the actual user ID
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to save liked item to the database');
+            }
+        } catch (error) {
+            console.error('Error saving liked item to the database:', error);
+        }
     };
 
     // Handle swipe logic
     const handleSwipe = (direction: string) => {
-        console.log(`Swiped ${direction}: Current Index: ${activeCardIndex}, Total Cards: ${cards.length}`);
-        if (direction === 'right') {
-            console.log('Swiping right on:', cards[activeCardIndex]);
-            addToLikedItems(cards[activeCardIndex]); // Save to store
+        if (direction === 'right' && cards[activeCardIndex]) {
+            addToLikedItems(cards[activeCardIndex]);
         }
         if (activeCardIndex < cards.length - 1) {
             activeCardIndex++;
@@ -74,22 +81,19 @@
         const threshold = 100;
 
         if (Math.abs(deltaX) > threshold) {
-            if (deltaX > 0) {
-                handleSwipe('right');
-            } else {
-                handleSwipe('left');
-            }
+            handleSwipe(deltaX > 0 ? 'right' : 'left');
         }
     };
 
-    onMount(() => {
-        fetchCards();
-    });
+    onMount(fetchCards);
 
     const closePopup = () => {
         showPopup = false;
     };
 </script>
+
+<!-- HTML remains unchanged -->
+
 
 <div class="card-swiper">
     {#if loading}
