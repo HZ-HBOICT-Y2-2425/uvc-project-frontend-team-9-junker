@@ -7,7 +7,7 @@
     import { page } from "$app/stores";
     import ViewCommunityListings from "$lib/components/ViewCommunityItems.svelte";
     import { onMount } from "svelte";
-    import {getItemsByCommunityId, getAllItems} from "$lib/stores/ItemStore"
+    import {getAllItems} from "$lib/stores/ItemStore"
     import {getCommunity} from "$lib/stores/CommunityStore"
     import {Item} from "$lib/models/Item";
     
