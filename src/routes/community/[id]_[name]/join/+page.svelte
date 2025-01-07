@@ -57,7 +57,7 @@
         <div class="flex justify-between mt-4">
             <button
             class="bg-primary-500 text-white py-2 px-4 rounded-lg hover:bg-primary-600"
-            on:click={joinCommunity()}
+            on:click={joinCommunity}
             >
             Join
             </button>

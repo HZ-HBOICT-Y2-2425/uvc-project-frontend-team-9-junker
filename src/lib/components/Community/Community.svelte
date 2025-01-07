@@ -1,20 +1,23 @@
 <script>
   import Card from './Card.svelte';
-  // import { communities } from '$lib/stores/AllPurposeStore';
   import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
+  import fetchUserData from '$lib/utils/fetchUserWithAuth';
 
   /**
    * @type {never[]}
    */
   let communities = [];
+  let userData;
 
   onMount( async () => {
       try {
+        // fetch user data
+        userData = await fetchUserData();
+        // fetch communities
         const response = await fetch(`http://localhost:3011/`);
         const data = await response.json();
         communities = data;
-        // console.log(communities);
       } catch (error) {
         console.error('Error fetching communities:', error);
       }
