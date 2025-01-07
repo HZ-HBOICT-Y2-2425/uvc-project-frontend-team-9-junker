@@ -25,6 +25,12 @@ const fetchAPI = async (url, method, body) => {
     }
 };
 
+export const getCommunity = async (communityId) => {
+    console.log("getCommunity()");
+    let community = await fetchAPI('/' + communityId, 'GET');
+    return community
+};
+
 export const getCommunitiesByUserId = async (userid) => {
     console.log("getCommunitiesByUserId()");
     let communities = await fetchAPI('/user/' + userid, 'POST');

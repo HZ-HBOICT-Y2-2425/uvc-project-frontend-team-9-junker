@@ -51,6 +51,12 @@ export const getItem = async (itemId) => {
     return item
 };
 
+export const getItemsByCommunityId = async (communityId) => {
+    console.log("getItemsByCommunityId()");
+    let items = await fetchAPI('/community/' + communityId, 'GET');
+    return items
+};
+
 export const storeItem = async (userid, name, description, pictures, action, available, views, interested, categories, communities) => {
     console.log("storeItem()")
     let message = await fetchAPI('/create', 'POST', {userid, name, description, pictures, action, available, views, interested, categories, communities});

@@ -11,6 +11,7 @@
     let searchTerm = '';
     let selectedCategory = '';
     let thisItems = items;
+    let categoriesSorted;
 
     // Filtered items
     $: filteredItems = thisItems.filter((item) => {
@@ -20,56 +21,118 @@
     });
 
     onMount( async () => {
+      categoriesSorted = sortCommunitiesbyName();
       thisItems = await getAllItems();
       console.log(thisItems);
     });
+
+    function sortCommunitiesbyName() {
+      return categories.sort((a, b) => {
+        const nameA = a.name.toUpperCase(); // ignore upper and lowercase
+        const nameB = b.name.toUpperCase(); // ignore upper and lowercase
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        // names must be equal
+        return 0;
+      });
+    }
 
 </script>
 
 <!-- Content Wrapper -->
 <div class="h-full w-full overflow-scroll">
-<div class="filter-bar-container">
-  <!-- Enhanced Filter Bar -->
-  <div class="filter-bar shadow-lg px-4 py-2">
-    <!-- Search Bar with Icon -->
-    <div class="search-bar">
-      <input
-        type="text"
-        bind:value={searchTerm}
-        placeholder="Search by name..."
-        class="search-input rounded-full border p-2 w-full mb-2"
-      />
-    </div>
+  <div class="filter-bar-container">
+    <!-- Enhanced Filter Bar -->
+    <div class="filter-bar shadow-lg px-4 py-2">
+      <!-- Search Bar with Icon -->
+      <div class="search-bar">
+        <input
+          type="text"
+          bind:value={searchTerm}
+          placeholder="Search by name..."
+          class="search-input rounded-full border p-2 w-full mb-2"
+        />
+      </div>
 
-    <!-- Category Filter -->
-    <select bind:value={selectedCategory} class="category-select rounded-full border p-2 w-full">
-      <option value="">All Categories</option>
-      {#each categories as category}
-      <option value="{String(category.id)}">{category.name}</option>
-      {/each}
-    </select>
-  </div>
-</div>
+      <!-- Category Filter -->
+      <!--select bind:value={selectedCategory} class="category-select rounded-full border p-2 w-full">
+        <option value="">All Categories</option>
+        {#each categories as category}
+        <option value="{String(category.id)}">{category.name}</option>
+        {/each}
+      </select-->
 
-<!-- Main Content -->
-<div class:dark={$darkModeEnabled} class="bg-background dark:bg-background-dark flex flex-col flex-nowrap">
-  <div class="text-text dark:text-text-dark">
-    <div class="flex flex-col items-center p-4 space-y-8">
-      <!-- Community Grid -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 h-full overflow-hidden">
-        {#if filteredItems.length > 0}
-          {#each filteredItems as item}
-            {#key item}
-              <CommunityListingCard item={item} />
-            {/key}
-          {/each}
-        {:else}
-          <li>No items match your search.</li>
-        {/if}
+      <div class="relative">
+        <select 
+          bind:value={selectedCategory}
+          class="category-select rounded-full border p-2 w-full"
+          style="
+            appearance: none; /* Hides the default arrow */
+            -moz-appearance: none; /* For Firefox */
+            -webkit-appearance: none; /* For Safari */
+            background-image: none; /* Removes any background arrow in some browsers */
+          "
+        >
+          <option value="">All Categories</option>
+          {#if categoriesSorted?.length}
+            {#each categoriesSorted as category}
+            <option class="text-gray-600" value={String(category.id)}>
+                {category.name}
+            </option>
+            {/each}
+          {/if}
+        </select>
+        <span
+          class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
+        >
+          <!-- Custom arrow SVG -->
+          <svg
+            class="w-4 h-4 text-gray-600"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </span>
       </div>
     </div>
   </div>
-</div>
+
+    
+
+  <!-- Main Content -->
+  <div class:dark={$darkModeEnabled} class="bg-background dark:bg-background-dark flex flex-col flex-nowrap">
+    <div class="text-text dark:text-text-dark">
+      <div class="flex flex-col items-center p-4 space-y-8">
+        <!-- Community Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 h-full overflow-hidden">
+          {#if filteredItems.length > 0}
+            {#each filteredItems as item}
+              {#key item}
+                <CommunityListingCard item={item} />
+              {/key}
+            {/each}
+          {:else}
+            <li>No items match your search.</li>
+          {/if}
+        </div>
+        <div class="placeholder h-[40vh]">
+
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!--style>

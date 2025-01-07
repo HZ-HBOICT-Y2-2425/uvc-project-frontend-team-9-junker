@@ -4,7 +4,7 @@
     import { authStore } from "$lib/stores/authStore";
     import { Community } from "$lib/models/Community.js";
     import { getCommunitiesByUserId } from "$lib/stores/CommunityStore";
-    import { storePicture } from "$lib/stores/PictureStore";
+    import { storePicture, deletePicture } from "$lib/stores/PictureStore";
     import { goto } from "$app/navigation";
     import { categories } from "$lib/stores/AllPurposeStore";
     import ProfileButton from "$lib/components/ProfileButton.svelte";
@@ -14,9 +14,12 @@
     let navigationRoute: string = "";
   
     let showCancelPopup = false; // For cancel confirmation
-    let showPrivatePopup = false; // For private community confirmation
     let showConfirmPopup = false; // For creation confirmation
     let showSuccessPopup = false; // For success message popup
+    let showIncompletePopup = false;
+    let showLoginRequiredPopup = false;
+    let showItemStoreFailedPopup = false;
+    let showPictureStoreFailedPopup = false;
 
     let title: string = "";
     let selectedListingType: string = "Give-Away";
@@ -25,6 +28,7 @@
     let uploadedImages: string[] = [];
     let imageId = 0;
     let description: string = "";
+    let categoriesSorted;
     
     let action: boolean = false;
     let userid: number | undefined = undefined;
@@ -36,6 +40,9 @@
 
     let listingPath: string = "";
 
+    let errorMessage: string = "";
+    let pictureErrorIndex: number;
+
     const communityOptions = ["HZ", "APV", "Middelburg"];
 
     let auth: any;
@@ -44,7 +51,23 @@
     authStore.subscribe( (authStore) => updateUser(authStore));
 
     onMount( async () => {
+      categoriesSorted = sortCategoriesbyName();
     });
+
+    function sortCategoriesbyName() {
+      return categories.sort((a, b) => {
+        const nameA = a.name.toUpperCase(); // ignore upper and lowercase
+        const nameB = b.name.toUpperCase(); // ignore upper and lowercase
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        // names must be equal
+        return 0;
+      });
+    }
 
     async function updateUser(authStore: any) {
       auth = authStore;
@@ -85,51 +108,55 @@
       //uploadedImages = uploadedImages.filter(image => image.id !== id);
     }
 
-    //userid: number, name: string, description: string, images: string[], action: boolean, available: boolean, views: number, interested: number, categories: string[], communities: number[]
     async function postMyListing() {
 
-      // id, userid, name, description, pictures, action, available, views, interested, date, categories, communities
       let name = title;
-      description = description;
-
-      //communities = Array.from(selectedCommunities);
-      //userid = 0;
+      let pictureIdArray = "";
+      let pictureTitle = name.replace(/\s/g, ''); // remove all spaces in title
+      let resultItem;
+      let resultPicture = [];
       
-      let communityIds = "";
+      let communityIds: number[] = [];
       for(const community of selectedCommunities){
-        if(communityIds){
-          communityIds = communityIds + "," + String(community.id);
-        }
-        else if(!communityIds){
-          communityIds = String(community.id);
-        }
+        communityIds.push(community.id);
       }
       
-      let result = await storeItem(auth.user.id, name, description, "", action, available, views, interested, selectedCategoryId, communityIds);
-      console.log(result);
-      let itemId = result?.itemId || 0;
-      listingPath = `/item_details/${itemId}_${name}`
-
-      // Upload pictures and get back the string of picture IDs (ex. "1,2,3")
-      let pictureTitle = name.replace(/\s/g, ''); // remove all spaces in title 
-      // string
-      let pictureIdArray = "";
-      //console.log(uploadedImages.entries())
-      let entries = await uploadedImages.entries();
-      for(const [index, imageDataString] of entries){
-        console.log(imageDataString, index);
-        let result = await storePicture(auth.user.id, itemId, null, `${pictureTitle}_${index}`, imageDataString);
-        console.log(result);
-        console.log(String(result?.pictureId));
-        if(result?.pictureId) {
-          if(pictureIdArray){
-            pictureIdArray = pictureIdArray + "," + String(result.pictureId);
+      resultItem = await storeItem(auth.user.id, name, description, "", action, available, views, interested, selectedCategoryId, JSON.stringify(communityIds));
+      console.log(resultItem);
+      if(resultItem?.itemId) {
+        let itemId = resultItem?.itemId || 0;
+        listingPath = `/item_details/${itemId}_${name}`
+        
+        //console.log(uploadedImages.entries())
+        let entries = await uploadedImages.entries();
+        for(const [index, imageDataString] of entries){
+          console.log(imageDataString, index);
+          resultPicture[index] = await storePicture(auth.user.id, itemId, null, `${pictureTitle}_${index}`, imageDataString);
+          console.log(resultPicture[index]);
+          if(resultPicture[index]?.pictureId) {
+            if(pictureIdArray){
+              pictureIdArray = pictureIdArray + "," + String(resultPicture[index].pictureId);
+            }
+            else if(!pictureIdArray){
+              pictureIdArray = String(resultPicture[index].pictureId);
+            }
+            
           }
-          else if(!pictureIdArray){
-            pictureIdArray = String(result.pictureId);
+          else {
+            let resultItemDelete = await deleteItem(itemId, auth.user.id);
+            errorMessage = resultItemDelete;
+            pictureErrorIndex = index +1;
+            showPictureStoreFailedPopup = true;
+            return
           }
-          
         }
+        // Reset the form
+        resetForm();
+      }
+      else {
+        errorMessage = resultItem;
+        showItemStoreFailedPopup = true;
+        return
       }
 
       //TODO: Update Item in db with picture Ids
@@ -142,11 +169,11 @@
 
     function requestCreateListing() {
       if(!auth?.user?.id) {
-        alert("You need to login to post a listing!");
+        showLoginRequiredPopup = true;
         return;
       }
       if (!title.trim() || !uploadedImages || !description.trim() || !selectedCommunities) {
-        alert("Please fill out all required fields!");
+        showIncompletePopup = true;
         return;
       }
       showConfirmPopup = true; // Show confirmation popup before creating
@@ -160,9 +187,6 @@
   
       // Close the confirmation popup
       showConfirmPopup = false;
-  
-      // Reset the form
-      resetForm();
   
     }
 
@@ -211,6 +235,7 @@
     .upload-placeholder:hover {
       background-color: #f3f4f6;
     }
+
   </style>
 
 <div class="h-screen w-screen flex flex-col bg-scroll">
@@ -253,17 +278,6 @@
   
   <div class="overflow-y-auto flex-grow mt-[10vh]">
     <div class="overflow-y-auto h-auto px-6 pb-6 max-w-lg mx-auto space-y-4">
-      <!--div class="bg-white shadow-md rounded-lg p-6 w-full max-w-md"-->
-        <!-- Title (Editable) -->
-        <!--div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700 mb-1">Title</label>
-          <input
-            type="text"
-            bind:value={title}  
-            class="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500"
-            placeholder="Enter title"
-          />
-        </div-->
 
         <!-- Listing Title -->
         <input
@@ -326,26 +340,58 @@
           </textarea>
         </div>
 
-        <div class="mb-4">
+        <div class="mb-4 w-full sm:w-1/2">
           <label class="block text-sm font-medium text-gray-700 mb-1">Select a Category</label>
-          <select bind:value={selectedCategoryId} class="category-select rounded-full border p-2 w-full">
-            {#each categories as category}
-            <option class="text-gray-600" value={String(category.id)}>
-                {category.name}
-            </option>
-            {/each}
-          </select>
+          <div class="relative">
+            <select 
+              bind:value={selectedCategoryId}
+              class="category-select rounded-full border p-2 w-full"
+              style="
+                appearance: none; /* Hides the default arrow */
+                -moz-appearance: none; /* For Firefox */
+                -webkit-appearance: none; /* For Safari */
+                background-image: none; /* Removes any background arrow in some browsers */
+              "
+            >
+              {#if categoriesSorted?.length}
+                {#each categoriesSorted as category}
+                <option class="text-gray-600" value={String(category.id)}>
+                    {category.name}
+                </option>
+                {/each}
+              {/if}
+            </select>
+            <span
+              class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
+            >
+              <!-- Custom arrow SVG -->
+              <svg
+                class="w-4 h-4 text-gray-600"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </span>
+          </div>
         </div>
         
         <!--TODO: Make 3+ communities column flex wrap for up to two rows then scroll. Currently: overflow to the right-->
         <!-- Select Communities -->
-        <div class="mb-4">
+        <div class="">
           <label class="block text-sm font-medium text-gray-700 mb-1">Select Communities</label>
-          <div class="flex flex-wrap space-x-2 space-y-2">
+          <div class="flex flex-wrap">
             {#if communities?.length}
             {#each communities as community}
               <button
-                class="flex items-center px-4 py-2 rounded-full border font-medium text-sm"
+                class="flex items-center px-4 py-2 mr-2 mb-2 rounded-full border font-medium text-sm"
                 class:bg-primary-500="{selectedCommunities.has(community)}"
                 class:text-white="{selectedCommunities.has(community)}"
                 class:border-gray-300="{!selectedCommunities.has(community)}"
@@ -365,30 +411,6 @@
         <!-- Listing Type -->
         <div class="mb-6">
           <label class="block text-sm font-medium text-gray-700 mb-1">Listing type</label>
-          <!--div class="flex space-x-4">
-            <button
-              class="px-4 py-2 border rounded-full text-sm font-medium"
-              class:bg-primary-500="{selectedListingType === 'Give-Away'}"
-              class:text-white="{selectedListingType === 'Give-Away'}"
-              class:border-gray-300="{selectedListingType !== 'Give-Away'}"
-              class:text-gray-600="{selectedListingType !== 'Give-Away'}"
-              class:bg-white="{selectedListingType !== 'Give-Away'}"
-              on:click={() => toggleListingType('Give-Away')}
-            >
-              Give-Away
-            </button>
-            <button
-              class="px-4 py-2 border rounded-full text-sm font-medium"
-              class:bg-primary-500="{selectedListingType === 'Trade-Offer'}"
-              class:text-white="{selectedListingType === 'Trade-Offer'}"
-              class:border-gray-300="{selectedListingType !== 'Trade-Offer'}"
-              class:text-gray-600="{selectedListingType !== 'Trade-Offer'}"
-              class:bg-white="{selectedListingType !== 'Trade-Offer'}"
-              on:click={() => toggleListingType('Trade-Offer')}
-            >
-              Trade-Offer
-            </button>
-          </div-->
         </div>
 
         <div class="flex space-x-4">
@@ -433,6 +455,9 @@
           </button>
         </div-->
       <!--/div-->
+      <div class="bottom-scroll-space h-[40vh]">
+
+      </div>
     </div>
   </div>
 </div>
@@ -441,7 +466,7 @@
     <div
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10"
     >
-      <div class="bg-white p-6 rounded-lg shadow-lg space-y-4 text-center">
+      <div class="bg-white p-6 rounded-lg shadow-lg space-y-4 text-center m-2">
         <h2 class="text-lg font-bold">Are you sure?</h2>
         <p>Do you want to cancel creating this listing?</p>
         <div class="flex justify-around mt-4">
@@ -461,13 +486,57 @@
       </div>
     </div>
   {/if}
+
+  {#if showIncompletePopup}
+    <div
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10"
+    >
+      <div class="bg-white p-6 rounded-lg shadow-lg space-y-4 text-center m-2">
+        <h2 class="text-lg font-bold">Required Data Missing</h2>
+        <p>You need to fill out all fields to create a listing</p>
+        <div class="flex justify-around mt-4">
+          <button
+            class="bg-primary-500 text-white py-2 px-4 rounded-lg hover:bg-primary-600"
+            on:click={() => (showIncompletePopup = false)}
+          >
+            Ok
+          </button>
+        </div>
+      </div>
+    </div>
+  {/if}
+
+  {#if showLoginRequiredPopup}
+    <div
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10"
+    >
+      <div class="bg-white p-6 rounded-lg shadow-lg space-y-4 text-center m-2">
+        <h2 class="text-lg font-bold">User Not Logged In</h2>
+        <p>You need to be logged in to create a listing</p>
+        <div class="flex justify-around mt-4">
+          <button
+            class="bg-gray-400 text-white py-2 px-4 rounded-lg hover:bg-gray-500"
+            on:click={() =>  (showLoginRequiredPopup = false, navigateToLeave('/username'))}
+          >
+            Login
+          </button>
+          <button
+            class="bg-primary-500 text-white py-2 px-4 rounded-lg hover:bg-primary-600"
+            on:click={() => (showLoginRequiredPopup = false)}
+          >
+            Ok
+          </button>
+        </div>
+      </div>
+    </div>
+  {/if}
   
   <!-- Confirmation Popup -->
   {#if showConfirmPopup}
     <div
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10"
     >
-      <div class="bg-white p-6 rounded-lg shadow-lg space-y-4 text-center">
+      <div class="bg-white p-6 rounded-lg shadow-lg space-y-4 text-center m-2">
         <h2 class="text-lg font-bold">Are you sure?</h2>
         <p>Do you want to create this community?</p>
         <div class="flex justify-around mt-4">
@@ -493,7 +562,7 @@
     <div
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10"
     >
-      <div class="bg-white p-6 rounded-lg shadow-lg space-y-4 text-center">
+      <div class="bg-white p-6 rounded-lg shadow-lg space-y-4 text-center m-2">
         <h2 class="text-2xl font-bold">Listing Created!</h2>
         <p>Your listing has been created successfully.</p>
         <button
@@ -502,6 +571,44 @@
         >
           Go to my new listing
         </button>
+      </div>
+    </div>
+  {/if}
+
+  {#if showItemStoreFailedPopup}
+    <div
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10"
+    >
+      <div class="bg-white p-6 rounded-lg shadow-lg space-y-4 text-center m-2">
+        <h2 class="text-lg font-bold">Listing Upload Failed</h2>
+        <p>{errorMessage}</p>
+        <div class="flex justify-around mt-4">
+          <button
+            class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600"
+            on:click={() => (showItemStoreFailedPopup = false)}
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    </div>
+  {/if}
+
+  {#if showIncompletePopup}
+    <div
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10"
+    >
+      <div class="bg-white p-6 rounded-lg shadow-lg space-y-4 text-center m-2">
+        <h2 class="text-lg font-bold">Picture Nr.{pictureErrorIndex} Upload Failed</h2>
+        <p>{errorMessage}</p>
+        <div class="flex justify-around mt-4">
+          <button
+            class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600"
+            on:click={() => (showIncompletePopup = false)}
+          >
+            Try Again
+          </button>
+        </div>
       </div>
     </div>
   {/if}

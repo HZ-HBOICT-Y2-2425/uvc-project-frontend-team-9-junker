@@ -1,6 +1,6 @@
 export class Community {
     /**
-   * @param {string | number} id
+   * @param {number} id
    * @param {string} title
    * @param {string} image
    * @param {number} members

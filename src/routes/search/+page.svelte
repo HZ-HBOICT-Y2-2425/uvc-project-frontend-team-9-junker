@@ -1,8 +1,8 @@
 <script>
   import Header from "$lib/components/Header.svelte";
   import Footer from "$lib/components/Footer.svelte";
+  import ViewSearch from "$lib/components/ViewSearch.svelte";
   
-    import ViewSearch from "$lib/components/ViewSearch.svelte";
 </script>
 
 <div class="h-screen">
