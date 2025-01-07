@@ -1,7 +1,8 @@
 <script>
   import ItemCard from './ItemCard.svelte';
 
-  export let items = /** @type {Array<any>} */ ([]);
+  export let items;
+  console.log(items);
 </script>
 
 <div class="w-full p-4 mx-2">

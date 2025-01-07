@@ -1,7 +1,6 @@
 <script>
   export let user;
   export let badges;
-  export let item;
   export let handleImageUpload;
 </script>
 

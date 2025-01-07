@@ -2,52 +2,154 @@
   import PendingOffers from "./PendingOffers.svelte";
   import { likedItemsStore } from "../../stores/likedItemsStore";
   import { get } from "svelte/store";
+  import ItemList from "./MyItems/ItemList.svelte";
+  import { onMount } from "svelte";
+  import { authStore } from "$lib/stores/authStore";
+  export let user;
+  console.log(user);
 
-  let activeTab = "pending";
+  /**
+   * @type {never[]}
+   */
+  let myItems = [];
+  /**
+   * @type {any[]}
+   */
   let likedItems = [];
+
+  let dealedItems = [
+    {
+      id: 1,
+      title: "Tennis Racket",
+      image: "path-to-racket.jpg",
+      category: "sports",
+      interested: 3,
+      views: 12,
+    },
+    {
+      id: 2,
+      title: "Tennis Racket",
+      image: "path-to-racket.jpg",
+      category: "sports",
+      interested: 3,
+      views: 12,
+    },
+  ];
+
+  let activeTab = "my-items";
   let carbonSavings = 0;
-  let totalCarbonFootprint = 0;
+  let totalCarbonFootprint = user?.co2_reduction_kg;
   let level = "Beginner";
 
   const carbonThresholds = {
     Beginner: 10,
-    Intermediate: 30,
-    Advanced: 50,
-    Expert: 100,
+    Intermediate: 100,
+    Advanced: 500,
+    Expert: 1000,
   };
 
-  // Subscribe to likedItemsStore for reactivity
+  // Watch likedItems store for updates
   $: likedItems = get(likedItemsStore);
 
-  // Calculate carbon footprint
-  function calculateCarbonFootprint() {
-    const totalDistance = likedItems.reduce((acc, item) => acc + (item.distance || 0), 0);
-    const emissionFactor = 0.25;
-    totalCarbonFootprint = totalDistance * emissionFactor;
-
-    const baselineEmissions = totalDistance * 0.5;
-    const savings = baselineEmissions - totalCarbonFootprint;
-
-    carbonSavings = baselineEmissions > 0 ? Math.round((savings / baselineEmissions) * 100) : 0;
-
-    if (carbonSavings >= carbonThresholds.Expert) {
+  onMount(() => {
+    // Calculate user's CO2 level and savings
+    if (totalCarbonFootprint >= carbonThresholds.Expert) {
       level = "Expert";
-    } else if (carbonSavings >= carbonThresholds.Advanced) {
+      carbonSavings = totalCarbonFootprint / carbonThresholds.Expert * 100;
+    } else if (totalCarbonFootprint >= carbonThresholds.Advanced) {
       level = "Advanced";
-    } else if (carbonSavings >= carbonThresholds.Intermediate) {
+      carbonSavings = totalCarbonFootprint / carbonThresholds.Advanced * 100;
+    } else if (totalCarbonFootprint >= carbonThresholds.Intermediate) {
       level = "Intermediate";
+      carbonSavings = totalCarbonFootprint / carbonThresholds.Intermediate * 100;
     } else {
       level = "Beginner";
+      carbonSavings = totalCarbonFootprint / carbonThresholds.Beginner * 100;
+    }
+
+    // Ensure to send dealed items to the backend only once
+    updateDealedItems();
+  });
+
+  // Function to send category and CO2 data to backend for each dealed item
+  async function updateDealedItems() {
+    const processedItems = [];  // Track which items have been processed
+    console.log(processedItems);
+    for (const item of dealedItems) {
+      // If this item hasn't been processed before
+      if (!processedItems.includes(item.id)) {
+        processedItems.push(item.id);
+
+        // Send the item's category to the backend
+        const co2Amount = await fetchCO2Data(item.category);
+
+        if (co2Amount) {
+          // Update the user's profile CO2 with the new amount
+          await updateUserCO2(co2Amount);
+        }
+      }
     }
   }
 
-  $: calculateCarbonFootprint();
+  // Fetch CO2 data from the backend based on item category
+  /**
+   * @param {any} category
+   */
+  async function fetchCO2Data(category) {
+    try {
+      const response = await fetch(`http://localhost:3012/co2/${category}`);
+      const data = await response.json();
+      const co2Amount = data[0].co2_reduction_kg
+      return co2Amount;
+    } catch (error) {
+      console.error("Failed to fetch CO2 data:", error);
+      return 0;
+    }
+  }
+
+  // Update the user's CO2 reduction in the profile
+  /**
+   * @param {any} co2Amount
+   */
+  async function updateUserCO2(co2Amount) {
+    try {
+      const response = await fetch(`http://localhost:3012/user/${user.username}/co2`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ co2Reduction: co2Amount}),
+      });
+
+      const co2Update = response.json;
+      console.log(co2Update);
+      // Update the user's local state/store after successful update
+      authStore.update((store) => ({
+        ...store,
+        user: {
+          ...store.user,
+          co2_reduction_kg: co2Update,
+        },
+      }));
+
+      // Update totalCarbonFootprint after the CO2 is updated
+      totalCarbonFootprint = co2Update;
+    } catch (error) {
+      console.error("Failed to update user's CO2:", error);
+    }
+  }
 </script>
 
 <div class="profile-container">
   <div class="tabs">
+    <button class:active={activeTab === "my-items"} on:click={() => (activeTab = "my-items")}>
+      My Items
+    </button>
     <button class:active={activeTab === "pending"} on:click={() => (activeTab = "pending")}>
       Liked Items
+    </button>
+    <button class:active={activeTab === "dealed-items"} on:click={() => (activeTab = "dealed-items")}>
+      Dealed Items
     </button>
     <button class:active={activeTab === "carbon-footprint"} on:click={() => (activeTab = "carbon-footprint")}>
       Carbon Footprint
@@ -60,14 +162,18 @@
     <div class="carbon-footprint-section">
       <h3>Your Carbon Footprint</h3>
       <div class="footprint-stats">
-        <p>Total Carbon Footprint: <strong>{totalCarbonFootprint.toFixed(2)} kg CO2</strong></p>
-        <p>Carbon Savings: <strong>{carbonSavings || 0}%</strong></p>
+        <p>You have reduced <strong>{totalCarbonFootprint} kg CO2</strong> emission</p>
+        <p>Your Level: <strong>{level}</strong></p>
+        <p>To Next Level: <strong>{carbonSavings || 0}%</strong></p>
         <div class="progress-bar">
           <div class="progress" style="width: {Math.min(carbonSavings, 100)}%"></div>
         </div>
-        <p>Your Level: <strong>{level}</strong></p>
       </div>
     </div>
+  {:else if activeTab === "my-items"}
+    <ItemList items={myItems}/>
+  {:else if activeTab === "dealed-items"}
+    <ItemList items={dealedItems}/>
   {/if}
 </div>
 
