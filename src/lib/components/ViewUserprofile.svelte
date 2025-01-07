@@ -12,12 +12,6 @@
     // console.log(user);
 
     let badges = ["Beginner", "Level 1"];
-    let item = {
-        name: "Tennis Racket",
-        interestCount: 3,
-        value: 12,
-        tags: ["HZ Students", "APV"],
-    };
 
     /**
      * @param {{ target: { files: any[]; }; }} event
@@ -84,12 +78,12 @@
 </script>
 
 <div class="max-w-xl mx-auto shadow-lg rounded-lg p-6">
-    <ProfileDetails {user} {badges} {item} {handleImageUpload} />
+    <ProfileDetails {user} {badges} {handleImageUpload} />
 
     <!-- Item Section -->
     <div class="border-t-4 border-primary-500 dark:border-primary-dark-500">
         <div class="flex items-center justify-center rounded-lg mb-6">
-        <ProfileTabs />
+        <ProfileTabs {user}/>
         </div> 
     </div>
 

@@ -5,8 +5,9 @@
 	import { darkModeEnabled } from "$lib/stores/AllPurposeStore";
 	import fetchUserData from '$lib/utils/fetchUserWithAuth';
 	import { authStore } from "$lib/stores/authStore";
+	import LoadingScreen from '$lib/components/LoadingScreen.svelte';
 
-	let countdown = 1;
+	let countdown = 3;
 	let userData: { user: any; } | null = null;
 
 	onMount(async () => {
@@ -36,10 +37,11 @@
 </script>
 
 <div class:dark={$darkModeEnabled} class="bg-background dark:bg-background-dark h-screen w-screen flex flex-col items-center justify-center text-text dark:text-text-dark">
-  <h1 class="text-2xl text-center font-bold mb-4">You will be redirected to Junker in {countdown}...</h1>
-  <button on:click={redirectToJunker} class="mt-4 px-4 py-2 bg-primary-500 dark:bg-primary-dark-500 text-white rounded-lg shadow-md hover:bg-primary-700 dark:hover:bg-primary-dark-700">
-    Go to Junker
-  </button>
+	<!-- <h1 class="text-2xl text-center font-bold mb-4">You will be redirected to Junker in {countdown}...</h1>
+	<button on:click={redirectToJunker} class="mt-4 px-4 py-2 bg-primary-500 dark:bg-primary-dark-500 text-white rounded-lg shadow-md hover:bg-primary-700 dark:hover:bg-primary-dark-700">
+	Go to Junker
+	</button> -->
+	<LoadingScreen />
 </div>
 
 <style>
