@@ -4,23 +4,27 @@
   import { onMount } from 'svelte';
   import fetchUserData from '$lib/utils/fetchUserWithAuth';
 
-  /**
-   * @type {never[]}
-   */
   let communities = [];
   let userData;
+  let searchTerm = ''; // Search term for filtering communities
 
-  onMount( async () => {
-      try {
-        // fetch user data
-        userData = await fetchUserData();
-        // fetch communities
-        const response = await fetch(`http://localhost:3011/`);
-        const data = await response.json();
-        communities = data;
-      } catch (error) {
-        console.error('Error fetching communities:', error);
-      }
+  // Filtered communities based on search term
+  $: filteredCommunities = communities.filter((community) =>
+    community.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  onMount(async () => {
+    try {
+      // Fetch user data
+      userData = await fetchUserData();
+
+      // Fetch communities
+      const response = await fetch(`http://localhost:3011/`);
+      const data = await response.json();
+      communities = data;
+    } catch (error) {
+      console.error('Error fetching communities:', error);
+    }
   });
 
   // Navigate to the create-community page
@@ -33,20 +37,15 @@
   <!-- Header -->
   <h1 class="text-2xl font-bold text-center mt-4 mb-2">My Communities</h1>
 
-  <!-- Styled Input Area -->
+  <!-- Search Bar -->
   <div class="bg-background dark:bg-background-dark rounded-lg shadow-md p-4 max-w-md mx-auto mb-4">
-    <div class="flex items-center justify-center space-x-2">
-      <input 
-        type="text" 
-        placeholder="Enter a code.." 
-        class="px-4 py-2 border rounded-lg text-sm text-text dark:text-text-dark bg-background dark:bg-background-dark focus:ring-primary focus:border-primary"
+    <div class="search-bar">
+      <input
+        type="text"
+        bind:value={searchTerm}
+        placeholder="Search communities..."
+        class="search-input rounded-full border p-2 w-full"
       />
-      <button 
-        class="w-10 h-10 flex items-center justify-center bg-primary-500 dark:bg-primary-dark-500 text-white rounded-lg shadow-md" 
-        aria-label="Submit code"
-      >
-        <i class="fa-solid fa-check"></i>
-      </button>
     </div>
   </div>
 
@@ -56,7 +55,7 @@
       <!-- Community Grid -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
         <!-- Add Community Button -->
-        <div 
+        <div
           class="flex flex-col items-center justify-center bg-background dark:bg-background-dark rounded-lg shadow-md border-4 border-secondary-500 dark:border-secondary-dark-500 cursor-pointer hover:bg-secondary-500 dark:hover:bg-secondary-dark-500 transition aspect-square text-center"
           role="button"
           tabindex="0"
@@ -70,9 +69,13 @@
         </div>
 
         <!-- Community Cards -->
-        {#each communities as community (community.id)}
-          <Card {community} />
-        {/each}
+        {#if filteredCommunities.length > 0}
+          {#each filteredCommunities as community (community.id)}
+            <Card {community} />
+          {/each}
+        {:else}
+          <p>No communities match your search.</p>
+        {/if}
       </div>
     </div>
   </div>
@@ -82,5 +85,27 @@
   .min-h-screen {
     display: flex;
     flex-direction: column;
+  }
+
+  .search-bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 10px 15px;
+    border: 2px solid #ccc;
+    border-radius: 20px;
+    font-size: 1rem;
+    background-color: white;
+    outline: none;
+    transition: box-shadow 0.2s, border-color 0.2s;
+  }
+
+  .search-input:focus {
+    border-color: #39c69c;
+    box-shadow: 0 0 10px rgba(51, 204, 204, 0.4);
   }
 </style>
