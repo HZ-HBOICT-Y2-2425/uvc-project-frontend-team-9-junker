@@ -12,6 +12,8 @@ export const intendedRoute = writable("");
 
 export const loggedInUserID = "user1";
 
+export const swipeIndexStore = writable(0);
+
 export const categories = [
     new Category(0, "Bicycles"),
     new Category(1, "Books"),

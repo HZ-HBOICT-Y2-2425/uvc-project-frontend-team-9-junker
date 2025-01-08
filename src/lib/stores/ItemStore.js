@@ -3,7 +3,7 @@ import { writable } from 'svelte/store';
 import { Item } from '$lib/models/Item';
 
 let message = '';
-let mainUrl = 'http://localhost:3013';
+let mainUrl = 'http://localhost:3017';
 let gatewayUrl = 'http://localhost:3010/item_microservice';
 
 /**

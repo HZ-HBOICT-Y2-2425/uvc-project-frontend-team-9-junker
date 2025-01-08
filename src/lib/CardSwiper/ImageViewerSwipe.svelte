@@ -1,5 +1,6 @@
 <script>
 // @ts-nocheck
+    import { onMount } from 'svelte';
 
     const picturesPreload = import.meta.glob([
       '$lib/assets/pictures/**.jpg', 
@@ -11,10 +12,15 @@
 
 
     export let pictures;
+    
 
     console.log(pictures);
     
     let currentIndex = 0;
+
+    onMount(() => {
+        //pictures = [pictures[0], ...pictures];
+    });
   
     // Update picture position
     function goToPicture(index) {
@@ -41,7 +47,7 @@
         <div class="picture-wrapper">
             {#each pictures as picture, index}
                 <!--img src={picture} alt="picture {index + 1}"-->
-                <img src={pictures[index]?.data || picturesPreload[`/src/lib/assets/pictures/default.svg`]} alt="Img {index + 1}" />
+                <img class:img-first={index == 0} class:img-after={index != 0} src={pictures[index]?.data || picturesPreload[`/src/lib/assets/pictures/default.svg`]} alt="Img {index + 1}" />
             {/each}
         </div>
 
@@ -84,25 +90,31 @@
       height: 100%;
       transform: translateX(calc(-100% * var(--currentIndex)));
     }
-  
+
     .picture-wrapper img {
       width: 100%;
       height: 100%;
-      object-fit:contain;
       flex-shrink: 0;
+    }
+    
+    .img-first {
+      object-fit:cover;
+    }
+  
+    .img-after {
+      object-fit:contain;
     }
   
     .nav-button {
       position: absolute;
-      top: 90%;
+      top: 50%;
       transform: translateY(-50%);
-      background-color: rgba(0, 0, 0, 0.5);
-      color: white;
+      background-color: transparent;
+      color: transparent;
       border: none;
       font-size: 24px;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
+      width: 45%;
+      height: 100%;
       cursor: pointer;
       display: flex;
       justify-content: center;
@@ -111,7 +123,7 @@
     }
   
     .nav-button:hover {
-      background-color: rgba(0, 0, 0, 0.8);
+      background-color: transparent;
     }
   
     .nav-button.prev {

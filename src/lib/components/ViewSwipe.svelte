@@ -1,22 +1,32 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import Card from '../CardSwiper/Card.svelte';
+    import { getAllItems } from '$lib/stores/ItemStore';
+    import { swipeIndexStore } from '$lib/stores/AllPurposeStore';
 
     let cards = []; // Cards array
+    let items = [];
     let cardElements = []; // Store card elements for gesture handling
     let feedback = ''; // Feedback indicator for swipes
     let loading = true; // Loading state
     let showPopup = false; // Controls the popup visibility
+    let swipeIndex = 0;
+    swipeIndexStore.subscribe((index) => swipeIndex = index);
 
     // Fetch cards
     async function fetchCards() {
         try {
-            console.log("Fetching cards...");
+            console.log("Fetching listings...");
+            /*
             const response = await fetch('http://localhost:3010/api/aggregator/aggregated-items');
             if (!response.ok) {
                 throw new Error('Failed to fetch cards');
             }
             const data = await response.json();
+            */
+            items = await getAllItems();
+            console.log(items);
+            /*
             cards = data.map((item) => ({
                 id: item.id,
                 title: item.name || 'Unknown Title',
@@ -25,9 +35,10 @@
                 userid: item.userid || 'Unknown',
                 available: item.available ? 'Available' : 'Not Available',
             }));
-            console.log("Fetched and mapped cards:", cards);
+            */
+            console.log("Fetched items:", items);
         } catch (error) {
-            console.error("Error fetching cards:", error);
+            console.error("Error fetching items:", error);
         } finally {
             loading = false;
         }
@@ -85,25 +96,27 @@
         feedback = 'heart';
         el.style.transform = `translate(100vw, 0) rotate(30deg)`; // Smooth swipe to the right
         console.log(`Swiped Right on Card ${index}`);
-        removeCard(index);
+        removeCard(index, el);
     };
 
     const swipeLeft = (index, el) => {
         feedback = 'x';
         el.style.transform = `translate(-100vw, 0) rotate(-30deg)`; // Smooth swipe to the left
         console.log(`Swiped Left on Card ${index}`);
-        removeCard(index);
+        removeCard(index, el);
     };
 
-    const removeCard = (index) => {
+    const removeCard = (index, el) => {
         setTimeout(() => {
             feedback = '';
-            cards = cards.filter((_, i) => i !== index);
-
-            if (cards.length === 0) {
-                showPopup = true;
-            }
+            //items.splice(index, 1);
         }, 300);
+        el.style.visibility = `hidden`;
+        if (items.length == index+1) {
+            showPopup = true;
+        }
+        swipeIndexStore.set(swipeIndex+1);
+        console.log(swipeIndex);
     };
 
     const closePopup = () => {
@@ -129,21 +142,27 @@
         <div class="feedback x">❌</div>
     {/if}
 
-    {#each cards as card, index}
-        <div
-            class="card-wrapper"
-            bind:this={cardElements[index]}
-            style="z-index: {cards.length - index};"
-        >
-            <Card
-                title={card.title}
-                description={card.description}
-                image={card.image}
-                userid={card.userid}
-                available={card.available}
-            />
-        </div>
+    {#each items as item, index}
+        {#if index >= swipeIndex}
+            <div
+                class="card-wrapper"
+                bind:this={cardElements[index]}
+                style="z-index: {items.length - index};"
+            >
+                <Card item={item} totalItems={items.length}
+                />
+            </div>
+        {/if}
     {/each}
+    <div
+        class="card-wrapper"
+        style="z-index: -1;"
+    >
+        <div class="no-more-cards">
+            <h2>No More Cards</h2>
+            <p>You've swiped through all the cards.</p>
+        </div>
+    </div>
 </div>
 
 {#if showPopup}
@@ -157,6 +176,11 @@
 {/if}
 
 <style>
+.no-more-cards {
+    text-align: center;
+    padding: 20px;
+}
+
 .card-swiper {
     position: absolute;
     top: 50%;
