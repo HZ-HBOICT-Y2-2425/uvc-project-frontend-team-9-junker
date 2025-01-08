@@ -538,7 +538,7 @@
     >
       <div class="bg-white p-6 rounded-lg shadow-lg space-y-4 text-center m-2">
         <h2 class="text-lg font-bold">Are you sure?</h2>
-        <p>Do you want to create this community?</p>
+        <p>Do you want to create this Listing?</p>
         <div class="flex justify-around mt-4">
           <button
             class="bg-gray-400 text-white py-2 px-4 rounded-lg hover:bg-gray-500"
