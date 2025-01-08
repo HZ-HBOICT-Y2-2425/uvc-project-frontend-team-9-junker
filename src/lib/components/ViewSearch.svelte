@@ -1,67 +1,141 @@
 <script>
-  // @ts-nocheck
-  import { darkModeEnabled, items } from "$lib/stores/AllPurposeStore";
-  import CommunityListingCard from "./CommunityListings/CommunityListingCard.svelte";
+// @ts-nocheck
 
-  // Reactive variables for search and filters
-  let searchTerm = '';
-  let selectedCategory = '';
+    import { categories, darkModeEnabled, items } from "$lib/stores/AllPurposeStore";
+    import { onMount } from "svelte";
+    import { getAllItems } from "$lib/stores/ItemStore";
+    import CommunityListingCard from "./CommunityListings/CommunityListingCard.svelte";
+    import { Category } from "$lib/models/Category.js";
 
-  // Filtered items
-  $: filteredItems = items.filter((item) => {
-    const matchesName = item.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = !selectedCategory || item.categories.some((category) => category === selectedCategory);
-    return matchesName && matchesCategory;
-  });
+    // Reactive variables for search and filters
+    let searchTerm = '';
+    let selectedCategory = '';
+    let thisItems = items;
+    let categoriesSorted;
+
+    // Filtered items
+    $: filteredItems = thisItems.filter((item) => {
+      const matchesName = item.name.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = !selectedCategory || item.categories === selectedCategory;
+      return matchesName && matchesCategory;
+    });
+
+    onMount( async () => {
+      categoriesSorted = sortCommunitiesbyName();
+      thisItems = await getAllItems();
+      console.log(thisItems);
+    });
+
+    function sortCommunitiesbyName() {
+      return categories.sort((a, b) => {
+        const nameA = a.name.toUpperCase(); // ignore upper and lowercase
+        const nameB = b.name.toUpperCase(); // ignore upper and lowercase
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        // names must be equal
+        return 0;
+      });
+    }
+
 </script>
 
-<div class="filter-bar-container">
-  <!-- Enhanced Filter Bar -->
-  <div class="filter-bar shadow-lg">
-    <!-- Search Bar with Icon -->
-    <div class="search-bar">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="search-icon">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m1.9-5.4a7.5 7.5 0 11-15 0 7.5 7.5 0 0115 0z" />
-      </svg>
-      <input
-        type="text"
-        bind:value={searchTerm}
-        placeholder="Search by name..."
-        class="search-input"
-      />
+<!-- Content Wrapper -->
+<div class="h-full w-full overflow-scroll">
+  <div class="filter-bar-container">
+    <!-- Enhanced Filter Bar -->
+    <div class="filter-bar shadow-lg px-4 py-2">
+      <!-- Search Bar with Icon -->
+      <div class="search-bar">
+        <input
+          type="text"
+          bind:value={searchTerm}
+          placeholder="Search by name..."
+          class="search-input rounded-full border p-2 w-full mb-2"
+        />
+      </div>
+
+      <!-- Category Filter -->
+      <!--select bind:value={selectedCategory} class="category-select rounded-full border p-2 w-full">
+        <option value="">All Categories</option>
+        {#each categories as category}
+        <option value="{String(category.id)}">{category.name}</option>
+        {/each}
+      </select-->
+
+      <div class="relative">
+        <select 
+          bind:value={selectedCategory}
+          class="category-select rounded-full border p-2 w-full"
+          style="
+            appearance: none; /* Hides the default arrow */
+            -moz-appearance: none; /* For Firefox */
+            -webkit-appearance: none; /* For Safari */
+            background-image: none; /* Removes any background arrow in some browsers */
+          "
+        >
+          <option value="">All Categories</option>
+          {#if categoriesSorted?.length}
+            {#each categoriesSorted as category}
+            <option class="text-gray-600" value={String(category.id)}>
+                {category.name}
+            </option>
+            {/each}
+          {/if}
+        </select>
+        <span
+          class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
+        >
+          <!-- Custom arrow SVG -->
+          <svg
+            class="w-4 h-4 text-gray-600"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </span>
+      </div>
     </div>
-
-    <!-- Category Filter -->
-    <select bind:value={selectedCategory} class="category-select">
-      <option value="">All Categories</option>
-      <option value="Outdoors">Outdoors</option>
-      <option value="Furniture">Furniture</option>
-      <option value="Kitchen">Kitchen</option>
-      <option value="Clothing">Clothing</option>
-      <option value="Sports">Sports</option>
-    </select>
   </div>
-</div>
 
-<!-- Main Content -->
-<div class:dark={$darkModeEnabled} class="bg-background dark:bg-background-dark h-screen w-screen flex flex-col flex-nowrap">
-  <div class="text-text dark:text-text-dark overflow-y-auto" style="max-height: 100vh;">
-    <div class="flex flex-col items-center p-4 space-y-8">
-      <!-- Community Grid -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 w-full">
-        {#if filteredItems.length > 0}
-          {#each filteredItems as item}
-            <CommunityListingCard item={item} />
-          {/each}
-        {:else}
-          <li>No items match your search.</li>
-        {/if}
+    
+
+  <!-- Main Content -->
+  <div class:dark={$darkModeEnabled} class="bg-background dark:bg-background-dark flex flex-col flex-nowrap">
+    <div class="text-text dark:text-text-dark">
+      <div class="flex flex-col items-center p-4 space-y-8">
+        <!-- Community Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 h-full overflow-hidden">
+          {#if filteredItems.length > 0}
+            {#each filteredItems as item}
+              {#key item}
+                <CommunityListingCard item={item} />
+              {/key}
+            {/each}
+          {:else}
+            <li>No items match your search.</li>
+          {/if}
+        </div>
+        <div class="placeholder h-[40vh]">
+
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<style>
+<!--style>
   :root {
     --mint-color: #39c69c; /*color*/
     --mint-hover: #a3ebe1; 
@@ -131,4 +205,4 @@
     border-color: var(--mint-hover);
     box-shadow: 0 0 10px rgba(51, 204, 204, 0.4); 
   }
-</style>
+</style-->

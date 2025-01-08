@@ -1,15 +1,15 @@
 <script>
   import Header from "$lib/components/Header.svelte";
   import Footer from "$lib/components/Footer.svelte";
+  import ViewSearch from "$lib/components/ViewSearch.svelte";
   
-    import ViewSearch from "$lib/components/ViewSearch.svelte";
 </script>
 
-<div>
+<div class="h-screen">
   <Header title="Search" />
 
-  <main>
-    <ViewSearch />
+  <main  class="h-[80vh]">
+    <ViewSearch/>
   </main>
 
   <Footer />
