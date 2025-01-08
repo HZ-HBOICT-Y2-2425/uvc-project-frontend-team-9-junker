@@ -87,7 +87,7 @@
             class="card-wrapper"
             on:pointerdown={onPointerDown}
             on:pointerup={onPointerUp}
-            style="z-index: {cards.length - activeCardIndex}"
+            style="z-index: {totalItems - activeCardIndex}"
         >
         <div class="card">
             <ImageViewerSwipe pictures={[pictures[0], ...pictures]}/>

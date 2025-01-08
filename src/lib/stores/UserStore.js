@@ -44,3 +44,21 @@ export const getUserById = async (userId) => {
     let user = await fetchAPI('/id/public/' + userId, 'GET');
     return user
 };
+
+export const likeItem = async (userid, itemid) => {
+    console.log("likeItem()");
+    let message = await fetchAPI('/like', 'POST', {userid, itemid});
+    return message
+};
+
+export const dislikeItem = async (userid, itemid) => {
+    console.log("dislikeItem()");
+    let message = await fetchAPI('/dislike', 'POST', {userid, itemid});
+    return message
+};
+
+export const delteLikes = async (userid) => {
+    console.log("deleteLikes()");
+    let message = await fetchAPI('/likes/' + userid, 'PUT');
+    return message
+};

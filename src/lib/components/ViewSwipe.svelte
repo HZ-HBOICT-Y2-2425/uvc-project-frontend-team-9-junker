@@ -2,7 +2,13 @@
     import { onMount } from 'svelte';
     import Card from '../CardSwiper/Card.svelte';
     import { getAllItems } from '$lib/stores/ItemStore';
+    import { likeItem, dislikeItem, delteLikes } from '$lib/stores/UserStore';
     import { swipeIndexStore } from '$lib/stores/AllPurposeStore';
+    import { goto } from '$app/navigation';
+    import { authStore } from "$lib/stores/authStore";
+
+    let auth;
+    authStore.subscribe( (authStore) => auth = authStore);
 
     let cards = []; // Cards array
     let items = [];
@@ -42,6 +48,17 @@
         } finally {
             loading = false;
         }
+    }
+
+    async function reset() {
+        swipeIndexStore.set(0);
+        const thisPage = window.location.pathname;
+        if(auth?.user?.id) {
+            await delteLikes(auth?.user?.id);
+        }
+        goto('/search').then(
+            () => goto(thisPage)
+        );
     }
 
     // Bind swipe gestures to a card element
@@ -92,18 +109,30 @@
         el.addEventListener('pointerdown', handlePointerDown);
     };
 
-    const swipeRight = (index, el) => {
+    const swipeRight = async (index, el) => {
         feedback = 'heart';
         el.style.transform = `translate(100vw, 0) rotate(30deg)`; // Smooth swipe to the right
         console.log(`Swiped Right on Card ${index}`);
-        removeCard(index, el);
+        if(auth?.user?.id) {
+            let message = await likeItem(auth?.user?.id, items[index].id).then( () => {
+                removeCard(index, el);
+            })
+        } else {
+            removeCard(index, el);
+        }
     };
 
-    const swipeLeft = (index, el) => {
+    const swipeLeft = async (index, el) => {
         feedback = 'x';
         el.style.transform = `translate(-100vw, 0) rotate(-30deg)`; // Smooth swipe to the left
         console.log(`Swiped Left on Card ${index}`);
-        removeCard(index, el);
+        if(auth?.user?.id) {
+            let message = await dislikeItem(auth?.user?.id, items[index].id).then( () => {
+                removeCard(index, el);
+            })
+        } else {
+            removeCard(index, el);
+        }
     };
 
     const removeCard = (index, el) => {
@@ -112,9 +141,11 @@
             //items.splice(index, 1);
         }, 300);
         el.style.visibility = `hidden`;
+        /*
         if (items.length == index+1) {
             showPopup = true;
         }
+        */
         swipeIndexStore.set(swipeIndex+1);
         console.log(swipeIndex);
     };
@@ -160,7 +191,8 @@
     >
         <div class="no-more-cards">
             <h2>No More Cards</h2>
-            <p>You've swiped through all the cards.</p>
+            <p>You've swiped through all available listings.</p>
+            <button class="m-6 bg-primary-500 text-white py-2 px-4 rounded-lg hover:bg-primary-600" on:click={reset}>❌ Reset ❤️</button>
         </div>
     </div>
 </div>
@@ -169,7 +201,7 @@
     <div class="popup">
         <div class="popup-content">
             <h2>No More Cards</h2>
-            <p>You've swiped through all the cards.</p>
+            <p>You've swiped through all available listings.</p>
             <button on:click={closePopup}>Close</button>
         </div>
     </div>
