@@ -18,9 +18,13 @@
 		}
 		userData = await fetchUserData();
 		if (userData) {
+			let liked_items = await JSON.parse(userData.user.liked_items);
+			let disliked_items = await JSON.parse(userData.user.disliked_items);
             authStore.update((store) => ({
                 ...store,
-                user: userData.user
+                user: userData.user,
+				liked_items: liked_items,
+				disliked_items: disliked_items,
             }));
 			// console.log($authStore);
 			goto('/swipe');

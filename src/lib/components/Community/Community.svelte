@@ -22,7 +22,7 @@
         console.error('Error fetching communities:', error);
       }
   });
-  
+
   // Navigate to the create-community page
   function AddCommunity() {
     goto('/community/create'); // Ensure the route matches your actual setup

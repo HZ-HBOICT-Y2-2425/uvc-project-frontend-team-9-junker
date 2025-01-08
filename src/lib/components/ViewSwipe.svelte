@@ -7,8 +7,20 @@
     import { goto } from '$app/navigation';
     import { authStore } from "$lib/stores/authStore";
 
-    let auth;
-    authStore.subscribe( (authStore) => auth = authStore);
+    let auth = {
+        username: 'null',
+        isAuthenticated: false,
+        token: null,
+        refreshToken: null,
+        user: [],
+        liked_items: [undefined],
+        disliked_items: [undefined],
+    };
+
+    authStore.subscribe( (authStore) => {
+        auth = authStore;
+        console.log(auth);
+    });
 
     let cards = []; // Cards array
     let items = [];
@@ -56,6 +68,11 @@
         if(auth?.user?.id) {
             await delteLikes(auth?.user?.id);
         }
+        authStore.update((store) => ({
+            ...store,
+            liked_items: [],
+            disliked_items: [],
+        }));
         goto('/search').then(
             () => goto(thisPage)
         );
@@ -113,6 +130,14 @@
         feedback = 'heart';
         el.style.transform = `translate(100vw, 0) rotate(30deg)`; // Smooth swipe to the right
         console.log(`Swiped Right on Card ${index}`);
+        console.log(auth)
+        auth.liked_items.push(items[index].id);
+        let liked_items = auth.liked_items;
+        authStore.update((store) => ({
+            ...store,
+            liked_items: liked_items,
+        }));
+        console.log(auth.liked_items)
         if(auth?.user?.id) {
             let message = await likeItem(auth?.user?.id, items[index].id).then( () => {
                 removeCard(index, el);
@@ -126,6 +151,14 @@
         feedback = 'x';
         el.style.transform = `translate(-100vw, 0) rotate(-30deg)`; // Smooth swipe to the left
         console.log(`Swiped Left on Card ${index}`);
+        console.log(auth)
+        auth.disliked_items.push(items[index].id);
+        let disliked_items = auth.disliked_items;
+        authStore.update((store) => ({
+            ...store,
+            disliked_items: disliked_items,
+        }));
+        console.log(auth.disliked_items)
         if(auth?.user?.id) {
             let message = await dislikeItem(auth?.user?.id, items[index].id).then( () => {
                 removeCard(index, el);
@@ -174,7 +207,7 @@
     {/if}
 
     {#each items as item, index}
-        {#if index >= swipeIndex}
+        {#if index >= swipeIndex && !(auth.liked_items.includes(item.id) || auth.disliked_items.includes(item.id))}
             <div
                 class="card-wrapper"
                 bind:this={cardElements[index]}
