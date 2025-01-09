@@ -8,6 +8,11 @@
   let userData;
   let searchTerm = ''; // Search term for filtering communities
 
+  // Filtered communities based on search term
+  $: filteredCommunities = communities.filter((community) =>
+    community.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   onMount(async () => {
     try {
       // Fetch user data
@@ -21,11 +26,6 @@
       console.error('Error fetching communities:', error);
     }
   });
-
-    // Filtered communities based on search term
-    $: filteredCommunities = communities.filter((community) =>
-      community.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
 
   // Navigate to the create-community page
   function AddCommunity() {
