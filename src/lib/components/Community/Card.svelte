@@ -31,7 +31,7 @@
     } catch (error) {
       console.error(error);
     }
-  });
+  }); 
 
   function directTo() {
     if (memberRole) {

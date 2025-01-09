@@ -19,7 +19,7 @@
 
   let dealedItems = [
     {
-      id: 1,
+      id: 6,
       title: "Tennis Racket",
       image: "path-to-racket.jpg",
       category: "sports",
@@ -27,7 +27,7 @@
       views: 12,
     },
     {
-      id: 2,
+      id: 5,
       title: "Tennis Racket",
       image: "path-to-racket.jpg",
       category: "sports",
@@ -52,44 +52,65 @@
   $: likedItems = get(likedItemsStore);
 
   onMount(() => {
-    // Calculate user's CO2 level and savings
     if (totalCarbonFootprint >= carbonThresholds.Expert) {
       level = "Expert";
-      carbonSavings = totalCarbonFootprint / carbonThresholds.Expert * 100;
+      carbonSavings = 100; // Already at the highest level
     } else if (totalCarbonFootprint >= carbonThresholds.Advanced) {
       level = "Advanced";
-      carbonSavings = totalCarbonFootprint / carbonThresholds.Advanced * 100;
+      carbonSavings = ((totalCarbonFootprint - carbonThresholds.Advanced) /
+        (carbonThresholds.Expert - carbonThresholds.Advanced)) * 100;
     } else if (totalCarbonFootprint >= carbonThresholds.Intermediate) {
       level = "Intermediate";
-      carbonSavings = totalCarbonFootprint / carbonThresholds.Intermediate * 100;
+      carbonSavings = ((totalCarbonFootprint - carbonThresholds.Intermediate) /
+        (carbonThresholds.Advanced - carbonThresholds.Intermediate)) * 100;
+    } else if (totalCarbonFootprint >= carbonThresholds.Beginner) {
+      level = "Beginner";
+      carbonSavings = ((totalCarbonFootprint - carbonThresholds.Beginner) /
+        (carbonThresholds.Intermediate - carbonThresholds.Beginner)) * 100;
     } else {
       level = "Beginner";
-      carbonSavings = totalCarbonFootprint / carbonThresholds.Beginner * 100;
+      carbonSavings = (totalCarbonFootprint / carbonThresholds.Beginner) * 100;
     }
 
-    // Ensure to send dealed items to the backend only once
     updateDealedItems();
+    fetchUserCO2Data();
   });
 
-  // Function to send category and CO2 data to backend for each dealed item
+
   async function updateDealedItems() {
-    const processedItems = [];  // Track which items have been processed
-    console.log(processedItems);
-    for (const item of dealedItems) {
-      // If this item hasn't been processed before
-      if (!processedItems.includes(item.id)) {
-        processedItems.push(item.id);
-
-        // Send the item's category to the backend
-        const co2Amount = await fetchCO2Data(item.category);
-
-        if (co2Amount) {
-          // Update the user's profile CO2 with the new amount
-          await updateUserCO2(co2Amount);
-        }
+  for (const item of dealedItems) {
+    const newDealedItem = await addDealedItemBack(item.id);
+    if (newDealedItem) {
+      // Fetch CO2 data and update the user's profile
+      const co2Amount = await fetchCO2Data(item.category);
+      if (co2Amount) {
+        console.log("Updating user's CO2 for item ID:", item.id);
+        await updateUserCO2(co2Amount);
       }
+    } else {
+      console.log("Item ID already processed:", item.id);
     }
   }
+}
+
+async function addDealedItemBack(itemid) {
+  try {
+    const response = await fetch(`http://localhost:3012/dealed`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userid: user.id, itemid }),
+    });
+    const data = await response.json();
+    console.log("Response from backend:", data);
+    return data;
+  } catch (error) {
+    console.error("Failed to add dealed item:", error);
+    return false;
+  }
+}
+
 
   // Fetch CO2 data from the backend based on item category
   /**
@@ -100,7 +121,19 @@
       const response = await fetch(`http://localhost:3012/co2/${category}`);
       const data = await response.json();
       const co2Amount = data[0].co2_reduction_kg
+      console.log(co2Amount);
       return co2Amount;
+    } catch (error) {
+      console.error("Failed to fetch CO2 data:", error);
+      return 0;
+    }
+  }
+
+  async function fetchUserCO2Data() {
+    try {
+      const response = await fetch(`http://localhost:3012/user/${user.username}/co2`);
+      const data = await response.json();
+      totalCarbonFootprint = data;
     } catch (error) {
       console.error("Failed to fetch CO2 data:", error);
       return 0;
@@ -118,11 +151,13 @@
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ co2Reduction: co2Amount}),
+        body: JSON.stringify({ co2_reduction: co2Amount}),
       });
 
-      const co2Update = response.json;
+      const data = await response.json();
+      const co2Update = data;
       console.log(co2Update);
+
       // Update the user's local state/store after successful update
       authStore.update((store) => ({
         ...store,
@@ -163,10 +198,9 @@
       <h3>Your Carbon Footprint</h3>
       <div class="footprint-stats">
         <p>You have reduced <strong>{totalCarbonFootprint} kg CO2</strong> emission</p>
-        <p>Your Level: <strong>{level}</strong></p>
-        <p>To Next Level: <strong>{carbonSavings || 0}%</strong></p>
+        <p>To Next Level: <strong>{Math.floor(carbonSavings) || 0}%</strong></p>
         <div class="progress-bar">
-          <div class="progress" style="width: {Math.min(carbonSavings, 100)}%"></div>
+          <div class="progress" style="width: {Math.floor(Math.min(carbonSavings, 100))}%"></div>
         </div>
       </div>
     </div>

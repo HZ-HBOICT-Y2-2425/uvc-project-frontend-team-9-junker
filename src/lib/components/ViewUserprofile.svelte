@@ -11,8 +11,6 @@
     const user = userData.user;
     // console.log(user);
 
-    let badges = ["Beginner", "Level 1"];
-
     /**
      * @param {{ target: { files: any[]; }; }} event
      */
@@ -79,7 +77,7 @@
 </script>
 
 <div class="max-w-xl mx-auto shadow-lg rounded-lg p-6">
-    <ProfileDetails {user} {badges} {handleImageUpload} />
+    <ProfileDetails {user} {handleImageUpload} />
 
     <!-- Item Section -->
     <div class="border-t-4 border-primary-500 dark:border-primary-dark-500">

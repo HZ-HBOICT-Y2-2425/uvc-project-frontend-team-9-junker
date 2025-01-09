@@ -19,7 +19,6 @@
 
     authStore.subscribe( (authStore) => {
         auth = authStore;
-        console.log(auth);
     });
 
     let cards = []; // Cards array

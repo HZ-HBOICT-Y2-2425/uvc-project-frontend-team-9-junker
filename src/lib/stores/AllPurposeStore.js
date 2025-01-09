@@ -8,7 +8,6 @@ export const toggleState = writable("swipe");
 export const loadingState = writable(false);
 export const darkModeEnabled = writable(false);
 export const savedListingsUser = writable('username');
-export const intendedRoute = writable("");
 
 export const loggedInUserID = "user1";
 
