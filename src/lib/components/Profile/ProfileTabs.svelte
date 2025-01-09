@@ -19,18 +19,18 @@
 
   let dealedItems = [
     {
-      id: 6,
+      id: 3,
       title: "Tennis Racket",
       image: "path-to-racket.jpg",
-      category: "sports",
+      category: "Sports Equipment",
       interested: 3,
       views: 12,
     },
     {
-      id: 5,
+      id: 2,
       title: "Tennis Racket",
       image: "path-to-racket.jpg",
-      category: "sports",
+      category: "Sports Equipment",
       interested: 3,
       views: 12,
     },
