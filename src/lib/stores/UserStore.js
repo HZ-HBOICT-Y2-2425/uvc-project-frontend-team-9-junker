@@ -51,9 +51,21 @@ export const likeItem = async (userid, itemid) => {
     return message
 };
 
+export const unlikeItem = async (userid, itemid) => {
+    console.log("unlikeItem()");
+    let message = await fetchAPI('/unlike', 'POST', {userid, itemid});
+    return message
+};
+
 export const dislikeItem = async (userid, itemid) => {
     console.log("dislikeItem()");
     let message = await fetchAPI('/dislike', 'POST', {userid, itemid});
+    return message
+};
+
+export const undislikeItem = async (userid, itemid) => {
+    console.log("undislikeItem()");
+    let message = await fetchAPI('/undislike', 'POST', {userid, itemid});
     return message
 };
 
