@@ -245,7 +245,6 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    padding: 1rem;
   }
   
   .liked-item {
@@ -282,9 +281,8 @@
   }
   
   .profile-container {
-    padding: 1.5rem;
     font-family: 'Arial', sans-serif;
-    width: 80%;
+    width: 100%;
   }
   
   .tabs {
@@ -293,6 +291,7 @@
     justify-content: center;
     gap: 1rem;
     margin-bottom: 2rem;
+    margin-top: 1.5rem;
   }
   
   .tabs button {
