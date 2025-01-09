@@ -68,9 +68,7 @@
             liked_items: [],
             disliked_items: [],
         }));
-        goto('/search').then(
-            () => goto(thisPage)
-        );
+        goto('/search');
     }
 
     // Bind swipe gestures to a card element

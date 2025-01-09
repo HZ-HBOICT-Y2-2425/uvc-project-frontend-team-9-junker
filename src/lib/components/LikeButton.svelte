@@ -24,6 +24,7 @@
     authStore.subscribe( (authStore) => {
         auth = authStore;
         auth.liked_items.includes(item.id) ? isLiked = true : isLiked = false;
+        console.log(isLiked)
     });
 
     async function toggleHeart() {
@@ -34,9 +35,11 @@
             console.log(message)
             if(message === "Likes updated successfully") {
                 auth.liked_items.push(item.id);
+                auth.disliked_items = auth.disliked_items.filter((id) => String(id) === String(item.id));
                 authStore.update((store) => ({
                     ...store,
                     liked_items: auth.liked_items,
+                    disliked_items: auth.disliked_items,
                 }));
                 heart.classList.toggle("#D16D6A", isLiked);
                 heart.classList.toggle("text-white", isLiked);
