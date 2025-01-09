@@ -245,7 +245,7 @@ async function addDealedItemBack(itemid) {
       <div class="liked-items">
         {#if likedItems.length}
           {#each likedItems as item}
-            <button class="liked-item" on:click={goto(`/item_details/${item.id}_${item.name}`)}>
+            <button class="liked-item" on:click={() => goto(`/item_details/${item.id}_${item.name}`)}>
               <img src={item.pictures[0]?.data || '/default-picture.jpg'} alt={item.name} class="item-image" />
               <div class="item-info">
                 <h3>{item.name}</h3>
