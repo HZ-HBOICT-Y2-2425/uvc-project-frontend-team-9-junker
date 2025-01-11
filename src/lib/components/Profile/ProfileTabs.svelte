@@ -34,6 +34,7 @@
       console.log(likedItems.length);
     });
 
+
     async function loadPicture(itemId) {
       let pictures = await getPicturesByItemId(itemId);
       if(pictures?.data) {
@@ -140,22 +141,25 @@
       }
     }
 
-async function addDealedItemBack(itemid) {
-  try {
-    const response = await fetch(`http://localhost:3012/dealed`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ userid: user.id, itemid }),
-    });
-    const data = await response.json();
-    console.log("Response from backend:", data);
-    return data;
-  } catch (error) {
-    console.error("Failed to add dealed item:", error);
-    return false;
+
+  async function addDealedItemBack(itemid) {
+    try {
+      const response = await fetch(`http://localhost:3012/dealed`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userid: user.id, itemid }),
+      });
+      const data = await response.json();
+      console.log("Response from backend:", data);
+      return data;
+    } catch (error) {
+      console.error("Failed to add dealed item:", error);
+      return false;
+    }
   }
+
 }
 
   
@@ -174,11 +178,14 @@ async function addDealedItemBack(itemid) {
         console.error("Failed to fetch CO2 data:", error);
         return 0;
       }
+
     }
 
   async function fetchUserCO2Data() {
     try {
-      const response = await fetch(`http://localhost:3012/user/${user.username}/co2`);
+      const response = await fetch(
+        `http://localhost:3012/user/${user.username}/co2`,
+      );
       const data = await response.json();
       totalCarbonFootprint = data;
     } catch (error) {
@@ -186,6 +193,7 @@ async function addDealedItemBack(itemid) {
       return 0;
     }
   }
+
   
     // Update the user's CO2 reduction in the profile
     /**
@@ -194,16 +202,19 @@ async function addDealedItemBack(itemid) {
     async function updateUserCO2(co2Amount) {
       try {
         const response = await fetch(`http://localhost:3012/user/${user.username}/co2`, {
+
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
+
         body: JSON.stringify({ co2_reduction: co2Amount}),
         });
   
         const data = await response.json();
         const co2Update = data;
         console.log(co2Update);
+
 
         // Update the user's local state/store after successful update
         authStore.update((store) => ({
@@ -220,6 +231,7 @@ async function addDealedItemBack(itemid) {
         console.error("Failed to update user's CO2:", error);
       }
     }
+
   </script>
   
   <div class="profile-container">
@@ -267,12 +279,20 @@ async function addDealedItemBack(itemid) {
         <p>To Next Level: <strong>{Math.floor(carbonSavings) || 0}%</strong></p>
           <div class="progress-bar">
           <div class="progress" style="width: {Math.floor(Math.min(carbonSavings, 100))}%"></div>
+
         </div>
       </div>
     </div>
   {:else if activeTab === "my-items"}
-    <ItemList items={myItems}/>
+    {#if myItems.length > 0}
+    <MyListings items={myItems} />
+    {:else}
+      <p class="text-gray-500 dark:text-gray-400 text-center">
+        No items found.
+      </p>
+    {/if}
   {:else if activeTab === "dealed-items"}
+
     <ItemList items={dealedItems}/>
     {/if}
   </div>
@@ -340,6 +360,7 @@ async function addDealedItemBack(itemid) {
     cursor: pointer;
     font-size: 1rem;
     transition: all 0.3s ease;
+
     width: 25vw;
   }
   
@@ -348,6 +369,7 @@ async function addDealedItemBack(itemid) {
     color: white;
     font-weight: bold;
   }
+
   
   .tabs button:hover {
     background: #45a049;
@@ -360,18 +382,21 @@ async function addDealedItemBack(itemid) {
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   }
+
   
   .carbon-footprint-section h3 {
     font-size: 1.5rem;
     color: #333;
     margin-bottom: 1rem;
   }
+
   
   .footprint-stats p {
     font-size: 1.1rem;
     color: #555;
     margin: 0.5rem 0;
   }
+
   
   .progress-bar {
     width: 100%;
@@ -383,11 +408,13 @@ async function addDealedItemBack(itemid) {
     overflow: hidden;
     position: relative;
   }
+
   
   .progress-bar .progress {
     height: 100%;
     background: linear-gradient(90deg, #4caf50, #81c784);
     transition: width 0.4s ease-in-out;
   }
+
   
   </style>
