@@ -55,7 +55,7 @@
             message = await unlikeItem(auth?.user?.id, item.id);
             console.log(message)
             if(message === "Likes updated successfully" && auth.liked_items) {
-                auth.liked_items = auth.liked_items.filter( (liked_item) => liked_item.id === item.id );
+                auth.liked_items = await auth.liked_items.filter( (id) => String(id) !== String(item.id) );
                 authStore.update((store) => ({
                     ...store,
                     liked_items: auth.liked_items,
