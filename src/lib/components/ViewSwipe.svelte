@@ -3,7 +3,6 @@
     import Card from '../CardSwiper/Card.svelte';
     import { getAllItems } from '$lib/stores/ItemStore';
     import { likeItem, dislikeItem, delteLikes } from '$lib/stores/UserStore';
-    import { swipeIndexStore } from '$lib/stores/AllPurposeStore';
     import { goto } from '$app/navigation';
     import { authStore } from "$lib/stores/authStore";
 
@@ -27,8 +26,6 @@
     let feedback = ''; // Feedback indicator for swipes
     let loading = true; // Loading state
     let showPopup = false; // Controls the popup visibility
-    let swipeIndex = 0;
-    swipeIndexStore.subscribe((index) => swipeIndex = index);
 
     // Fetch cards
     async function fetchCards() {
@@ -62,7 +59,6 @@
     }
 
     async function reset() {
-        swipeIndexStore.set(0);
         const thisPage = window.location.pathname;
         if(auth?.user?.id) {
             await delteLikes(auth?.user?.id);
@@ -72,9 +68,7 @@
             liked_items: [],
             disliked_items: [],
         }));
-        goto('/search').then(
-            () => goto(thisPage)
-        );
+        goto('/search');
     }
 
     // Bind swipe gestures to a card element
@@ -178,8 +172,6 @@
             showPopup = true;
         }
         */
-        swipeIndexStore.set(swipeIndex+1);
-        console.log(swipeIndex);
     };
 
     const closePopup = () => {
@@ -206,7 +198,7 @@
     {/if}
 
     {#each items as item, index}
-        {#if index >= swipeIndex && !(auth.liked_items.includes(item.id) || auth.disliked_items.includes(item.id))}
+        {#if !(auth.liked_items.includes(item.id) || auth.disliked_items.includes(item.id))}
             <div
                 class="card-wrapper"
                 bind:this={cardElements[index]}
@@ -260,10 +252,8 @@
 
 .card-wrapper {
     position: absolute;
-    width: 90%;
-    max-width: 400px;
-    height: 90%;
-    max-height: 600px;
+    aspect-ratio: 9 / 16;
+    height: 78vh;
     border-radius: 16px;
     box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
     display: flex;

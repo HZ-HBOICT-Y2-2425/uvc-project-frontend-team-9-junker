@@ -46,7 +46,7 @@
 
     // Show success popup
     showSuccessPopup = true;
-
+    
     // Close the confirmation popup
     showConfirmPopup = false;
 
@@ -160,16 +160,16 @@
   />
 
   <div class="flex items-center mt-4">
-    <label class="mr-4">
+      <label class="mr-4">
       <input type="radio" value="public" bind:group={status} />
-      Public
-    </label>
-    <label>
+        Public
+      </label>
+      <label>
       <input type="radio" value="private" bind:group={status} />
-      Private
-    </label>
-  </div>
-
+        Private
+      </label>
+    </div>
+    
   <!-- Description -->
   <textarea
     bind:value={description}
@@ -197,25 +197,25 @@
   <div
     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10"
   >
-    <div class="bg-white p-6 rounded-lg shadow-lg space-y-4 text-center">
-      <h2 class="text-lg font-bold">Are you sure?</h2>
-      <p>Do you want to cancel creating this community?</p>
-      <div class="flex justify-around mt-4">
-        <button
-          class="bg-gray-400 text-white py-2 px-4 rounded-lg hover:bg-gray-500"
-          on:click={() => (showCancelPopup = false)}
-        >
-          No
-        </button>
-        <button
-          class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600"
-          on:click={confirmCancel}
-        >
-          Yes
-        </button>
-      </div>
+  <div class="bg-white p-6 rounded-lg shadow-lg space-y-4 text-center">
+    <h2 class="text-lg font-bold">Are you sure?</h2>
+    <p>Do you want to cancel creating this community?</p>
+    <div class="flex justify-around mt-4">
+      <button
+        class="bg-gray-400 text-white py-2 px-4 rounded-lg hover:bg-gray-500"
+        on:click={() => (showCancelPopup = false)}
+      >
+        No
+      </button>
+      <button
+        class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600"
+        on:click={confirmCancel}
+      >
+        Yes
+      </button>
     </div>
   </div>
+</div>
 {/if}
 
 <!-- Confirmation Popup -->

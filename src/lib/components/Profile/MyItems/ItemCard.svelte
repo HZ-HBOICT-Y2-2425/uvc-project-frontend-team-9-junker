@@ -1,12 +1,7 @@
 <script>
   import { goto } from "$app/navigation";
 
-  export let item = {
-    title: "Tennis Racket",
-    image: "path-to-racket.jpg",
-    interested: 3,
-    views: 12,
-  };
+  export let item;
 </script>
 
 <div
