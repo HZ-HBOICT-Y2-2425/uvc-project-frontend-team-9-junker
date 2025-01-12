@@ -10,7 +10,8 @@
     import {getItem} from "$lib/stores/ItemStore"
     import {getPicturesByItemId} from "$lib/stores/PictureStore"
     import { goto } from "$app/navigation";
-    import LikedItemList from "./MyItems/LikedItemList.svelte";
+    import UserItemListings from "./MyItems/UserItemListings.svelte";
+    
 
     export let user;
     console.log(user);
@@ -208,7 +209,7 @@ async function addDealedItemBack(itemid) {
   
     <!-- Conditional Rendering Based on Active Tab -->
     {#if activeTab === "my-items"}
-      <!-- Content for My Items -->
+    <UserItemListings userId={user.id} />
     {:else if activeTab === "liked-items"}
       <LikedItemList likedItemsIdArray={user.liked_items}/>
     {:else if activeTab === "dealed-items"}
@@ -224,8 +225,6 @@ async function addDealedItemBack(itemid) {
         </div>
       </div>
     </div>
-  {:else if activeTab === "my-items"}
-    <ItemList items={myItems}/>
   {:else if activeTab === "dealed-items"}
     <ItemList items={dealedItems}/>
     {/if}
