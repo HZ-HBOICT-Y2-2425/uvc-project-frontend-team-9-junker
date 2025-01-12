@@ -1,9 +1,9 @@
 <script>
 // @ts-nocheck
-    import { getAllItems, getItem, storeItem, updateItem, deleteItem } from "$lib/stores/ItemStore";
-    import { storePicture, getAllPictures } from "$lib/stores/pictureStore";
+    import { getAllItems, getItem, storeItem, updateItem, deleteItem } from "$lib/stores/ItemStore.js";
+    import { storePicture, getAllPictures } from "$lib/stores/pictureStore.js";
     import { goto } from "$app/navigation";
-    import { authStore } from "$lib/stores/authStore";
+    import { authStore } from "$lib/stores/authStore.js";
     import { onMount } from 'svelte';
 
     let username = '';

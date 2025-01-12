@@ -130,8 +130,9 @@
   <h1 class="text-2xl font-bold text-center">Add Community</h1>
 
   <!-- Upload cover_pic -->
+  <!-- svelte-ignore a11y_img_redundant_alt -->
   <img
-    src={cover_pic ? cover_pic : "/placeholder-image.jpg"}
+    src={cover_pic ? cover_pic : "./placeholder-image.jpg"}
     class="rounded-lg w-full max-h-64 object-cover" alt="Community Image"
   />
   <div class="flex justify-center">
