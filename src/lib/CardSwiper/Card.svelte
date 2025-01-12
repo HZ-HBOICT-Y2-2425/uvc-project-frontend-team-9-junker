@@ -102,7 +102,7 @@
                             {publicOwner?.publicProfile?.username || ""}
                         </div>
                         <div class="card-availability ml-auto" class:text-primary-500={item.available == true} class:not-available={item.available == false}>
-                            {item.available ? 'Available' : 'Not Available'}
+                            <!-- {item.available ? 'Available' : 'Not Available'} -->
                         </div>
                         {#if item.action == false}
                             <svg class="ml-3" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="rgb(0 0 0 / var(--tw-text-opacity, 1))">
