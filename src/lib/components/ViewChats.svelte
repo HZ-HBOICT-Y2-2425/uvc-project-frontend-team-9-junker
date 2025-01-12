@@ -28,7 +28,7 @@
   });
 </script>
 
-<SubHeaderV2 title="Chats" />
+<SubHeaderV2 title="Chats"/>
 <div class="chats-view space-y-4 bg-background dark:bg-background-dark text-text dark:text-text-dark p-4">
   {#if isLoading}
     <div class="flex justify-center text-secondary-500 dark:text-secondary-dark-500 items-center py-4">

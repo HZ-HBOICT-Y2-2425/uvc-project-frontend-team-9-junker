@@ -10,29 +10,10 @@
     import {getItem} from "$lib/stores/ItemStore"
     import {getPicturesByItemId} from "$lib/stores/PictureStore"
     import { goto } from "$app/navigation";
+    import LikedItemList from "./MyItems/LikedItemList.svelte";
 
     export let user;
     console.log(user);
-  
-    let likedItemIds = [];
-    let likedItems = [];
-    let auth;
-    
-    authStore.subscribe( async (authStore) => {
-      likedItemIds = [];
-      likedItems = [];
-      auth = authStore;
-      console.log(auth.liked_items);
-      let newItem;
-      await Promise.all(
-        auth.liked_items.map(async (id) => likedItems.push(await getItem(id)))
-      );
-      await Promise.all(
-        likedItems.map(async (item, index) => likedItems[index].pictures = await getPicturesByItemId(item.id))
-      );
-      console.log(likedItems[0]);
-      console.log(likedItems.length);
-    });
 
     async function loadPicture(itemId) {
       let pictures = await getPicturesByItemId(itemId);
@@ -41,19 +22,6 @@
       }
       return false
     }
-    
-  
-    // authStore.subscribe(async (auth) => {
-    //   likedItemIds = auth.liked_items || []; // Get liked item IDs
-  
-    //   // Fetch all liked items using Promise.all
-    //   const items = await Promise.all(
-    //     likedItemIds.map(async (id) => await getItem(id))
-    //   );
-  
-    //   // Update likedItems without duplicates
-    //   likedItems = items.filter((item) => item !== null);
-    // });
   
     /**
      * @type {never[]}
@@ -242,21 +210,7 @@ async function addDealedItemBack(itemid) {
     {#if activeTab === "my-items"}
       <!-- Content for My Items -->
     {:else if activeTab === "liked-items"}
-      <div class="liked-items">
-        {#if likedItems.length}
-          {#each likedItems as item}
-            <button class="liked-item" on:click={() => goto(`/item_details/${item.id}_${item.name}`)}>
-              <img src={item.pictures[0]?.data || '/default-picture.jpg'} alt={item.name} class="item-image" />
-              <div class="item-info">
-                <h3>{item.name}</h3>
-                <p>{item.description}</p>
-              </div>
-            </button>
-          {/each}
-        {:else}
-          <p>No liked items yet. Swipe right to like items!</p>
-        {/if}
-      </div>
+      <LikedItemList likedItemsIdArray={user.liked_items}/>
     {:else if activeTab === "dealed-items"}
       <ItemList items={dealedItems} />
     {:else if activeTab === "carbon-footprint"}
@@ -277,22 +231,7 @@ async function addDealedItemBack(itemid) {
     {/if}
   </div>
   
-  <style>
-    .liked-items {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .liked-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background: #f9f9f9;
-  }
+<style>
   
   .item-image {
     width: 50px;
@@ -390,4 +329,4 @@ async function addDealedItemBack(itemid) {
     transition: width 0.4s ease-in-out;
   }
   
-  </style>
+</style>

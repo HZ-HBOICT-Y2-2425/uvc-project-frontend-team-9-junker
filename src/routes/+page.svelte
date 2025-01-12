@@ -18,13 +18,21 @@
 		}
 		userData = await fetchUserData();
 		if (userData) {
-			let liked_items = await JSON.parse(userData.user.liked_items);
-			let disliked_items = await JSON.parse(userData.user.disliked_items);
+			if(userData?.user?.liked_items && userData?.user?.disliked_items) {
+				try {
+					userData.user.liked_items = await JSON.parse(userData.user.liked_items);
+					userData.user.disliked_items = await JSON.parse(userData.user.disliked_items);
+				}
+				catch (error){
+					userData.user.liked_items = [];
+					userData.user.disliked_items = [];
+					console.error("Error fetching user data:", error.message);
+				}
+			}
+			console.log(userData)
             authStore.update((store) => ({
                 ...store,
                 user: userData.user,
-				liked_items: liked_items,
-				disliked_items: disliked_items,
             }));
 			// console.log($authStore);
 			goto('/swipe');

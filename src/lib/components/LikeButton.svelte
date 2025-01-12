@@ -11,36 +11,34 @@
     let likeButton;
     let heart;
 
-    let auth = {
-        username: 'null',
-        isAuthenticated: false,
-        token: null,
-        refreshToken: null,
-        user: [],
+    let user = {
+        id: undefined,
         liked_items: [undefined],
         disliked_items: [undefined],
-    };
+    }
 
-    authStore.subscribe( (authStore) => {
-        auth = authStore;
-        auth.liked_items.includes(item.id) ? isLiked = true : isLiked = false;
-        console.log(isLiked)
+    authStore.subscribe( async (authStore) => {
+        authStore.user ? user = authStore.user : null;
+        if(user.liked_items.length) {
+            user.liked_items.includes(item.id) ? isLiked = true : isLiked = false;
+            console.log(isLiked)
+        }
     });
 
     async function toggleHeart() {
-        if(!isLiked && auth?.user?.id) {
+        if(!isLiked && user?.id) {
             let message
-            message = await likeItem(auth?.user?.id, item.id);
-            await undislikeItem(auth?.user?.id, item.id);
+            message = await likeItem(user?.id, item.id);
+            await undislikeItem(user?.id, item.id);
             console.log(message)
             if(message === "Likes updated successfully") {
-                auth.liked_items.push(item.id);
-                auth.disliked_items = auth.disliked_items.filter((id) => String(id) === String(item.id));
+                user.liked_items.push(item.id);
+                user.disliked_items = user.disliked_items.filter((id) => String(id) === String(item.id));
                 authStore.update((store) => ({
                     ...store,
-                    liked_items: auth.liked_items,
-                    disliked_items: auth.disliked_items,
+                    user: user,
                 }));
+                console.log(user);
                 heart.classList.toggle("#D16D6A", isLiked);
                 heart.classList.toggle("text-white", isLiked);
 
@@ -50,16 +48,17 @@
                 }, 150);
             }
         }
-        else if(isLiked && auth?.user?.id) {
+        else if(isLiked && user?.id) {
             let message = "Likes updated successfully";
-            message = await unlikeItem(auth?.user?.id, item.id);
+            message = await unlikeItem(user?.id, item.id);
             console.log(message)
-            if(message === "Likes updated successfully" && auth.liked_items) {
-                auth.liked_items = await auth.liked_items.filter( (id) => String(id) !== String(item.id) );
+            if(message === "Likes updated successfully" && user.liked_items) {
+                user.liked_items = await user.liked_items.filter( (id) => String(id) !== String(item.id) );
                 authStore.update((store) => ({
                     ...store,
-                    liked_items: auth.liked_items,
+                    user: user,
                 }));
+                console.log(user);
                 heart.classList.toggle("#D16D6A", isLiked);
                 heart.classList.toggle("text-white", isLiked);
 

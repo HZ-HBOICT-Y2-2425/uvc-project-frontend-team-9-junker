@@ -6,6 +6,4 @@ export const authStore = writable({
   token: null,
   refreshToken: null,
   user: [],
-  liked_items: [undefined],
-  disliked_items: [undefined],
 });

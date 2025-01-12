@@ -5,23 +5,21 @@
     import { likeItem, dislikeItem, delteLikes } from '$lib/stores/UserStore';
     import { goto } from '$app/navigation';
     import { authStore } from "$lib/stores/authStore";
+    import { get } from 'svelte/store';
 
-    let auth = {
-        username: 'null',
-        isAuthenticated: false,
-        token: null,
-        refreshToken: null,
-        user: [],
+    let user = {
+        id: undefined,
         liked_items: [undefined],
         disliked_items: [undefined],
-    };
+    }
 
-    authStore.subscribe( (authStore) => {
-        auth = authStore;
+    authStore.subscribe( async (authStore) => {
+        authStore.user ? user = authStore.user : null;
     });
 
     let cards = []; // Cards array
     let items = [];
+
     let cardElements = []; // Store card elements for gesture handling
     let feedback = ''; // Feedback indicator for swipes
     let loading = true; // Loading state
@@ -31,25 +29,8 @@
     async function fetchCards() {
         try {
             console.log("Fetching listings...");
-            /*
-            const response = await fetch('http://localhost:3010/api/aggregator/aggregated-items');
-            if (!response.ok) {
-                throw new Error('Failed to fetch cards');
-            }
-            const data = await response.json();
-            */
             items = await getAllItems();
             console.log(items);
-            /*
-            cards = data.map((item) => ({
-                id: item.id,
-                title: item.name || 'Unknown Title',
-                description: item.description || 'No Description Available',
-                image: item.image || 'default-image.jpg',
-                userid: item.userid || 'Unknown',
-                available: item.available ? 'Available' : 'Not Available',
-            }));
-            */
             console.log("Fetched items:", items);
         } catch (error) {
             console.error("Error fetching items:", error);
@@ -60,13 +41,14 @@
 
     async function reset() {
         const thisPage = window.location.pathname;
-        if(auth?.user?.id) {
-            await delteLikes(auth?.user?.id);
+        if(user?.id) {
+            await delteLikes(user?.id);
         }
+        user.liked_items = [];
+        user.disliked_items = [];
         authStore.update((store) => ({
             ...store,
-            liked_items: [],
-            disliked_items: [],
+            user: user,
         }));
         goto('/search');
     }
@@ -123,16 +105,16 @@
         feedback = 'heart';
         el.style.transform = `translate(100vw, 0) rotate(30deg)`; // Smooth swipe to the right
         console.log(`Swiped Right on Card ${index}`);
-        console.log(auth)
-        auth.liked_items.push(items[index].id);
-        let liked_items = auth.liked_items;
+        console.log(user)
+        user.liked_items.push(items[index].id);
+        user.disliked_items = user.disliked_items.filter((id) => id != items[index].id)
         authStore.update((store) => ({
             ...store,
-            liked_items: liked_items,
+            user: user,
         }));
-        console.log(auth.liked_items)
-        if(auth?.user?.id) {
-            let message = await likeItem(auth?.user?.id, items[index].id).then( () => {
+        console.log(user.liked_items)
+        if(user?.id) {
+            let message = await likeItem(user?.id, items[index].id).then( () => {
                 removeCard(index, el);
             })
         } else {
@@ -144,16 +126,16 @@
         feedback = 'x';
         el.style.transform = `translate(-100vw, 0) rotate(-30deg)`; // Smooth swipe to the left
         console.log(`Swiped Left on Card ${index}`);
-        console.log(auth)
-        auth.disliked_items.push(items[index].id);
-        let disliked_items = auth.disliked_items;
+        console.log(user)
+        user.disliked_items.push(items[index].id);
+        user.liked_items = user.liked_items.filter((id) => id != items[index].id)
         authStore.update((store) => ({
             ...store,
-            disliked_items: disliked_items,
+            user: user,
         }));
-        console.log(auth.disliked_items)
-        if(auth?.user?.id) {
-            let message = await dislikeItem(auth?.user?.id, items[index].id).then( () => {
+        console.log(user.disliked_items)
+        if(user?.id) {
+            let message = await dislikeItem(user?.id, items[index].id).then( () => {
                 removeCard(index, el);
             })
         } else {
@@ -196,9 +178,9 @@
     {#if feedback === 'x'}
         <div class="feedback x">❌</div>
     {/if}
-
+    
     {#each items as item, index}
-        {#if !(auth.liked_items.includes(item.id) || auth.disliked_items.includes(item.id))}
+        {#if !(user.liked_items.includes(item.id) || user.disliked_items.includes(item.id))}
             <div
                 class="card-wrapper"
                 bind:this={cardElements[index]}

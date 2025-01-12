@@ -76,7 +76,7 @@
     };
 </script>
 
-<div class="max-w-xl mx-auto shadow-lg rounded-lg p-6">
+<div class="max-w-xl mx-auto rounded-lg p-6 mt-[10vh]">
     <ProfileDetails {user} {handleImageUpload} />
 
     <!-- Item Section -->
