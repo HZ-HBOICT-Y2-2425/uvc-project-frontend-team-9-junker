@@ -11,6 +11,7 @@
     import {getPicturesByItemId} from "$lib/stores/PictureStore"
     import { goto } from "$app/navigation";
     import UserItemListings from "./MyItems/UserItemListings.svelte";
+    import LikedItemList from "./MyItems/LikedItemList.svelte";
     
 
     export let user;
@@ -231,29 +232,6 @@ async function addDealedItemBack(itemid) {
   </div>
   
 <style>
-  
-  .item-image {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    border-radius: 4px;
-  }
-  
-  .item-info {
-    flex-grow: 1;
-  }
-  
-  .item-info h3 {
-    margin: 0;
-    font-size: 1.1rem;
-    font-weight: bold;
-  }
-  
-  .item-info p {
-    margin: 0.5rem 0 0;
-    font-size: 0.9rem;
-    color: #666;
-  }
   
   .profile-container {
     font-family: 'Arial', sans-serif;
