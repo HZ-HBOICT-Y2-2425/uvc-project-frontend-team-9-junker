@@ -1,51 +1,33 @@
 <script lang="ts">
     import SubHeaderV2 from "$lib/components/SubHeaderV2.svelte";
     import ViewUserprofile from "$lib/components/ViewUserprofile.svelte";
-    import JunkerLettering from "$lib/components/JunkerLettering.svelte";
-    import { get } from 'svelte/store';
-    import { authStore } from '$lib/stores/authStore';
-    import { browser } from '$app/environment';
-    import { goto } from '$app/navigation';
+    import fetchUserData from "$lib/utils/fetchUserWithAuth";
+    import { onMount } from "svelte";
 
+    // user authentication
     let userData: { $set?: any; $on?: any; } | null = null;
 
-    const loadUserData = async () => {
-		if (!browser) return null;
-
-    // Use `get` to access the current value of the store
-    const { token, username } = get(authStore);
-        if (!token) {
-            goto("/login");
-            return null;
-        }
-
-        try {
-            const response = await fetch(`http://localhost:3012/user/private/${username}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-
-            if (response.status === 403) {
-                goto("/login");
-                return null;
+    onMount(async () => {
+        userData = await fetchUserData();
+        if(userData?.user?.liked_items && userData?.user?.disliked_items) {
+            try {
+                userData.user.liked_items = await JSON.parse(userData.user.liked_items);
+                userData.user.disliked_items = await JSON.parse(userData.user.disliked_items);
             }
-
-            userData = await response.json();
-            // console.log(userData);
-            goto('/username');
-        } catch (error) {
-            console.error("Error fetching user data:", error);
-            goto("/login");
-            return null;
+            catch (error) {
+                userData.user.liked_items = [];
+                userData.user.disliked_items = [];
+                console.error("Error fetching user data:", error.message);
+            }
         }
-	};
-
-	loadUserData();
+    });
 </script>
 
 <main>
-    <SubHeaderV2 title="Profile" />
+    <div class="fixed top-0 left-0 w-full">
+        <SubHeaderV2 title="Profile"/>
+    </div>
+    
 
     {#if userData}
         <div>

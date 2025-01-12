@@ -6,17 +6,17 @@ import App from '../routes/+layout.svelte';
 import Login from '../routes/login/+page.svelte'
 import Register from '../routes/register/+page.svelte'
 
-test('Junker App renders without crashing', () => {
+test('Smoketest 1/3: Junker App renders without crashing', () => {
   const { container } = render(App);
   expect(container).toBeInTheDocument(); // Ensures the app renders into the DOM
 });
 
-test('Login component renders without crashing', () => {
+test('Smoketest 2/3: Login component renders without crashing', () => {
     const { container } = render(Login);
     expect(container).toBeInTheDocument();
 });
 
-test('Register component renders without crashing', () => {
+test('Smoketest 3/3: Register component renders without crashing', () => {
     const { container } = render(Register);
     expect(container).toBeInTheDocument();
 });

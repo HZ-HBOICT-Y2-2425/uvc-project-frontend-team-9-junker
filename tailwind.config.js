@@ -22,7 +22,7 @@ module.exports = {
           200: '#1d5412',
           300: '#2c7d1c',
           400: '#3aa725',
-          500: '#49d12e',
+          500: '#49d12e', // default
           600: '#6dda58',
           700: '#92e382',
           800: '#b6edab',
@@ -35,7 +35,7 @@ module.exports = {
           200: '#174f3e',
           300: '#22775d',
           400: '#2e9e7c',
-          500: '#39c69c',
+          500: '#39c69c', // default
           600: '#61d1af',
           700: '#88ddc3',
           800: '#b0e8d7',
@@ -48,7 +48,7 @@ module.exports = {
           200: '#006631',
           300: '#00994a',
           400: '#00cc63',
-          500: '#00ff7b',
+          500: '#00ff7b', // default
           600: '#33ff96',
           700: '#66ffb0',
           800: '#99ffca',
@@ -64,7 +64,7 @@ module.exports = {
           200: '#b6edab',
           300: '#92e382',
           400: '#6dda58',
-          500: '#49d12e',
+          500: '#49d12e', // default dark mode primary color
           600: '#3aa725',
           700: '#2c7d1c',
           800: '#1d5412',
@@ -77,7 +77,7 @@ module.exports = {
           200: '#b0e8d7',
           300: '#88ddc3',
           400: '#61d1af',
-          500: '#39c69c',
+          500: '#39c69c', // default dark mode secondary color
           600: '#2e9e7c',
           700: '#22775d',
           800: '#174f3e',
@@ -90,7 +90,7 @@ module.exports = {
           200: '#99ffca',
           300: '#66ffb0',
           400: '#33ff96',
-          500: '#00ff7b',
+          500: '#00ff7b', // default dark mode accent color
           600: '#00cc63',
           700: '#00994a',
           800: '#006631',
@@ -98,12 +98,12 @@ module.exports = {
           950: '#001a0c',
         },
         background: {
-          DEFAULT: '#e5fff2',
-          dark: '#002512',
+          DEFAULT: '#e5fff2', // default light mode background
+          dark: '#002512', // default dark mode background
         },
         text: {
-          DEFAULT: '#040b04',
-          dark: '#f4fbf4',
+          DEFAULT: '#040b04', // default light mode text color
+          dark: '#f4fbf4', // default dark mode text color
         },
         black: "#000000", // Added from "Stashed changes"
         white: "#ffffff", // Added from "Stashed changes"

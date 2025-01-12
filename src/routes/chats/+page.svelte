@@ -1,16 +1,17 @@
 <script>
-  import Header from "$lib/components/Header.svelte";
+  // @ts-nocheck
   import Footer from "$lib/components/Footer.svelte";
+  import ViewChats from "$lib/components/ViewChats.svelte";
+  import { authStore } from "$lib/stores/authStore";
+  import fetchUserData from "$lib/utils/fetchUserWithAuth";
 
-    import ViewChats from "$lib/components/ViewChats.svelte";
+  fetchUserData();
+  
+  const { username } = $authStore;
+  const userId = username;
 </script>
 
-<div>
-  <Header title="Chats" />
-
-  <main>
-    <ViewChats />
-  </main>
-
+<div class="page-container">
+  <ViewChats {userId} />
   <Footer />
 </div>

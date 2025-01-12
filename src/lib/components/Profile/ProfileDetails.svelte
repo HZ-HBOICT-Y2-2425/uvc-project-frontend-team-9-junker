@@ -1,7 +1,5 @@
 <script>
   export let user;
-  export let badges;
-  export let item;
   export let handleImageUpload;
 </script>
 
@@ -33,15 +31,7 @@
 
 <!-- Badges -->
 <div class="flex justify-center gap-3 mb-8">
-  {#each badges as badge, i}
-    <span
-      class="px-4 py-2 rounded-full text-sm text-black {i === 0
-        ? 'bg-[#B1FAAF]'
-        : i === 1
-          ? 'bg-[#F07FFF]'
-          : 'bg-[#FB7E7E]'}"
-    >
-      {badge}
+    <span class="px-4 py-2 rounded-full text-sm text-black bg-[#B1FAAF]">
+      {user.level}
     </span>
-  {/each}
 </div>

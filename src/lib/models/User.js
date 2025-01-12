@@ -1,13 +1,15 @@
 export class User {
     /**
      * @param {number} id
-     * @param {string} name
-     * @param {string} pfp
+     * @param {string} fullname
+     * @param {string} username
+     * @param {string} profile_pic
      */
-    constructor(id, name, pfp) {
+    constructor(id, fullname, username, profile_pic) {
         this.id = id;
-        this.name = name;
-        this.pfp = pfp;
+        this.fullname = fullname;
+        this.username = username;
+        this.profile_pic = profile_pic;
     }
 
     // Add methods or getters if needed

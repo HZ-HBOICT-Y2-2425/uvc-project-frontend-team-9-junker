@@ -1,6 +1,7 @@
 <script>
     import { goto } from "$app/navigation";
     import { authStore } from "$lib/stores/authStore";
+
     let username = '';
     let password = '';
     let message = '';
@@ -13,12 +14,17 @@
           body: JSON.stringify({ username, password }),
         });
         const data = await response.json();
+        console.log(data)
 
         if (response.ok) {
           authStore.set({
             username: username,
             isAuthenticated: !!data.accessToken,
             token: data.accessToken,
+            refreshToken: data.refreshToken,
+            user: [],
+            liked_items: [],
+            disliked_items: []
           });
           message = 'Login successful!';
           goto('/');
