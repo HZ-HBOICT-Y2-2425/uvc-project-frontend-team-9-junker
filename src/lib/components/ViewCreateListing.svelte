@@ -110,6 +110,10 @@
 
     async function postMyListing() {
 
+      if (selectedListingType === "Trade-Offer") {
+        action = true;
+      };
+
       let name = title;
       let pictureIdArray = "";
       let pictureTitle = name.replace(/\s/g, ''); // remove all spaces in title

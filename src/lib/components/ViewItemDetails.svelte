@@ -13,6 +13,20 @@
     import { getPicturesByItemId } from "$lib/stores/PictureStore";
     import {getUserById} from "$lib/stores/UserStore"
     import LikeButton from "./LikeButton.svelte";
+    import TradeDialog from "$lib/components/TradeDialog.svelte";
+    import { authStore } from "$lib/stores/authStore";
+
+    let showDialog = false;
+    let userItems = [];
+    let selectedItem = null;
+
+    let user;
+
+    authStore.subscribe( async (authStore) => {
+        authStore.user ? user = authStore.user : null;
+    });
+
+    let tradeItems = [];
 
     //const pictures = import.meta.glob(['$lib/assets/pictures/**.jpg', '$lib/assets/pictures/**.png', '$lib/assets/pictures/**.svg', '$lib/assets/pictures/**.webp', '$lib/assets/pictures/**.avif'], { eager: true, as: 'url' });
     let pictures = "";
@@ -23,13 +37,60 @@
     let owner = users.find((user) => user.id == item.userid) || new User(0, "Error: User not found", "blank-pfp.webp");
     let publicOwner;
 
-    onMount( async () => {
-		let loadedItem = await getItem(itemId);
-        pictures = await getPicturesByItemId(itemId);
-        item = loadedItem;
-		console.log(item);
-        publicOwner = await getUserById(item.userid);
+    onMount(async () => {
+    if (user?.id) {
+        const response = await fetch(`http://localhost:3017/items/user/${user.id}`);
+        const data = await response.json();
+        userItems = data.data; // Ensure userItems is an array even if empty
+        console.log("Fetched user items:", userItems); // Debug log
+    }
+
+    let loadedItem = await getItem(itemId);
+    pictures = await getPicturesByItemId(itemId);
+    item = loadedItem;
+    console.log("Fetched item details:", item); // Debug log
+    publicOwner = await getUserById(item.userid);
+});
+
+    async function requestTrade() {
+    // Fetch the user's items
+    showDialog = true;
+  }
+
+  async function confirmTrade(selectedItem) {
+    showDialog = false;
+
+    // Call API to create a trade
+    await fetch("http://localhost:3012/trades", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        requester_id: user.id,
+        receiver_id: item.userid,
+        item_requested_id: item.id,
+        item_offered_id: selectedItem.id,
+      }),
     });
+
+    alert("Trade request sent!");
+  }
+
+    console.log("current viewing userid: ", $authStore.user.id)
+
+    async function requestItem() {
+        // Call API to create a trade without offering any item
+        await fetch('http://usermicroservice:3012/trades', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                requester_id: user.id,
+                receiver_id: item.userid,
+                item_requested_id: item.id,
+                item_offered_id: null,
+            }),
+        });
+        alert('Item request sent!');
+    }
 
 </script>
 
@@ -69,11 +130,36 @@
         <LikeButton item={item}/>
     {/key}
 </div>
+<div>
+  {#if user.id !== item.userid} <!-- Only show buttons if the user is not the owner -->
+  {#if item.action === 1}
+    <!-- Request Trade button -->
+    <button
+        on:click={() => (showDialog = true)}
+        class="bg-primary-500 text-white px-4 py-2 rounded hover:bg-primary-600"
+    >
+        Request Trade
+    </button>
+  {:else if item.action === 0 || item.action === ""}
+    <!-- Request Item button -->
+    <button
+        on:click={requestItem}
+        class="bg-primary-500 text-white px-4 py-2 rounded hover:bg-primary-600"
+    >
+        Request Item
+    </button>
+  {/if}
+{/if}
+</div>
 <div class="item-desc-box">
     <div class="item-desc">
         {item.description}
     </div>
 </div>
+
+{#if showDialog}
+    <TradeDialog {userItems} on:close={() => (showDialog = false)} on:confirm={(e) => confirmTrade(e.detail)} />
+{/if}
 
 <style>
     .owner {
