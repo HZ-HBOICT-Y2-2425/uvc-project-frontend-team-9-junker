@@ -33,7 +33,7 @@
             console.log(message)
             if(message === "Likes updated successfully") {
                 user.liked_items.push(item.id);
-                user.disliked_items = user.disliked_items.filter((id) => String(id) === String(item.id));
+                user.disliked_items = user.disliked_items.filter((id) => String(id) !== String(item.id));
                 authStore.update((store) => ({
                     ...store,
                     user: user,
