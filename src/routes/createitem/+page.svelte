@@ -1,7 +1,7 @@
 <script>
 // @ts-nocheck
     import { getAllItems, getItem, storeItem, updateItem, deleteItem } from "$lib/stores/ItemStore.js";
-    import { storePicture, getAllPictures } from "$lib/stores/pictureStore.js";
+    import { storePicture, getAllPictures } from "$lib/stores/PictureStore.js";
     import { goto } from "$app/navigation";
     import { authStore } from "$lib/stores/authStore.js";
     import { onMount } from 'svelte';
