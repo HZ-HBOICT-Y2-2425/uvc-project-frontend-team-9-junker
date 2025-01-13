@@ -37,5 +37,5 @@
   {:else}
     <MyChats {chats} {userId} />
   {/if}
-  <CreateChatButton username="aa"/>
+  <!-- <CreateChatButton username="aa"/> -->
 </div>

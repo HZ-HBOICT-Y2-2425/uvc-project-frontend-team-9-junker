@@ -27,6 +27,10 @@
                     if (e.target) {
                         saveProfilePic(e.target.result);
                         user.profile_pic = e.target.result;
+                        authStore.update((store) => ({
+                            ...store,
+                            user: user,
+                        }));
                     }
                 };
                 reader.readAsDataURL(file);

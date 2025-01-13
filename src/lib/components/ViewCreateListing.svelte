@@ -116,6 +116,8 @@
       let resultItem;
       let resultPicture = [];
       
+      selectedListingType === "Trade-Offer" ? action = true : action = false;
+
       let communityIds: number[] = [];
       for(const community of selectedCommunities){
         communityIds.push(community.id);
