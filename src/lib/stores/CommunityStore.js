@@ -2,9 +2,9 @@
 import { writable } from 'svelte/store';
 import { Community } from '$lib/models/Community';
 
-let message = '';
-let mainUrl = 'http://localhost:3011';
-let gatewayUrl = 'http://localhost:3010/community_microservice';
+const message = '';
+const mainUrl = 'http://localhost:3011';
+const gatewayUrl = 'http://localhost:3010/community_microservice';
 
 /**
  * This function fetches the data from the API
@@ -27,12 +27,12 @@ const fetchAPI = async (url, method, body) => {
 
 export const getCommunity = async (communityId) => {
     console.log("getCommunity()");
-    let community = await fetchAPI('/' + communityId, 'GET');
+    const community = await fetchAPI('/' + communityId, 'GET');
     return community
 };
 
 export const getCommunitiesByUserId = async (userid) => {
     console.log("getCommunitiesByUserId()");
-    let communities = await fetchAPI('/user/' + userid, 'POST');
+    const communities = await fetchAPI('/user/' + userid, 'POST');
     return communities
 };

@@ -2,9 +2,9 @@
 import { writable } from 'svelte/store';
 import { Item } from '$lib/models/Item';
 
-let message = '';
-let mainUrl = 'http://localhost:3017';
-let gatewayUrl = 'http://localhost:3010/item_microservice';
+const message = '';
+const mainUrl = 'http://localhost:3017';
+const gatewayUrl = 'http://localhost:3010/item_microservice';
 
 /**
  * This function fetches the data from the API
@@ -41,36 +41,36 @@ const getPromisesData = async (urls) => {
 
 export const getAllItems = async () => {
     console.log("getAllItems()");
-    let items = await fetchAPI('/items', 'GET');
+    const items = await fetchAPI('/items', 'GET');
     return items
 };
 
 export const getItem = async (itemId) => {
     console.log("getItem()");
-    let item = await fetchAPI('/' + itemId, 'GET');
+    const item = await fetchAPI('/' + itemId, 'GET');
     return item
 };
 
 export const getItemsByUserId = async (userId) => {
     console.log("getItemsByUserId()");
-    let items = await fetchAPI('/items/user/' + userId, 'GET');
+    const items = await fetchAPI('/items/user/' + userId, 'GET');
     return item
 };
 
 export const storeItem = async (userid, name, description, pictures, action, available, views, interested, categories, communities) => {
     console.log("storeItem()")
-    let message = await fetchAPI('/create', 'POST', {userid, name, description, pictures, action, available, views, interested, categories, communities});
+    const message = await fetchAPI('/create', 'POST', {userid, name, description, pictures, action, available, views, interested, categories, communities});
     return message
 };
 
 export const updateItem = async (itemid, userid, name, description, pictures, action, available, views, interested, categories, communities) => {
     console.log("updateItem()");
-    let message = await fetchAPI('/edit/' + itemid + '/' + userid, 'PUT', {name, description, pictures, action, available, views, interested, categories, communities});
+    const message = await fetchAPI('/edit/' + itemid + '/' + userid, 'PUT', {name, description, pictures, action, available, views, interested, categories, communities});
     return message
 };
 
 export const deleteItem = async (itemid, userid) => {
     console.log("deleteItem()");
-    let message = await fetchAPI('/delete/' + itemid + '/' + userid, 'DELETE');
+    const message = await fetchAPI('/delete/' + itemid + '/' + userid, 'DELETE');
     return message
 };

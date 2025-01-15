@@ -2,9 +2,9 @@
 import { writable } from 'svelte/store';
 import { User } from '$lib/models/User';
 
-let message = '';
-let mainUrl = 'http://localhost:3012';
-let gatewayUrl = 'http://localhost:3010/usermicroservice';
+const message = '';
+const mainUrl = 'http://localhost:3012';
+const gatewayUrl = 'http://localhost:3010/usermicroservice';
 
 /**
  * This function fetches the data from the API
@@ -41,36 +41,36 @@ const getPromisesData = async (urls) => {
 
 export const getUserById = async (userId) => {
     console.log("getUser()");
-    let user = await fetchAPI('/id/public/' + userId, 'GET');
+    const user = await fetchAPI('/id/public/' + userId, 'GET');
     return user
 };
 
 export const likeItem = async (userid, itemid) => {
     console.log("likeItem()");
-    let message = await fetchAPI('/like', 'POST', {userid, itemid});
+    const message = await fetchAPI('/like', 'POST', {userid, itemid});
     return message
 };
 
 export const unlikeItem = async (userid, itemid) => {
     console.log("unlikeItem()");
-    let message = await fetchAPI('/unlike', 'POST', {userid, itemid});
+    const message = await fetchAPI('/unlike', 'POST', {userid, itemid});
     return message
 };
 
 export const dislikeItem = async (userid, itemid) => {
     console.log("dislikeItem()");
-    let message = await fetchAPI('/dislike', 'POST', {userid, itemid});
+    const message = await fetchAPI('/dislike', 'POST', {userid, itemid});
     return message
 };
 
 export const undislikeItem = async (userid, itemid) => {
     console.log("undislikeItem()");
-    let message = await fetchAPI('/undislike', 'POST', {userid, itemid});
+    const message = await fetchAPI('/undislike', 'POST', {userid, itemid});
     return message
 };
 
 export const delteLikes = async (userid) => {
     console.log("deleteLikes()");
-    let message = await fetchAPI('/likes/' + userid, 'PUT');
+    const message = await fetchAPI('/likes/' + userid, 'PUT');
     return message
 };
