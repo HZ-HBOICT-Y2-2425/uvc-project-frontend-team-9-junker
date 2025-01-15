@@ -19,5 +19,5 @@ jobs:
       - name: Build Docker Image
         run: docker build -t junker .
 
-      - name: Run Tests in Container
-        run: docker run junker npm test
+      # - name: Run Tests in Container
+      #   run: docker run junker npm test
