@@ -116,7 +116,7 @@
     <div class="text-text dark:text-text-dark">
       <div class="flex flex-col items-center p-4 space-y-8">
         <!-- Community Grid -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 h-full overflow-hidden">
+        <div id="ListWrapper" class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 h-full overflow-hidden">
           {#if filteredItems.length > 0}
             {#each filteredItems as item}
               {#key item}
