@@ -1,10 +1,5 @@
 // @ts-nocheck
-import { writable } from 'svelte/store';
-import { Community } from '$lib/models/Community';
-
-const message = '';
 const mainUrl = 'http://localhost:3011';
-const gatewayUrl = 'http://localhost:3010/community_microservice';
 
 /**
  * This function fetches the data from the API

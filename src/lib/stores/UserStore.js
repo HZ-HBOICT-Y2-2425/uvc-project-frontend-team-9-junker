@@ -1,10 +1,5 @@
 // @ts-nocheck
-import { writable } from 'svelte/store';
-import { User } from '$lib/models/User';
-
-const message = '';
 const mainUrl = 'http://localhost:3012';
-const gatewayUrl = 'http://localhost:3010/usermicroservice';
 
 /**
  * This function fetches the data from the API
@@ -20,20 +15,6 @@ const fetchAPI = async (url, method, body) => {
         const data = await response.json();
         console.log(data);
         return data;
-    } catch (error) {
-        return error;
-    }
-};
-
-/**
- * UNTESTED
- * This function handles multiple request
- * @param urls
- */
-const getPromisesData = async (urls) => {
-    try {
-        const response = await Promise.all(urls);
-        return response;
     } catch (error) {
         return error;
     }

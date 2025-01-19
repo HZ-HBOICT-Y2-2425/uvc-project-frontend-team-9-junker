@@ -1,10 +1,5 @@
 // @ts-nocheck
-import { writable } from 'svelte/store';
-import { Item } from '$lib/models/Item';
-
-const message = '';
 const mainUrl = 'http://localhost:3017';
-const gatewayUrl = 'http://localhost:3010/item_microservice';
 
 /**
  * This function fetches the data from the API
@@ -25,20 +20,6 @@ const fetchAPI = async (url, method, body) => {
     }
 };
 
-/**
- * UNTESTED
- * This function handles multiple request
- * @param urls
- */
-const getPromisesData = async (urls) => {
-    try {
-        const response = await Promise.all(urls);
-        return response;
-    } catch (error) {
-        return error;
-    }
-};
-
 export const getAllItems = async () => {
     console.log("getAllItems()");
     const items = await fetchAPI('/items', 'GET');
@@ -54,7 +35,7 @@ export const getItem = async (itemId) => {
 export const getItemsByUserId = async (userId) => {
     console.log("getItemsByUserId()");
     const items = await fetchAPI('/items/user/' + userId, 'GET');
-    return item
+    return items;
 };
 
 export const storeItem = async (userid, name, description, pictures, action, available, views, interested, categories, communities) => {
