@@ -2,11 +2,15 @@ export default {
   preset: 'ts-jest/presets/default-esm', // For TypeScript and ES Modules
   testEnvironment: 'jest-environment-jsdom', // Set the test environment to JSDOM
   transform: {
-    '^.+\\.svelte$': 'svelte-jester', // Transform Svelte files
+    '^.+\\.svelte$': ['svelte-jester', { preprocess: true }], // Transform Svelte files
     '^.+\\.js$': 'babel-jest',        // Transform JavaScript files
     '^.+\\.ts$': 'ts-jest',           // Transform TypeScript files
   },
   moduleFileExtensions: ['js', 'ts', 'svelte'],
+  transformIgnorePatterns: [
+    '/node_modules/(?!(@testing-library/svelte|some-other-esm-library))',
+  ],
+  extensionsToTreatAsEsm: ['.svelte'], // For handling Svelte files as ES modules
   globals: {
     'ts-jest': {
       useESM: true,
