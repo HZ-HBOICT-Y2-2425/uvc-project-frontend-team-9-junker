@@ -24,9 +24,9 @@ jobs:
     - name: Run build
       run: npm run build
 
-    # - name: Run Test
-    #   run: npm run test
+    - name: Run Test
+      run: npm run test
 
-    # - name: Run Eslint
-    #   run: npm run lint
+    - name: Run Eslint
+      run: npm run lint:fix
         

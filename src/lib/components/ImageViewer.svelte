@@ -11,8 +11,6 @@
 
 
     export let pictures;
-
-    console.log(pictures);
     
     let currentIndex = 0;
   

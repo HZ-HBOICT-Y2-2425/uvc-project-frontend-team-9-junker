@@ -6,7 +6,7 @@ import { refreshToken } from './refreshToken';
 const url = "http://localhost:3012/user/private/";
 
 export default async function fetchUserData() {
-    if (!browser) return null;
+    if (!browser) {return null;}
 
     console.log("Fetching user data...");
     const { token, username } = get(authStore);
