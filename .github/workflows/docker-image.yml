@@ -21,4 +21,4 @@ jobs:
         run: docker build -t junker .
 
       - name: Run Tests in Container
-        run: docker run --rm junker npm test -- --watchAll=false
+        run: docker run --rm junker npm test -- --run
