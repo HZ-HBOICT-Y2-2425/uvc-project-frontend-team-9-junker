@@ -14,7 +14,9 @@
 		"test:ui": "vitest --ui",
 		"test:watch": "vitest",
 		"test:coverage": "jest --coverage",
-		"coverage": "vitest run --coverage"
+		"coverage": "vitest run --coverage",
+		"start": "node build"
+
 	},
 	"devDependencies": {
 		"@babel/core": "^7.26.0",
