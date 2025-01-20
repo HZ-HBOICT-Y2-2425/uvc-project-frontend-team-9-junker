@@ -23,6 +23,7 @@
 		"@babel/preset-env": "^7.26.0",
 		"@eslint/js": "^9.15.0",
 		"@sveltejs/adapter-auto": "^3.0.0",
+		"@sveltejs/adapter-node": "5.2.12",
 		"@sveltejs/kit": "^2.8.2",
 		"@sveltejs/vite-plugin-svelte": "^4.0.2",
 		"@testing-library/jest-dom": "^6.6.3",
