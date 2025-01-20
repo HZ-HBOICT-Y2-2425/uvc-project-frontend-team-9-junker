@@ -27,6 +27,9 @@ jobs:
     - name: Run Test
       run: npm run test
 
+    - name: Generate Coverage Report
+      run: npm run coverage
+
     - name: Run Eslint
       run: npm run lint:fix
         
